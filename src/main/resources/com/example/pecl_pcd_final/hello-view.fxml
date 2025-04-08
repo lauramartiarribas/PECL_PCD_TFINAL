@@ -5,12 +5,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.HelloController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.HelloController">
    <children>
-      <Button fx:id="startButton" layoutX="271.0" layoutY="258.0" mnemonicParsing="false" onAction="#onStartButtonClick" prefHeight="31.0" prefWidth="59.0" text="Start" />
-      <Text layoutX="117.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apocalipsis Zombie" textAlignment="CENTER" wrappingWidth="367.431640625">
+      <Button fx:id="startButton" layoutX="254.0" layoutY="259.0" mnemonicParsing="false" onAction="#onStartButtonClick" prefHeight="49.0" prefWidth="94.0" text="Start">
          <font>
-            <Font size="33.0" />
+            <Font name="Bookman Old Style" size="16.0" />
+         </font></Button>
+      <Text layoutX="118.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apocalipsis Zombie" textAlignment="CENTER" wrappingWidth="367.431640625">
+         <font>
+            <Font name="Bookman Old Style" size="33.0" />
          </font>
       </Text>
    </children>
