@@ -33,7 +33,7 @@ public class HelloController {
             stage.setTitle("Programa");
             stage.setScene(scene);
 
-            stage.setHeight(455);
+            stage.setHeight(525);
             stage.setWidth(615);
             stage.show();
 
