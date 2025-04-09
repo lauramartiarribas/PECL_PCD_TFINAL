@@ -1,5 +1,8 @@
 package com.example.pecl_pcd_final;
 
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -9,9 +12,9 @@ se imprime su nuevo contenido en el JTextField que toma como parámetro el const
 public class ListaThreads
 {
     ArrayList<Ser> lista;
-    JTextField tf;
+    ListView tf;
     
-    public ListaThreads(JTextField tf)
+    public ListaThreads(ListView tf)
     {
         lista=new ArrayList<Ser>();
         this.tf=tf;
@@ -31,11 +34,6 @@ public class ListaThreads
     
     public void imprimir()
     {
-        String contenido="";
-        for(int i=0; i<lista.size(); i++)
-        {
-           contenido=contenido+lista.get(i).getName()+" ";
-        }
-        tf.setText(contenido);
+        tf.setItems((ObservableList) lista);
     }
 }

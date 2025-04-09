@@ -2,6 +2,7 @@ package com.example.pecl_pcd_final;
 
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
@@ -26,30 +27,32 @@ public class Humano extends Ser {
     public void run(){
         //Zona común tiempo entre 1 y 2
         try {
+            System.out.println("Empezando"+identificador);
             entorno.zona_comun.add(this);
+            entorno.meter(this,entorno.ListaZonaComun,entorno.zona_comun);
             sleep(1000 + (int) (Math.random() * 1000));
             entorno.zona_comun.remove(this);
 
-            //Seleccionar túnel
-            Random r= new Random();
-            int tunelSalir = r.nextInt(1,5);
-            CyclicBarrier barreraSalida= entorno.tunelesSalir.get(tunelSalir);
-            //METER HUMANO EN LA LISTA DE TUNELES SALIR
-            System.out.println("Esperando en la barrera para salir");
-            barreraSalida.await();
-            System.out.println("saliendo");
-            //QUITARLO
-            Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
-            if(!entorno.hayPrioridad.get(tunelSalir)){
-                tunelInterior.lock();
-                sleep(1000);
-                //METERLO EN ZONA EXTERIOR
-                System.out.println("En la zona exterior");
-                sleep(3000+(int)Math.random()*2000);
-                this.numComida+=2;
-
-
-            }
+//            //Seleccionar túnel
+//            Random r= new Random();
+//            int tunelSalir = r.nextInt(1,5);
+//            CyclicBarrier barreraSalida= entorno.tunelesSalir.get(tunelSalir);
+//            //METER HUMANO EN LA LISTA DE TUNELES SALIR
+//            System.out.println("Esperando en la barrera para salir");
+//            barreraSalida.await();
+//            System.out.println("saliendo");
+//            //QUITARLO
+//            Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
+//            if(!entorno.hayPrioridad.get(tunelSalir)){
+//                tunelInterior.lock();
+//                sleep(1000);
+//                //METERLO EN ZONA EXTERIOR
+//                System.out.println("En la zona exterior");
+//                sleep(3000+(int)Math.random()*2000);
+//                this.numComida+=2;
+//
+//
+//            }
 
 
 
