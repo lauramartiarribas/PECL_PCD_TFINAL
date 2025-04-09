@@ -1,7 +1,5 @@
 package com.example.pecl_pcd_final;
 
-import com.example.pecl_pcd_final.Clases.Ser;
-
 import javax.swing.*;
 import java.util.ArrayList;
 

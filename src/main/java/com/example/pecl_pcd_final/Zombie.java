@@ -1,8 +1,9 @@
-package com.example.pecl_pcd_final.Clases;
+package com.example.pecl_pcd_final;
 
 import com.example.pecl_pcd_final.Entorno;
+import com.example.pecl_pcd_final.Ser;
 
-public class Zombie extends Ser{
+public class Zombie extends Ser {
 
     public Zombie (String id, Entorno entorno){
         this.identificador=id;

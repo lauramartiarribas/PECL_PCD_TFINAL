@@ -1,4 +1,4 @@
-package com.example.pecl_pcd_final.Clases;
+package com.example.pecl_pcd_final;
 
 import com.example.pecl_pcd_final.Entorno;
 
