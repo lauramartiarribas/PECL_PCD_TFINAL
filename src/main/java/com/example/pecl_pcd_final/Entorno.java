@@ -21,9 +21,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class Entorno {
-   ArrayList<Humano> descanso= new ArrayList<>();
-   ArrayList<Humano> comedor= new ArrayList<>();
-   ArrayList<Humano> zona_comun= new ArrayList<>();
+   ArrayList<Ser> descanso= new ArrayList<>();
+   ArrayList<Ser> comedor= new ArrayList<>();
+   ArrayList<Ser> zona_comun= new ArrayList<>();
    int comida;
 
    int numSeres;
@@ -42,6 +42,11 @@ public class Entorno {
    ArrayList<Zombie> zombies= new ArrayList<>();
 
    ArrayList<Object> zona_riesgo= new ArrayList<>();
+
+
+   //Para cuando queramos pausar el juego y asi poder también alamacenar todos los hilos que estan en ese momento
+   private boolean isPaused = false;
+   private ArrayList<Thread> hilos = new ArrayList<>();
 
    public Entorno(){
       numSeres=0;
@@ -62,6 +67,9 @@ public class Entorno {
    public Button PauseButton;
 
    @FXML
+   public Button ReanudarButton;
+
+   @FXML
    public ListView ListaDescanso;
 
    @FXML
@@ -69,7 +77,7 @@ public class Entorno {
 
 
    @FXML
-   public ListView<Humano> ListaZonaComun;
+   public ListView<Ser> ListaZonaComun;
 
    @FXML
    public Label Comida;
@@ -80,28 +88,27 @@ public class Entorno {
 
 
 
-   public synchronized void meter(Humano t,ListView vista, ArrayList<Humano> lista) {
+   public synchronized void meter(Humano t,ListView vista, ArrayList<Ser> lista) {
       lista.add(t);
-      imprimir(vista,lista);
+      Platform.runLater(() -> {
+         imprimir(vista, lista); // Esto actualizará la ListView
+      });
    }
 
-   public synchronized void sacar(Ser t,ListView vista,ArrayList<Humano> lista)
+   public synchronized void sacar(Ser t,ListView vista,ArrayList<Ser> lista)
    {
       lista.remove(t);
-      // Nos aseguramos de que imprimir se ejecuta en el hilo de la interfaz gráfica
+      // Nos aseguramos de que imprimir se ejecuta en el hilo de la interfaz gráfica (el hilo principal de la aplicación de JavaFX
       Platform.runLater(() -> {
          imprimir(vista, lista); // Esto actualizará la ListView
       });
 
    }
 
-   public void imprimir(ListView vista,ArrayList<Humano> lista)
-   {
-      ObservableList<Humano> datosObservableList = FXCollections.observableArrayList(lista);
-
-      // Asignar la ObservableList al ListView
-      ListaZonaComun.setItems(datosObservableList);
-      vista.setItems(datosObservableList);
+   public synchronized void imprimir(ListView<Ser> vista, ArrayList<Ser> lista) {
+      Platform.runLater(() -> {
+         vista.setItems(FXCollections.observableArrayList(lista));
+      });
    }
 
 
@@ -113,6 +120,7 @@ public class Entorno {
 
       for(int i=0;i<4;i++){
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
+         hilos.add(humano);
          humano.start();
       }
 
@@ -122,10 +130,21 @@ public class Entorno {
    }
    @FXML
    void onStopButtonClick(ActionEvent event) {
+      isPaused = true; // Cambia el estado a pausa
+      for (Thread thread : hilos) {
+         thread.interrupt(); // Interrumpe los hilos activos, esto lo pausará temporalmente
+      }
+
+   }
+
+   @FXML
+   void onReanudarButtonClick(ActionEvent event){
+      isPaused = false; // Cambia el estado a reanudado
+      notifyAll();
 
    }
    @FXML
-   public void initialize() {
+   public  void  initialize() {
 
       System.out.println("ListView inicializado correctamente.");
    }
