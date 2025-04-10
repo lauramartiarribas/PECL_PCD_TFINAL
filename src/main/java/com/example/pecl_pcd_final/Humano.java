@@ -1,5 +1,6 @@
 package com.example.pecl_pcd_final;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -22,16 +23,21 @@ public class Humano extends Ser {
         numComida=0;
         marcado=false;
     }
+    @Override
+    public String toString() {
+        return identificador;
+    }
 
     @Override
     public void run(){
         //Zona común tiempo entre 1 y 2
         try {
             System.out.println("Empezando"+identificador);
-            entorno.zona_comun.add(this);
+            System.out.println("En la zona común "+identificador);
             entorno.meter(this,entorno.ListaZonaComun,entorno.zona_comun);
             sleep(1000 + (int) (Math.random() * 1000));
-            entorno.zona_comun.remove(this);
+            System.out.println("Saliendo de la zona común "+identificador);
+            entorno.sacar(this,entorno.ListaZonaComun, entorno.zona_comun);
 
 //            //Seleccionar túnel
 //            Random r= new Random();

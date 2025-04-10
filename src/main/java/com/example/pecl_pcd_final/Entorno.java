@@ -1,8 +1,14 @@
 package com.example.pecl_pcd_final;
 
+import com.almasb.fxgl.app.MainWindow;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -12,11 +18,12 @@ import java.util.ArrayList;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class Entorno {
-   ArrayList<Humano> descanso;
-   ArrayList<Humano> comedor;
-   ArrayList<Humano> zona_comun;
+   ArrayList<Humano> descanso= new ArrayList<>();
+   ArrayList<Humano> comedor= new ArrayList<>();
+   ArrayList<Humano> zona_comun= new ArrayList<>();
    int comida;
 
    int numSeres;
@@ -62,7 +69,7 @@ public class Entorno {
 
 
    @FXML
-   public ListView ListaZonaComun;
+   public ListView<Humano> ListaZonaComun;
 
    @FXML
    public Label Comida;
@@ -72,8 +79,8 @@ public class Entorno {
 
 
 
-   public synchronized void meter(Humano t,ListView vista, ArrayList<Humano> lista)
-   {
+
+   public synchronized void meter(Humano t,ListView vista, ArrayList<Humano> lista) {
       lista.add(t);
       imprimir(vista,lista);
    }
@@ -81,15 +88,21 @@ public class Entorno {
    public synchronized void sacar(Ser t,ListView vista,ArrayList<Humano> lista)
    {
       lista.remove(t);
-      imprimir(vista,lista);
+      // Nos aseguramos de que imprimir se ejecuta en el hilo de la interfaz gráfica
+      Platform.runLater(() -> {
+         imprimir(vista, lista); // Esto actualizará la ListView
+      });
+
    }
 
    public void imprimir(ListView vista,ArrayList<Humano> lista)
    {
-      vista.setItems((ObservableList) lista);
+      ObservableList<Humano> datosObservableList = FXCollections.observableArrayList(lista);
+
+      // Asignar la ObservableList al ListView
+      ListaZonaComun.setItems(datosObservableList);
+      vista.setItems(datosObservableList);
    }
-
-
 
 
 
@@ -97,14 +110,24 @@ public class Entorno {
 
    @FXML
    void onPlayButtonClick(ActionEvent event) {
+
       for(int i=0;i<4;i++){
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
          humano.start();
       }
+
+
+
+
    }
    @FXML
    void onStopButtonClick(ActionEvent event) {
 
+   }
+   @FXML
+   public void initialize() {
+
+      System.out.println("ListView inicializado correctamente.");
    }
 
 }
