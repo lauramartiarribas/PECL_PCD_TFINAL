@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.Entorno">
+<AnchorPane prefHeight="750.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.Entorno">
    <children>
       <AnchorPane prefHeight="800.0" prefWidth="466.0" style="-fx-background-color: #64A002;">
          <children>
@@ -43,15 +43,23 @@
       </AnchorPane>
       <AnchorPane layoutX="465.0" prefHeight="762.0" prefWidth="598.0" style="-fx-background-color: #003300;">
          <children>
-            <ListView fx:id="ListaTunelEntrar1" layoutX="26.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelSalir1" layoutX="26.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
             <Label alignment="CENTER" layoutX="32.0" layoutY="36.0" prefHeight="28.0" prefWidth="132.0" style="-fx-background-color: #F6F2E5;" text="TÚNELES">
                <font>
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
-            <ListView layoutX="27.0" layoutY="193.0" prefHeight="72.0" prefWidth="142.0" />
-            <ListView layoutX="27.0" layoutY="332.0" prefHeight="72.0" prefWidth="142.0" />
-            <ListView layoutX="26.0" layoutY="459.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelSalir2" layoutX="27.0" layoutY="193.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelSalir3" layoutX="27.0" layoutY="332.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelSalir4" layoutX="26.0" layoutY="459.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelEntrar1" layoutX="287.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelEntrar2" layoutX="287.0" layoutY="193.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelEntrar3" layoutX="287.0" layoutY="332.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelEntrar4" layoutX="287.0" layoutY="459.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="TunelIntermedio1" layoutX="191.0" layoutY="102.0" prefHeight="28.0" prefWidth="78.0" />
+            <ListView fx:id="TunelIntermedio2" layoutX="191.0" layoutY="215.0" prefHeight="28.0" prefWidth="78.0" />
+            <ListView fx:id="TunelIntermedio3" layoutX="191.0" layoutY="354.0" prefHeight="28.0" prefWidth="78.0" />
+            <ListView fx:id="TunelIntermedio4" layoutX="191.0" layoutY="481.0" prefHeight="28.0" prefWidth="78.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="922.0" prefHeight="734.0" prefWidth="480.0" style="-fx-background-color: #8db600;">
@@ -61,14 +69,14 @@
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
-            <ListView fx:id="ListaZonaRiesgo1" layoutX="39.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgoZombie1" layoutX="270.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgo2" layoutX="39.0" layoutY="207.0" prefHeight="102.0" prefWidth="170.0" />
-            <ListView fx:id="ListaZonaRiesgoZombie2" layoutX="270.0" layoutY="207.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgo3" layoutX="42.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgoZombie3" layoutX="270.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgo4" layoutX="43.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ListaZonaRiesgoZombie4" layoutX="270.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgo1" layoutX="39.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoZombie1" layoutX="270.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgo2" layoutX="39.0" layoutY="207.0" prefHeight="102.0" prefWidth="170.0" />
+            <ListView fx:id="ZonaRiesgoZombie2" layoutX="270.0" layoutY="207.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgo3" layoutX="42.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoZombie3" layoutX="270.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgo4" layoutX="43.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoZombie4" layoutX="270.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="607.0" prefHeight="194.0" prefWidth="1402.0" style="-fx-background-color: #F6F2E5;">

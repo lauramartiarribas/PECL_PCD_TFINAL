@@ -1,40 +1,40 @@
 package com.example.pecl_pcd_final;
 
-import com.almasb.fxgl.app.MainWindow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
+
+import static java.lang.Thread.sleep;
+
 
 public class Entorno {
    ArrayList<Ser> descanso= new ArrayList<>();
    ArrayList<Ser> comedor= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
+
    int comida;
 
    int numSeres;
+   //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
+   private boolean isPaused = false;
+   private ArrayList<Thread> hilos = new ArrayList<>();
+
 
 
    ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
    ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
 
    ArrayList<Lock> tunelesInterior= new ArrayList<>();
-
    ArrayList<Boolean> hayPrioridad= new ArrayList<>();
 
 
@@ -54,6 +54,12 @@ public class Entorno {
    ArrayList<Ser> tunelSalir3=new ArrayList<>();
    ArrayList<Ser> tunelSalir4=new ArrayList<>();
 
+   ArrayList<ArrayList<Ser>> listaTunelesIntermedio = new ArrayList<>();
+   ArrayList<Ser> tunelIntermedio1 = new ArrayList<>();
+   ArrayList<Ser> tunelIntermedio2 = new ArrayList<>();
+   ArrayList<Ser> tunelIntermedio3 = new ArrayList<>();
+   ArrayList<Ser> tunelIntermedio4 = new ArrayList<>();
+
 
    ArrayList<ArrayList<Ser>> listaTunelesEntrar= new ArrayList<>();
    ArrayList<Ser> tunelEntrar1=new ArrayList<>();
@@ -62,13 +68,14 @@ public class Entorno {
    ArrayList<Ser> tunelEntrar4=new ArrayList<>();
 
 
-   ArrayList<Ser> zona_riesgoZombie= new ArrayList<>();
+   ArrayList<ArrayList<Ser>> zona_riesgoZombie= new ArrayList<>();
+   ArrayList<Ser> zona_riesgoZombie1=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoZombie2=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoZombie3=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoZombie4=new ArrayList<>();
 
 
 
-   //Para cuando queramos pausar el juego y asi poder también alamacenar todos los hilos que estan en ese momento
-   private boolean isPaused = false;
-   private ArrayList<Thread> hilos = new ArrayList<>();
 
    public Entorno(){
       numSeres=0;
@@ -88,11 +95,21 @@ public class Entorno {
       listaTunelesSalir.add(tunelSalir3);
       listaTunelesSalir.add(tunelSalir4);
 
+      listaTunelesIntermedio.add(tunelIntermedio1);
+      listaTunelesIntermedio.add(tunelIntermedio2);
+      listaTunelesIntermedio.add(tunelIntermedio3);
+      listaTunelesIntermedio.add(tunelIntermedio4);
+
+
       listaTunelesEntrar.add(tunelEntrar1);
       listaTunelesEntrar.add(tunelEntrar2);
       listaTunelesEntrar.add(tunelEntrar3);
       listaTunelesEntrar.add(tunelEntrar4);
 
+      zona_riesgoZombie.add(zona_riesgoZombie1);
+      zona_riesgoZombie.add(zona_riesgoZombie2);
+      zona_riesgoZombie.add(zona_riesgoZombie3);
+      zona_riesgoZombie.add(zona_riesgoZombie4);
 
 
    }
@@ -220,11 +237,21 @@ public class Entorno {
    @FXML
    void onPlayButtonClick(ActionEvent event) {
 
-      for(int i=0;i<5;i++){
+      for(int i=0;i<10;i++){
+         //COMPROBAR QUE SE DUERMEN 0,5/2 SEGUNDOS
+
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
          hilos.add(humano);
          humano.start();
       }
+
+//      while(true){
+//
+//         Humano humano= new Humano("H"+ String.format("%04d", numSeres),this);
+//         hilos.add(humano);
+//         humano.start();
+//         numSeres++;
+//      }
 
 
 

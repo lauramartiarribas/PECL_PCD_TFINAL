@@ -37,16 +37,23 @@ public class Humano extends Ser {
             entorno.meter(this,entorno.ListaZonaComun,entorno.zona_comun);
             sleep(1000 + (int) (Math.random() * 1000));
             System.out.println("Saliendo de la zona común "+identificador);
-            entorno.sacar(this,entorno.ListaZonaComun, entorno.zona_comun);
+
 
             //Seleccionar túnel
             Random r= new Random();
             int tunelSalir = r.nextInt(0,4);
-            //CyclicBarrier barreraSalida= entorno.tunelesSalir.get(tunelSalir);
+
+            entorno.sacar(this,entorno.ListaZonaComun, entorno.zona_comun);
+
+            CyclicBarrier barreraSalida= entorno.tunelesSalirBarreras.get(tunelSalir);
             //METER HUMANO EN LA LISTA DE TUNELES SALIR
+            entorno.meter(this, entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
             System.out.println("Esperando en la barrera para salir");
-            sleep(2000);
-            //barreraSalida.await();
+            //sleep(2000);
+            barreraSalida.await();
+
+            entorno.sacar(this,entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
+
             System.out.println("saliendo");
             //QUITARLO
             Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
@@ -54,9 +61,10 @@ public class Humano extends Ser {
 
                 try {
                     tunelInterior.lock();
-
-
+                    entorno.meter(this, entorno.TunelesIntermedio.get(tunelSalir),entorno.listaTunelesIntermedio.get(tunelSalir));
                     sleep(1000);
+                    entorno.sacar(this, entorno.TunelesIntermedio.get(tunelSalir),entorno.listaTunelesIntermedio.get(tunelSalir));
+
                     //METERLO EN ZONA EXTERIOR
                     entorno.meter(this, entorno.ZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
                     System.out.println("En la zona exterior");
