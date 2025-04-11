@@ -30,8 +30,8 @@ public class Entorno {
    int numSeres;
 
 
-   ArrayList<CyclicBarrier> tunelesSalir= new ArrayList<>();
-   ArrayList<CyclicBarrier> tunelesEntrar= new ArrayList<>();
+   ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
+   ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
 
    ArrayList<Lock> tunelesInterior= new ArrayList<>();
 
@@ -46,6 +46,22 @@ public class Entorno {
    ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
    ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
    ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
+
+
+   ArrayList<ArrayList<Ser>> listaTunelesSalir= new ArrayList<>();
+   ArrayList<Ser> tunelSalir1=new ArrayList<>();
+   ArrayList<Ser> tunelSalir2=new ArrayList<>();
+   ArrayList<Ser> tunelSalir3=new ArrayList<>();
+   ArrayList<Ser> tunelSalir4=new ArrayList<>();
+
+
+   ArrayList<ArrayList<Ser>> listaTunelesEntrar= new ArrayList<>();
+   ArrayList<Ser> tunelEntrar1=new ArrayList<>();
+   ArrayList<Ser> tunelEntrar2=new ArrayList<>();
+   ArrayList<Ser> tunelEntrar3=new ArrayList<>();
+   ArrayList<Ser> tunelEntrar4=new ArrayList<>();
+
+
    ArrayList<Ser> zona_riesgoZombie= new ArrayList<>();
 
 
@@ -57,8 +73,8 @@ public class Entorno {
    public Entorno(){
       numSeres=0;
       for(int i=0; i<4;i++){
-         tunelesSalir.add(new CyclicBarrier(3));
-         tunelesEntrar.add(new CyclicBarrier(3));
+         tunelesSalirBarreras.add(new CyclicBarrier(3));
+         tunelesEntrarBarreras.add(new CyclicBarrier(3));
          tunelesInterior.add(new ReentrantLock());
          hayPrioridad.add(false);
       }
@@ -66,6 +82,16 @@ public class Entorno {
       zona_riesgoHumanos.add(zona_riesgoHumano2);
       zona_riesgoHumanos.add(zona_riesgoHumano3);
       zona_riesgoHumanos.add(zona_riesgoHumano4);
+
+      listaTunelesSalir.add(tunelSalir1);
+      listaTunelesSalir.add(tunelSalir2);
+      listaTunelesSalir.add(tunelSalir3);
+      listaTunelesSalir.add(tunelSalir4);
+
+      listaTunelesEntrar.add(tunelEntrar1);
+      listaTunelesEntrar.add(tunelEntrar2);
+      listaTunelesEntrar.add(tunelEntrar3);
+      listaTunelesEntrar.add(tunelEntrar4);
 
 
 
@@ -90,25 +116,67 @@ public class Entorno {
    @FXML
    public ListView<Ser> ListaZonaComun;
 
+   ///////////////// TUNELES //////////////////////
 
-   public ObservableList<ListView<Ser>> ListaZonaRiesgo;
+
+   public ObservableList<ListView<Ser>> TunelesSalida;
 
    @FXML
-   public ListView<Ser> ListaZonaRiesgo1;
+   public ListView<Ser> TunelSalir1;
    @FXML
-   public ListView<Ser> ListaZonaRiesgo2;
+   public ListView<Ser> TunelSalir2;
    @FXML
-   public ListView<Ser> ListaZonaRiesgo3;
+   public ListView<Ser> TunelSalir3;
    @FXML
-   public ListView<Ser> ListaZonaRiesgo4;
+   public ListView<Ser> TunelSalir4;
+
+
+   public ObservableList<ListView<Ser>> TunelesIntermedio;
+
    @FXML
-   public ListView<Ser> ListaZonaRiesgoZombie1;
+   public ListView<Ser> TunelIntermedio1;
    @FXML
-   public ListView<Ser> ListaZonaRiesgoZombie2;
+   public ListView<Ser> TunelIntermedio2;
    @FXML
-   public ListView<Ser> ListaZonaRiesgoZombie3;
+   public ListView<Ser> TunelIntermedio3;
    @FXML
-   public ListView<Ser> ListaZonaRiesgoZombie4;
+   public ListView<Ser> TunelIntermedio4;
+
+
+   public ObservableList<ListView<Ser>> TunelesEntrada;
+
+   @FXML
+   public ListView<Ser> TunelEntrar1;
+   @FXML
+   public ListView<Ser> TunelEntrar2;
+   @FXML
+   public ListView<Ser> TunelEntrar3;
+   @FXML
+   public ListView<Ser> TunelEntrar4;
+
+
+
+
+
+   ///////////////// ZONA DE RIESGO ///////////////////////////
+   public ObservableList<ListView<Ser>> ZonaRiesgo;
+
+   @FXML
+   public ListView<Ser> ZonaRiesgo1;
+   @FXML
+   public ListView<Ser> ZonaRiesgo2;
+   @FXML
+   public ListView<Ser> ZonaRiesgo3;
+   @FXML
+   public ListView<Ser> ZonaRiesgo4;
+   @FXML
+   public ListView<Ser> ZonaRiesgoZombie1;
+   @FXML
+   public ListView<Ser> ZonaRiesgoZombie2;
+   @FXML
+   public ListView<Ser> ZonaRiesgoZombie3;
+   @FXML
+   public ListView<Ser> ZonaRiesgoZombie4;
 
    @FXML
    public Label Comida;
@@ -181,13 +249,33 @@ public class Entorno {
    public  void  initialize() {
 
       System.out.println("ListView inicializado correctamente.");
-      ListaZonaRiesgo = FXCollections.observableArrayList(
-              ListaZonaRiesgo1,
-              ListaZonaRiesgo2,
-              ListaZonaRiesgo3,
-              ListaZonaRiesgo4
+      ZonaRiesgo = FXCollections.observableArrayList(
+              ZonaRiesgo1,
+              ZonaRiesgo2,
+              ZonaRiesgo3,
+              ZonaRiesgo4
+      );
+      TunelesSalida = FXCollections.observableArrayList(
+              TunelSalir1,
+              TunelSalir2,
+              TunelSalir3,
+              TunelSalir4
       );
 
+      TunelesEntrada = FXCollections.observableArrayList(
+              TunelEntrar1,
+              TunelEntrar2,
+              TunelEntrar3,
+              TunelEntrar4
+      );
+
+
+      TunelesIntermedio = FXCollections.observableArrayList(
+              TunelIntermedio1,
+              TunelIntermedio2,
+              TunelIntermedio3,
+              TunelIntermedio4
+      );
 
 
 
