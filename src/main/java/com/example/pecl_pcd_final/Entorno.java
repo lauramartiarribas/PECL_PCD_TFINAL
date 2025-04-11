@@ -15,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -38,10 +39,15 @@ public class Entorno {
 
 
 
-   ArrayList<Humano> humanos= new ArrayList<>();
-   ArrayList<Zombie> zombies= new ArrayList<>();
 
-   ArrayList<Object> zona_riesgo= new ArrayList<>();
+
+   ArrayList<ArrayList<Ser>> zona_riesgoHumanos= new ArrayList<>();
+   ArrayList<Ser> zona_riesgoHumano1=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
+   ArrayList<Ser> zona_riesgoZombie= new ArrayList<>();
+
 
 
    //Para cuando queramos pausar el juego y asi poder también alamacenar todos los hilos que estan en ese momento
@@ -50,14 +56,19 @@ public class Entorno {
 
    public Entorno(){
       numSeres=0;
-      zona_riesgo.add(humanos);
-      zona_riesgo.add(zombies);
       for(int i=0; i<4;i++){
          tunelesSalir.add(new CyclicBarrier(3));
          tunelesEntrar.add(new CyclicBarrier(3));
          tunelesInterior.add(new ReentrantLock());
          hayPrioridad.add(false);
       }
+      zona_riesgoHumanos.add(zona_riesgoHumano1);
+      zona_riesgoHumanos.add(zona_riesgoHumano2);
+      zona_riesgoHumanos.add(zona_riesgoHumano3);
+      zona_riesgoHumanos.add(zona_riesgoHumano4);
+
+
+
    }
 
 
@@ -78,6 +89,26 @@ public class Entorno {
 
    @FXML
    public ListView<Ser> ListaZonaComun;
+
+
+   public ObservableList<ListView<Ser>> ListaZonaRiesgo;
+
+   @FXML
+   public ListView<Ser> ListaZonaRiesgo1;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgo2;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgo3;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgo4;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgoZombie1;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgoZombie2;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgoZombie3;
+   @FXML
+   public ListView<Ser> ListaZonaRiesgoZombie4;
 
    @FXML
    public Label Comida;
@@ -107,9 +138,12 @@ public class Entorno {
 
    public synchronized void imprimir(ListView<Ser> vista, ArrayList<Ser> lista) {
       Platform.runLater(() -> {
-         vista.setItems(FXCollections.observableArrayList(lista));
+         ObservableList<Ser> observableList = FXCollections.observableArrayList(lista);
+
+         vista.setItems(observableList);
       });
    }
+
 
 
 
@@ -118,7 +152,7 @@ public class Entorno {
    @FXML
    void onPlayButtonClick(ActionEvent event) {
 
-      for(int i=0;i<4;i++){
+      for(int i=0;i<5;i++){
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
          hilos.add(humano);
          humano.start();
@@ -140,13 +174,23 @@ public class Entorno {
    @FXML
    void onReanudarButtonClick(ActionEvent event){
       isPaused = false; // Cambia el estado a reanudado
-      notifyAll();
+
 
    }
    @FXML
    public  void  initialize() {
 
       System.out.println("ListView inicializado correctamente.");
+      ListaZonaRiesgo = FXCollections.observableArrayList(
+              ListaZonaRiesgo1,
+              ListaZonaRiesgo2,
+              ListaZonaRiesgo3,
+              ListaZonaRiesgo4
+      );
+
+
+
+
    }
 
 }

@@ -32,9 +32,10 @@ public class HelloController {
             Stage stage = new Stage();
             stage.setTitle("Programa");
             stage.setScene(scene);
+            stage.setResizable(false);
 
-            stage.setHeight(525);
-            stage.setWidth(615);
+            stage.setHeight(750);
+            stage.setWidth(1400);
             stage.show();
 
         } catch (Exception e) {

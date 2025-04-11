@@ -39,30 +39,47 @@ public class Humano extends Ser {
             System.out.println("Saliendo de la zona común "+identificador);
             entorno.sacar(this,entorno.ListaZonaComun, entorno.zona_comun);
 
-//            //Seleccionar túnel
-//            Random r= new Random();
-//            int tunelSalir = r.nextInt(1,5);
-//            CyclicBarrier barreraSalida= entorno.tunelesSalir.get(tunelSalir);
-//            //METER HUMANO EN LA LISTA DE TUNELES SALIR
-//            System.out.println("Esperando en la barrera para salir");
-//            barreraSalida.await();
-//            System.out.println("saliendo");
-//            //QUITARLO
-//            Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
-//            if(!entorno.hayPrioridad.get(tunelSalir)){
-//                tunelInterior.lock();
-//                sleep(1000);
-//                //METERLO EN ZONA EXTERIOR
-//                System.out.println("En la zona exterior");
-//                sleep(3000+(int)Math.random()*2000);
-//                this.numComida+=2;
-//
-//
-//            }
+            //Seleccionar túnel
+            Random r= new Random();
+            int tunelSalir = r.nextInt(0,4);
+            //CyclicBarrier barreraSalida= entorno.tunelesSalir.get(tunelSalir);
+            //METER HUMANO EN LA LISTA DE TUNELES SALIR
+            System.out.println("Esperando en la barrera para salir");
+            sleep(2000);
+            //barreraSalida.await();
+            System.out.println("saliendo");
+            //QUITARLO
+            Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
+            if(!entorno.hayPrioridad.get(tunelSalir)){
+
+                try {
+                    tunelInterior.lock();
+
+
+                    sleep(1000);
+                    //METERLO EN ZONA EXTERIOR
+                    entorno.meter(this, entorno.ListaZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                    System.out.println("En la zona exterior");
+                    sleep(3000 + (int) Math.random() * 2000);
+                    entorno.sacar(this, entorno.ListaZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                    this.numComida+=2;
+                }catch (Exception e){}
+                finally {
+                    tunelInterior.unlock();
+                }
+
+
+
+
+
+            }
 
 
 
         }catch (Exception e){}
+        finally {
+
+        }
 
     }
 

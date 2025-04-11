@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.Entorno">
+<AnchorPane prefHeight="750.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.Entorno">
    <children>
-      <AnchorPane prefHeight="417.0" prefWidth="202.0" style="-fx-background-color: #64A002;">
+      <AnchorPane prefHeight="800.0" prefWidth="466.0" style="-fx-background-color: #64A002;">
          <children>
             <Label alignment="CENTER" layoutX="26.0" layoutY="37.0" prefHeight="28.0" prefWidth="132.0" style="-fx-background-color: #F6F2E5;" text="REFUGIO">
                <font>
@@ -41,7 +41,7 @@
             <Label fx:id="Comida" layoutX="112.0" layoutY="257.0" text="Label" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="202.0" layoutY="-1.0" prefHeight="418.0" prefWidth="196.0" style="-fx-background-color: #003300;">
+      <AnchorPane layoutX="465.0" prefHeight="762.0" prefWidth="598.0" style="-fx-background-color: #003300;">
          <children>
             <ListView layoutX="26.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
             <Label alignment="CENTER" layoutX="32.0" layoutY="36.0" prefHeight="28.0" prefWidth="132.0" style="-fx-background-color: #F6F2E5;" text="TÚNELES">
@@ -51,28 +51,36 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="398.0" layoutY="-2.0" prefHeight="418.0" prefWidth="202.0" style="-fx-background-color: #8db600;">
+      <AnchorPane layoutX="922.0" prefHeight="734.0" prefWidth="480.0" style="-fx-background-color: #8db600;">
          <children>
             <Label alignment="CENTER" layoutX="20.0" layoutY="38.0" prefHeight="28.0" prefWidth="161.0" style="-fx-background-color: #F6F2E5;" text="ZONA DE RIESGO">
                <font>
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
+            <ListView fx:id="ListaZonaRiesgo1" layoutX="39.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgoZombie1" layoutX="270.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgo2" layoutX="39.0" layoutY="207.0" prefHeight="102.0" prefWidth="170.0" />
+            <ListView fx:id="ListaZonaRiesgoZombie2" layoutX="270.0" layoutY="207.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgo3" layoutX="42.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgoZombie3" layoutX="270.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgo4" layoutX="43.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ListaZonaRiesgoZombie4" layoutX="270.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="-2.0" layoutY="418.0" prefHeight="72.0" prefWidth="600.0" style="-fx-background-color: #F6F2E5;">
+      <AnchorPane layoutY="607.0" prefHeight="194.0" prefWidth="1402.0" style="-fx-background-color: #F6F2E5;">
          <children>
-            <Button fx:id="PlayButton" layoutX="118.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPlayButtonClick" prefHeight="37.0" prefWidth="78.0" text="Play">
+            <Button fx:id="PlayButton" layoutX="420.0" layoutY="41.0" mnemonicParsing="false" onAction="#onPlayButtonClick" prefHeight="37.0" prefWidth="78.0" text="Play">
                <font>
                   <Font name="Bookman Old Style" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="PauseButton" layoutX="410.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStopButtonClick" prefHeight="37.0" prefWidth="78.0" text="Pause">
+            <Button fx:id="PauseButton" layoutX="891.0" layoutY="41.0" mnemonicParsing="false" onAction="#onStopButtonClick" prefHeight="37.0" prefWidth="78.0" text="Pause">
                <font>
                   <Font name="Bookman Old Style" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="ReanudarButton" layoutX="264.0" layoutY="16.0" mnemonicParsing="false" onAction="#onReanudarButtonClick" prefHeight="37.0" prefWidth="78.0" text="Reanudar">
+            <Button fx:id="ReanudarButton" layoutX="662.0" layoutY="41.0" mnemonicParsing="false" onAction="#onReanudarButtonClick" prefHeight="37.0" prefWidth="78.0" text="Reanudar">
                <font>
                   <Font name="Bookman Old Style" size="12.0" />
                </font>
