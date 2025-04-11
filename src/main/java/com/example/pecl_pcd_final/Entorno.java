@@ -27,7 +27,7 @@ public class Entorno {
    int numSeres;
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
    private boolean isPaused = false;
-   private ArrayList<Thread> humanos = new ArrayList<>();
+   public ArrayList<Thread> humanos = new ArrayList<>();
 
 
 

@@ -28,12 +28,13 @@ public class Zombie extends Ser {
                 if(entorno.zona_riesgoHumanos.get(numZonaRiesgoZombie).size()==1){
                     atacar((Humano) entorno.zona_riesgoHumanos.get(numZonaRiesgoZombie).get(0),numZonaRiesgoZombie);
                 }
-                else{
+                else if(entorno.zona_riesgoHumanos.get(numZonaRiesgoZombie).size()>1){
                     int humanoAtacar= (int)(Math.random()*entorno.zona_riesgoHumanos.size());
                     atacar((Humano) entorno.zona_riesgoHumanos.get(numZonaRiesgoZombie).get(humanoAtacar),numZonaRiesgoZombie);
 
                 }
                 sleep(2000+ (int) Math.random()*1000);
+                entorno.sacar(this, entorno.ZonaRiesgoZombies.get(numZonaRiesgoZombie), entorno.zona_riesgoZombie.get(numZonaRiesgoZombie));
 
             }
 
@@ -43,15 +44,17 @@ public class Zombie extends Ser {
     }
 
     public void atacar(Humano humano,int numTunel){
-        int probGanaHumano= (int)(Math.random()*2);
+        int probGanaHumano= (int)(Math.random()*3);
         if(probGanaHumano<=1){
             humano.marcado=true;
             humano.numComida=0;
-            humano.volverAtaque(numTunel);
+            humano.volver(numTunel);
         }
         else{
             Zombie zombie = new Zombie("Z"+ humano.identificador.substring(1), entorno);
             zombie.start();
+            entorno.zona_riesgoHumanos.get(numTunel).remove(humano);
+            entorno.humanos.remove(humano);
         }
         try {
             sleep(500+(int) Math.random()*1000);

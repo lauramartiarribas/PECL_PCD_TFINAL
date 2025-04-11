@@ -65,14 +65,21 @@ public class Humano extends Ser {
 
             }
 
+            volver(tunelSalir);
+
+
+
 
         }catch (Exception e){}
 
     }
 
     public void pasarTunel(Humano humano, Lock tunel, int numTunel){
+        tunel.lock();
         try {
-            tunel.lock();
+            while (entorno.hayPrioridad.get(numTunel)){
+                entorno.tunelesInteriorCondition.get(numTunel).await();
+            }
             entorno.meter(humano, entorno.TunelesIntermedio.get(numTunel),entorno.listaTunelesIntermedio.get(numTunel));
             sleep(1000);
             entorno.sacar(humano, entorno.TunelesIntermedio.get(numTunel),entorno.listaTunelesIntermedio.get(numTunel));
@@ -84,19 +91,30 @@ public class Humano extends Ser {
     }
 
 
-    public void volverAtaque(int tunelEntrar){
+    public void volver(int tunelEntrar){
         entorno.hayPrioridad.set(tunelEntrar, true);
 
         entorno.sacar(this,entorno.ZonaRiesgoHumanos.get(tunelEntrar), entorno.zona_riesgoHumanos.get(tunelEntrar));
 
 
         entorno.meter(this, entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
-        System.out.println(identificador+ " Esperando en para entrar después de un ataque");
+        System.out.println(identificador+ " Esperando para entrar a la zona segura");
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         entorno.sacar(this,entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
 
-        Lock tunelExterior=entorno.tunelesInteriorLock.get(tunelEntrar);
-        pasarTunel(this, tunelExterior, tunelEntrar );
+
+        entorno.meter(this, entorno.TunelesIntermedio.get(tunelEntrar),entorno.listaTunelesIntermedio.get(tunelEntrar));
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        entorno.sacar(this, entorno.TunelesIntermedio.get(tunelEntrar),entorno.listaTunelesIntermedio.get(tunelEntrar));
 
 
         System.out.println(identificador+ " Saliendo");
