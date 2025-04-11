@@ -58,10 +58,10 @@ public class Humano extends Ser {
 
                     sleep(1000);
                     //METERLO EN ZONA EXTERIOR
-                    entorno.meter(this, entorno.ListaZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                    entorno.meter(this, entorno.ZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
                     System.out.println("En la zona exterior");
                     sleep(3000 + (int) Math.random() * 2000);
-                    entorno.sacar(this, entorno.ListaZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                    entorno.sacar(this, entorno.ZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
                     this.numComida+=2;
                 }catch (Exception e){}
                 finally {

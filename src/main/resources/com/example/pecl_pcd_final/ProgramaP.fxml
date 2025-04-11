@@ -43,12 +43,15 @@
       </AnchorPane>
       <AnchorPane layoutX="465.0" prefHeight="762.0" prefWidth="598.0" style="-fx-background-color: #003300;">
          <children>
-            <ListView layoutX="26.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView fx:id="ListaTunelEntrar1" layoutX="26.0" layoutY="80.0" prefHeight="72.0" prefWidth="142.0" />
             <Label alignment="CENTER" layoutX="32.0" layoutY="36.0" prefHeight="28.0" prefWidth="132.0" style="-fx-background-color: #F6F2E5;" text="TÚNELES">
                <font>
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
+            <ListView layoutX="27.0" layoutY="193.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView layoutX="27.0" layoutY="332.0" prefHeight="72.0" prefWidth="142.0" />
+            <ListView layoutX="26.0" layoutY="459.0" prefHeight="72.0" prefWidth="142.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="922.0" prefHeight="734.0" prefWidth="480.0" style="-fx-background-color: #8db600;">
