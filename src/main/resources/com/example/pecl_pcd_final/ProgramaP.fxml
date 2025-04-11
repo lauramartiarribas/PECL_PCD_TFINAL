@@ -69,13 +69,13 @@
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
-            <ListView fx:id="ZonaRiesgo1" layoutX="39.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoHumano1" layoutX="39.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
             <ListView fx:id="ZonaRiesgoZombie1" layoutX="270.0" layoutY="82.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ZonaRiesgo2" layoutX="39.0" layoutY="207.0" prefHeight="102.0" prefWidth="170.0" />
+            <ListView fx:id="ZonaRiesgoHumano2" layoutX="39.0" layoutY="207.0" prefHeight="102.0" prefWidth="170.0" />
             <ListView fx:id="ZonaRiesgoZombie2" layoutX="270.0" layoutY="207.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ZonaRiesgo3" layoutX="42.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoHumano3" layoutX="42.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
             <ListView fx:id="ZonaRiesgoZombie3" layoutX="270.0" layoutY="331.0" prefHeight="102.0" prefWidth="171.0" />
-            <ListView fx:id="ZonaRiesgo4" layoutX="43.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
+            <ListView fx:id="ZonaRiesgoHumano4" layoutX="43.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
             <ListView fx:id="ZonaRiesgoZombie4" layoutX="270.0" layoutY="468.0" prefHeight="102.0" prefWidth="171.0" />
          </children>
       </AnchorPane>

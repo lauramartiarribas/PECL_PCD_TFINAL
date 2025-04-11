@@ -11,10 +11,10 @@ import javafx.scene.control.ListView;
 
 import java.util.ArrayList;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.lang.Thread.sleep;
 
 
 public class Entorno {
@@ -22,20 +22,22 @@ public class Entorno {
    ArrayList<Ser> comedor= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
 
-   int comida;
+   int comidaTotal;
 
    int numSeres;
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
    private boolean isPaused = false;
-   private ArrayList<Thread> hilos = new ArrayList<>();
+   private ArrayList<Thread> humanos = new ArrayList<>();
 
 
 
    ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
    ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
 
-   ArrayList<Lock> tunelesInterior= new ArrayList<>();
+   ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
+   ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
    ArrayList<Boolean> hayPrioridad= new ArrayList<>();
+
 
 
 
@@ -82,9 +84,11 @@ public class Entorno {
       for(int i=0; i<4;i++){
          tunelesSalirBarreras.add(new CyclicBarrier(3));
          tunelesEntrarBarreras.add(new CyclicBarrier(3));
-         tunelesInterior.add(new ReentrantLock());
+         tunelesInteriorLock.add(new ReentrantLock());
+         tunelesInteriorCondition.add(tunelesInteriorLock.get(i).newCondition());
          hayPrioridad.add(false);
       }
+
       zona_riesgoHumanos.add(zona_riesgoHumano1);
       zona_riesgoHumanos.add(zona_riesgoHumano2);
       zona_riesgoHumanos.add(zona_riesgoHumano3);
@@ -99,7 +103,6 @@ public class Entorno {
       listaTunelesIntermedio.add(tunelIntermedio2);
       listaTunelesIntermedio.add(tunelIntermedio3);
       listaTunelesIntermedio.add(tunelIntermedio4);
-
 
       listaTunelesEntrar.add(tunelEntrar1);
       listaTunelesEntrar.add(tunelEntrar2);
@@ -176,16 +179,20 @@ public class Entorno {
 
 
    ///////////////// ZONA DE RIESGO ///////////////////////////
-   public ObservableList<ListView<Ser>> ZonaRiesgo;
+   public ObservableList<ListView<Ser>> ZonaRiesgoHumanos;
 
    @FXML
-   public ListView<Ser> ZonaRiesgo1;
+   public ListView<Ser> ZonaRiesgoHumano1;
    @FXML
-   public ListView<Ser> ZonaRiesgo2;
+   public ListView<Ser> ZonaRiesgoHumano2;
    @FXML
-   public ListView<Ser> ZonaRiesgo3;
+   public ListView<Ser> ZonaRiesgoHumano3;
    @FXML
-   public ListView<Ser> ZonaRiesgo4;
+   public ListView<Ser> ZonaRiesgoHumano4;
+
+
+   public ObservableList<ListView<Ser>> ZonaRiesgoZombies;
+
    @FXML
    public ListView<Ser> ZonaRiesgoZombie1;
    @FXML
@@ -204,7 +211,7 @@ public class Entorno {
 
 
 
-   public synchronized void meter(Humano t,ListView vista, ArrayList<Ser> lista) {
+   public synchronized void meter(Ser t,ListView vista, ArrayList<Ser> lista) {
       lista.add(t);
       Platform.runLater(() -> {
          imprimir(vista, lista); // Esto actualizará la ListView
@@ -241,9 +248,12 @@ public class Entorno {
          //COMPROBAR QUE SE DUERMEN 0,5/2 SEGUNDOS
 
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
-         hilos.add(humano);
+         humanos.add(humano);
          humano.start();
       }
+
+      Zombie zombie= new Zombie("Z0000", this);
+      zombie.start();
 
 //      while(true){
 //
@@ -260,7 +270,7 @@ public class Entorno {
    @FXML
    void onStopButtonClick(ActionEvent event) {
       isPaused = true; // Cambia el estado a pausa
-      for (Thread thread : hilos) {
+      for (Thread thread : humanos) {
          thread.interrupt(); // Interrumpe los hilos activos, esto lo pausará temporalmente
       }
 
@@ -276,11 +286,11 @@ public class Entorno {
    public  void  initialize() {
 
       System.out.println("ListView inicializado correctamente.");
-      ZonaRiesgo = FXCollections.observableArrayList(
-              ZonaRiesgo1,
-              ZonaRiesgo2,
-              ZonaRiesgo3,
-              ZonaRiesgo4
+      ZonaRiesgoHumanos = FXCollections.observableArrayList(
+              ZonaRiesgoHumano1,
+              ZonaRiesgoHumano2,
+              ZonaRiesgoHumano3,
+              ZonaRiesgoHumano4
       );
       TunelesSalida = FXCollections.observableArrayList(
               TunelSalir1,
@@ -304,6 +314,12 @@ public class Entorno {
               TunelIntermedio4
       );
 
+      ZonaRiesgoZombies = FXCollections.observableArrayList(
+              ZonaRiesgoZombie1,
+              ZonaRiesgoZombie2,
+              ZonaRiesgoZombie3,
+              ZonaRiesgoZombie4
+      );
 
 
    }

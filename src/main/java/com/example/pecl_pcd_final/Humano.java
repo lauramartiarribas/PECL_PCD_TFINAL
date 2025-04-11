@@ -9,11 +9,9 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
 
 public class Humano extends Ser {
+
     int numComida;
     boolean marcado;
-
-
-
 
 
 
@@ -23,16 +21,14 @@ public class Humano extends Ser {
         numComida=0;
         marcado=false;
     }
-    @Override
-    public String toString() {
-        return identificador;
-    }
+
 
     @Override
     public void run(){
-        //Zona común tiempo entre 1 y 2
+
         try {
             System.out.println("Empezando"+identificador);
+            //Zona común tiempo entre 1 y 2
             System.out.println("En la zona común "+identificador);
             entorno.meter(this,entorno.ListaZonaComun,entorno.zona_comun);
             sleep(1000 + (int) (Math.random() * 1000));
@@ -46,88 +42,66 @@ public class Humano extends Ser {
             entorno.sacar(this,entorno.ListaZonaComun, entorno.zona_comun);
 
             CyclicBarrier barreraSalida= entorno.tunelesSalirBarreras.get(tunelSalir);
-            //METER HUMANO EN LA LISTA DE TUNELES SALIR
             entorno.meter(this, entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
-            System.out.println("Esperando en la barrera para salir");
+            System.out.println(identificador+ " Esperando en la barrera para salir");
             //sleep(2000);
             barreraSalida.await();
 
             entorno.sacar(this,entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
 
-            System.out.println("saliendo");
-            //QUITARLO
-            Lock tunelInterior=entorno.tunelesInterior.get(tunelSalir);
+            System.out.println(identificador+ " Saliendo");
+
+            Lock tunelInterior=entorno.tunelesInteriorLock.get(tunelSalir);
+
             if(!entorno.hayPrioridad.get(tunelSalir)){
 
-                try {
-                    tunelInterior.lock();
-                    entorno.meter(this, entorno.TunelesIntermedio.get(tunelSalir),entorno.listaTunelesIntermedio.get(tunelSalir));
-                    sleep(1000);
-                    entorno.sacar(this, entorno.TunelesIntermedio.get(tunelSalir),entorno.listaTunelesIntermedio.get(tunelSalir));
+                pasarTunel( this, tunelInterior, tunelSalir);
 
-                    //METERLO EN ZONA EXTERIOR
-                    entorno.meter(this, entorno.ZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
-                    System.out.println("En la zona exterior");
-                    sleep(3000 + (int) Math.random() * 2000);
-                    entorno.sacar(this, entorno.ZonaRiesgo.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
-                    this.numComida+=2;
-                }catch (Exception e){}
-                finally {
-                    tunelInterior.unlock();
-                }
-
-
-
-
+                entorno.meter(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                System.out.println(identificador +" En la zona exterior");
+                sleep(3000 + (int) Math.random() * 2000);
+                this.numComida+=2;
+                entorno.sacar(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
 
             }
 
 
-
         }catch (Exception e){}
-        finally {
-
-        }
 
     }
 
+    public void pasarTunel(Humano humano, Lock tunel, int numTunel){
+        try {
+            tunel.lock();
+            entorno.meter(humano, entorno.TunelesIntermedio.get(numTunel),entorno.listaTunelesIntermedio.get(numTunel));
+            sleep(1000);
+            entorno.sacar(humano, entorno.TunelesIntermedio.get(numTunel),entorno.listaTunelesIntermedio.get(numTunel));
+
+        }catch (Exception e){}
+        finally {
+            tunel.unlock();
+        }
+    }
 
 
+    public void volverAtaque(int tunelEntrar){
+        entorno.hayPrioridad.set(tunelEntrar, true);
+
+        entorno.sacar(this,entorno.ZonaRiesgoHumanos.get(tunelEntrar), entorno.zona_riesgoHumanos.get(tunelEntrar));
 
 
+        entorno.meter(this, entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
+        System.out.println(identificador+ " Esperando en para entrar después de un ataque");
+
+        entorno.sacar(this,entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
+
+        Lock tunelExterior=entorno.tunelesInteriorLock.get(tunelEntrar);
+        pasarTunel(this, tunelExterior, tunelEntrar );
 
 
+        System.out.println(identificador+ " Saliendo");
+        entorno.hayPrioridad.set(tunelEntrar, false);
+    }
 
-
-//    @FXML
-//    private ListView<String> listView;
-//
-//    @FXML
-//    private TextField inputField;
-//
-//    private ObservableList<String> datos;
-//
-//    @FXML
-//    public void initialize() {
-//        datos = FXCollections.observableArrayList();
-//        listView.setItems(datos);
-//    }
-//
-//    @FXML
-//    private void agregarElemento() {
-//        String texto = inputField.getText();
-//        if (!texto.isEmpty()) {
-//            datos.add(texto);
-//            inputField.clear();
-//        }
-//    }
-//
-//    @FXML
-//    private void eliminarElemento() {
-//        String seleccionado = listView.getSelectionModel().getSelectedItem();
-//        if (seleccionado != null) {
-//            datos.remove(seleccionado);
-//        }
-//    }
 
 }
