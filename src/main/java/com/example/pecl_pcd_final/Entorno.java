@@ -14,10 +14,19 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.*;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+
+import java.util.logging.SimpleFormatter;
 
 
 
 public class Entorno {
+
+   ///El logger///
+
    ArrayList<Ser> descanso= new ArrayList<>();
    ArrayList<Ser> comedor= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
@@ -79,7 +88,7 @@ public class Entorno {
 
 
 
-   public Entorno(){
+   public Entorno() throws IOException {
       numSeres=0;
       for(int i=0; i<4;i++){
          tunelesSalirBarreras.add(new CyclicBarrier(3));
@@ -230,7 +239,7 @@ public class Entorno {
 
    public synchronized void imprimir(ListView<Ser> vista, ArrayList<Ser> lista) {
       Platform.runLater(() -> {
-         ObservableList<Ser> observableList = FXCollections.observableArrayList(lista);
+         ObservableList<Ser> observableList = FXCollections.observableArrayList(new ArrayList<>(lista));
 
          vista.setItems(observableList);
       });

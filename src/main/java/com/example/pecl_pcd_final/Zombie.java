@@ -3,7 +3,11 @@ package com.example.pecl_pcd_final;
 import com.example.pecl_pcd_final.Entorno;
 import com.example.pecl_pcd_final.Ser;
 
+import java.util.logging.Logger;
+
 public class Zombie extends Ser {
+
+    Logger logger= LoggerConFichero.getLogger();
 
     public Zombie (String id, Entorno entorno){
         this.identificador=id;
@@ -15,11 +19,11 @@ public class Zombie extends Ser {
     @Override
     public void run(){
         try {
-            System.out.println("Empezando zombie" + identificador);
+            logger.info("Empezando zombie" + identificador);
 
             while (true){
                 //Elige zona
-                System.out.println("En la zona de riesgo de zombie " + identificador);
+                logger.info("En la zona de riesgo de zombie " + identificador);
                 int numZonaRiesgoZombie= (int)(Math.random()*3);
                 entorno.meter(this, entorno.ZonaRiesgoZombies.get(numZonaRiesgoZombie), entorno.zona_riesgoZombie.get(numZonaRiesgoZombie));
 
@@ -46,11 +50,13 @@ public class Zombie extends Ser {
     public void atacar(Humano humano,int numTunel){
         int probGanaHumano= (int)(Math.random()*3);
         if(probGanaHumano<=1){
+            logger.info("El humano "+humano.identificador+ " ha salido victorioso y queda marcado");
             humano.marcado=true;
             humano.numComida=0;
-            humano.volver(numTunel);
+            humano.volver(numTunel,entorno.tunelesInteriorLock.get(numTunel));
         }
         else{
+            logger.info("Convirtiendo humano "+humano.identificador+ " a zombie" );
             Zombie zombie = new Zombie("Z"+ humano.identificador.substring(1), entorno);
             zombie.start();
             entorno.zona_riesgoHumanos.get(numTunel).remove(humano);
