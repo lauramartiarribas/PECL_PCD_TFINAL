@@ -84,8 +84,6 @@ public class Humano extends Ser {
         try {
             entorno.hayPrioridad.set(tunelEntrar, true);
 
-            entorno.sacar(this, entorno.ZonaRiesgoHumanos.get(tunelEntrar), entorno.zona_riesgoHumanos.get(tunelEntrar));
-
             entorno.meter(this, entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
             logger.info("Esperando para entrar a la zona segura " + identificador);
             sleep(1000);
