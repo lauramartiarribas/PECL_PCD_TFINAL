@@ -25,6 +25,7 @@ public class Humano extends Ser {
     @Override
     public void run() {
         try {
+            //while(true) EL PROCESO SE REPITE SIEMPRE
             logger.info("Empezando " + identificador);
             // Zona común tiempo entre 1 y 2
             logger.info("En la zona común " + identificador);
@@ -46,6 +47,8 @@ public class Humano extends Ser {
             entorno.sacar(this, entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
 
             Lock tunelInterior = entorno.tunelesInteriorLock.get(tunelSalir);
+
+            //Salimos del tunel
             salir(this, tunelInterior, tunelSalir);
 
             entorno.meter(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
@@ -54,7 +57,20 @@ public class Humano extends Ser {
             this.numComida += 2;
             entorno.sacar(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
 
+            //Volvemos al refugio
             volver(tunelSalir, tunelInterior);
+
+            //SE TIENE QUE MOSTRAR LA COMIDA!!!!!!!
+            entorno.comidaTotal+=this.numComida;
+
+            ///En la zona de descanso
+            entorno.meter(this,entorno.ListaDescanso,entorno.descanso);
+            sleep(2000+(int)Math.random()*2000);
+            entorno.sacar(this,entorno.ListaDescanso,entorno.descanso);
+
+            //Zona de espera en el comedor
+            entorno.meter(this,entorno.ListaComedorEspera,entorno.comedor_espera);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

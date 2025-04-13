@@ -38,14 +38,14 @@
                   <Font name="Bookman Old Style" size="12.0" />
                </font>
             </Label>
-            <ListView fx:id="ListaComedor" layoutX="31.0" layoutY="278.0" prefHeight="120.0" prefWidth="171.0" />
+            <ListView fx:id="ListaComedorEspera" layoutX="31.0" layoutY="278.0" prefHeight="120.0" prefWidth="171.0" />
             <ListView fx:id="ListaZonaComun" layoutX="31.0" layoutY="456.0" prefHeight="120.0" prefWidth="372.0">
                <items>
                   <FXCollections fx:factory="observableArrayList" />
                </items>
             </ListView>
-            <Label fx:id="Comida" layoutX="348.0" layoutY="382.0" prefHeight="22.0" prefWidth="42.0" text="Label" />
-            <ListView fx:id="ListaComedor1" layoutX="231.0" layoutY="278.0" prefHeight="120.0" prefWidth="171.0" />
+            <Label fx:id="Comida" layoutX="330.0" layoutY="362.0" prefHeight="28.0" prefWidth="63.0" text="Label" />
+            <ListView fx:id="ListaComedorComiendo" layoutX="231.0" layoutY="278.0" prefHeight="120.0" prefWidth="171.0" />
             <Label alignment="CENTER" layoutX="31.0" layoutY="250.0" prefHeight="22.0" prefWidth="91.0" style="-fx-background-color: #F6F2E5;" text="ESPERANDO">
                <font>
                   <Font name="Bookman Old Style" size="12.0" />
@@ -61,6 +61,11 @@
                   <FXCollections fx:factory="observableArrayList" />
                </items>
             </ListView>
+            <Label alignment="CENTER" layoutX="330.0" layoutY="338.0" prefHeight="22.0" prefWidth="63.0" style="-fx-background-color: #F6F2E5;" text="COMIDA">
+               <font>
+                  <Font name="Bookman Old Style" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="465.0" prefHeight="762.0" prefWidth="598.0" style="-fx-background-color: #003300;">

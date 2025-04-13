@@ -28,7 +28,8 @@ public class Entorno {
    ///El logger///
 
    ArrayList<Ser> descanso= new ArrayList<>();
-   ArrayList<Ser> comedor= new ArrayList<>();
+   ArrayList<Ser> comedor_espera= new ArrayList<>();
+   ArrayList<Ser> comedor_comiendo= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
 
    int comidaTotal;
@@ -139,9 +140,9 @@ public class Entorno {
    public ListView ListaDescanso;
 
    @FXML
-   public ListView ListaComedor;
-
-
+   public ListView ListaComedorEspera;
+   @FXML
+   public ListView ListaComedorComiendo;
    @FXML
    public ListView<Ser> ListaZonaComun;
 
