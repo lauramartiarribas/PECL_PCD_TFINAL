@@ -60,8 +60,9 @@ public class Humano extends Ser {
             //Volvemos al refugio
             volver(tunelSalir, tunelInterior);
 
-            //SE TIENE QUE MOSTRAR LA COMIDA!!!!!!!
-            entorno.comidaTotal+=this.numComida;
+            //Sumamos la comida recolectada y actualizamos el label
+            entorno.comidaTotal.add(this.numComida);
+            entorno.actualizarLabelComida();
 
             ///En la zona de descanso
             entorno.meter(this,entorno.ListaDescanso,entorno.descanso);
@@ -70,6 +71,8 @@ public class Humano extends Ser {
 
             //Zona de espera en el comedor
             entorno.meter(this,entorno.ListaComedorEspera,entorno.comedor_espera);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,6 +118,12 @@ public class Humano extends Ser {
             e.printStackTrace();
         } finally {
             tunelInteriorLock.unlock();
+        }
+    }
+
+    public void comer(){
+        while(entorno.comidaTotal.size()==0){
+            //Tiene que esperar a que haya comida
         }
     }
 }

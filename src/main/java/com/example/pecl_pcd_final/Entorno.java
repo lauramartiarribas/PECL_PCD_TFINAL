@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -32,7 +33,7 @@ public class Entorno {
    ArrayList<Ser> comedor_comiendo= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
 
-   int comidaTotal;
+   PriorityQueue<Integer> comidaTotal= new PriorityQueue<>();
 
    int numSeres;
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
@@ -47,7 +48,6 @@ public class Entorno {
    ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
    ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
    ArrayList<Boolean> hayPrioridad= new ArrayList<>();
-
 
 
 
@@ -123,6 +123,8 @@ public class Entorno {
       zona_riesgoZombie.add(zona_riesgoZombie2);
       zona_riesgoZombie.add(zona_riesgoZombie3);
       zona_riesgoZombie.add(zona_riesgoZombie4);
+
+
 
 
    }
@@ -246,6 +248,20 @@ public class Entorno {
       });
    }
 
+   public int sumaComidaLista(){
+      int suma = 0;
+      for (Integer j : comidaTotal) {
+         suma += j;
+      }
+      return suma;
+   }
+
+   public void actualizarLabelComida(){
+      Platform.runLater(() -> {
+         Comida.setText(String.valueOf(sumaComidaLista()));
+      });
+   }
+
 
 
 
@@ -254,13 +270,18 @@ public class Entorno {
    @FXML
    void onPlayButtonClick(ActionEvent event) {
 
+
       for(int i=0;i<10;i++){
          //COMPROBAR QUE SE DUERMEN 0,5/2 SEGUNDOS
 
          Humano humano= new Humano("H"+ String.format("%04d", i),this);
          humanos.add(humano);
          humano.start();
+
       }
+
+
+
 
       Zombie zombie= new Zombie("Z0000", this);
       zombie.start();
@@ -284,6 +305,7 @@ public class Entorno {
          thread.interrupt(); // Interrumpe los hilos activos, esto lo pausará temporalmente
       }
 
+
    }
 
    @FXML
@@ -295,6 +317,7 @@ public class Entorno {
    @FXML
    public  void  initialize() {
 
+      Comida.setText(String.valueOf(0));
       System.out.println("ListView inicializado correctamente.");
       ZonaRiesgoHumanos = FXCollections.observableArrayList(
               ZonaRiesgoHumano1,
