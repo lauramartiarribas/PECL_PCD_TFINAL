@@ -1,8 +1,5 @@
 package com.example.pecl_pcd_final;
 
-import com.example.pecl_pcd_final.Entorno;
-import com.example.pecl_pcd_final.Ser;
-
 import java.util.logging.Logger;
 
 public class Zombie extends Ser {
@@ -22,6 +19,7 @@ public class Zombie extends Ser {
             logger.info("Empezando zombie" + identificador);
 
             while (true){
+                entorno.comprobarPausa();
                 //Elige zona
                 logger.info("En la zona de riesgo de zombie " + identificador);
                 int numZonaRiesgoZombie= (int)(Math.random()*3);
@@ -37,7 +35,9 @@ public class Zombie extends Ser {
                     atacar((Humano) entorno.zona_riesgoHumanos.get(numZonaRiesgoZombie).get(humanoAtacar),numZonaRiesgoZombie);
 
                 }
+                entorno.comprobarPausa();
                 sleep(2000+ (int) Math.random()*1000);
+                entorno.comprobarPausa();
                 entorno.sacar(this, entorno.ZonaRiesgoZombies.get(numZonaRiesgoZombie), entorno.zona_riesgoZombie.get(numZonaRiesgoZombie));
 
             }
@@ -63,7 +63,9 @@ public class Zombie extends Ser {
             entorno.humanos.remove(humano);
         }
         try {
+            entorno.comprobarPausa();
             sleep(500+(int) Math.random()*1000);
+            entorno.comprobarPausa();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

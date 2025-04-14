@@ -1,5 +1,6 @@
 package com.example.pecl_pcd_final;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,10 @@ public class HelloController {
             stage.setHeight(750);
             stage.setWidth(1400);
             stage.show();
+            stage.setOnCloseRequest(evento ->{
+                Platform.exit();
+                System.exit(0);
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

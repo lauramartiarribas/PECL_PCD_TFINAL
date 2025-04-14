@@ -10,34 +10,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.*;
 import java.io.IOException;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
-import java.util.logging.SimpleFormatter;
-
 
 
 public class Entorno {
 
    ///El logger///
 
+   Logger logger = LoggerConFichero.getLogger();
    ArrayList<Ser> descanso= new ArrayList<>();
    ArrayList<Ser> comedor_espera= new ArrayList<>();
    ArrayList<Ser> comedor_comiendo= new ArrayList<>();
    ArrayList<Ser> zona_comun= new ArrayList<>();
 
-   PriorityQueue<Integer> comidaTotal= new PriorityQueue<>();
+   Lock lockComida= new ReentrantLock();
+
+   ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
 
    int numSeres;
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
-   private boolean isPaused = false;
+   private boolean enPausa = false;
    public ArrayList<Thread> humanos = new ArrayList<>();
 
 
@@ -222,7 +220,7 @@ public class Entorno {
 
 
 
-
+   //Para sacar los hilos por pantalla
    public synchronized void meter(Ser t,ListView vista, ArrayList<Ser> lista) {
       lista.add(t);
       Platform.runLater(() -> {
@@ -265,60 +263,83 @@ public class Entorno {
 
 
 
-
+   //Botones
 
    @FXML
    void onPlayButtonClick(ActionEvent event) {
 
-
-      for(int i=0;i<10;i++){
-         //COMPROBAR QUE SE DUERMEN 0,5/2 SEGUNDOS
-
-         Humano humano= new Humano("H"+ String.format("%04d", i),this);
-         humanos.add(humano);
-         humano.start();
-
-      }
-
-
-
-
+      PlayButton.setDisable(true);
+      PauseButton.setDisable(false);
+      enPausa=false;
+      nacerHumanos();
+      //Creamos el zombie
       Zombie zombie= new Zombie("Z0000", this);
       zombie.start();
 
-//      while(true){
-//
-//         Humano humano= new Humano("H"+ String.format("%04d", numSeres),this);
-//         hilos.add(humano);
-//         humano.start();
-//         numSeres++;
-//      }
+   }
+   public synchronized void pausar(){
+      enPausa=true;
+
+   }
+
+   public synchronized void comprobarPausa() throws InterruptedException{
+      while(enPausa){
+         wait();
+      }
+   }
+
+   public synchronized void reanudar(){
+      enPausa = false; // Cambia el estado a reanudado
+      notifyAll();
+
+   }
+
+   public void nacerHumanos(){
+      new Thread(() ->{
+         while (true){
+
+            Humano humano= new Humano("H"+ String.format("%04d",numSeres),this);
+            numSeres++;
 
 
+
+            humanos.add(humano);
+            humano.start();
+            try {
+               this.comprobarPausa();
+               humano.sleep(500+(int)Math.random()*1500);
+               this.comprobarPausa();
+            } catch (InterruptedException e) {
+               throw new RuntimeException(e);
+            }
+
+         }
+      }).start();
 
 
    }
    @FXML
-   void onStopButtonClick(ActionEvent event) {
-      isPaused = true; // Cambia el estado a pausa
-      for (Thread thread : humanos) {
-         thread.interrupt(); // Interrumpe los hilos activos, esto lo pausará temporalmente
-      }
+   void onStopButtonClick(ActionEvent event) throws InterruptedException {
+      pausar();
+      PauseButton.setDisable(true);
+      ReanudarButton.setDisable(false);
 
 
    }
 
    @FXML
    void onReanudarButtonClick(ActionEvent event){
-      isPaused = false; // Cambia el estado a reanudado
-
-
+      reanudar();
+      PauseButton.setDisable(false);
+      ReanudarButton.setDisable(true);
    }
+
    @FXML
    public  void  initialize() {
-
+      PauseButton.setDisable(true);
+      ReanudarButton.setDisable(true);
       Comida.setText(String.valueOf(0));
-      System.out.println("ListView inicializado correctamente.");
+      logger.info("Inicializado correctamente.");
       ZonaRiesgoHumanos = FXCollections.observableArrayList(
               ZonaRiesgoHumano1,
               ZonaRiesgoHumano2,
@@ -356,5 +377,6 @@ public class Entorno {
 
 
    }
+
 
 }
