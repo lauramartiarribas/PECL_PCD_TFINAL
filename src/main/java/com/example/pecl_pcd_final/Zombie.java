@@ -22,7 +22,7 @@ public class Zombie extends Ser {
                 entorno.comprobarPausa();
                 //Elige zona
                 logger.info("En la zona de riesgo de zombie " + identificador);
-                int numZonaRiesgoZombie= (int)(Math.random()*3);
+                int numZonaRiesgoZombie= (int)(Math.random()*4);
                 entorno.meter(this, entorno.ZonaRiesgoZombies.get(numZonaRiesgoZombie), entorno.zona_riesgoZombie.get(numZonaRiesgoZombie));
 
                 //Busca humano para atacar
