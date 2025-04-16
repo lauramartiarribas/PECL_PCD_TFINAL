@@ -5,9 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -88,7 +86,7 @@ public class Entorno {
 
 
    public Entorno() throws IOException {
-      numSeres=0;
+      numSeres=1;
       for(int i=0; i<4;i++){
          tunelesSalirBarreras.add(new CyclicBarrier(3));
          tunelesEntrarBarreras.add(new CyclicBarrier(3));
@@ -123,8 +121,6 @@ public class Entorno {
       zona_riesgoZombie.add(zona_riesgoZombie4);
 
 
-
-
    }
 
 
@@ -132,17 +128,21 @@ public class Entorno {
    public Button PlayButton;
    @FXML
    public Button PauseButton;
-
    @FXML
    public Button ReanudarButton;
+
+   @FXML
+   public Button BotonInformacion;
 
    @FXML
    public ListView ListaDescanso;
 
    @FXML
    public ListView ListaComedorEspera;
+
    @FXML
    public ListView ListaComedorComiendo;
+
    @FXML
    public ListView<Ser> ListaZonaComun;
 
@@ -224,16 +224,14 @@ public class Entorno {
    public synchronized void meter(Ser t,ListView vista, ArrayList<Ser> lista) {
       lista.add(t);
       Platform.runLater(() -> {
-         imprimir(vista, lista); // Esto actualizará la ListView
+         imprimir(vista, lista);
       });
    }
 
-   public synchronized void sacar(Ser t,ListView vista,ArrayList<Ser> lista)
-   {
+   public synchronized void sacar(Ser t,ListView vista,ArrayList<Ser> lista) {
       lista.remove(t);
-      // Nos aseguramos de que imprimir se ejecuta en el hilo de la interfaz gráfica (el hilo principal de la aplicación de JavaFX
       Platform.runLater(() -> {
-         imprimir(vista, lista); // Esto actualizará la ListView
+         imprimir(vista, lista);
       });
 
    }
@@ -267,20 +265,36 @@ public class Entorno {
 
    @FXML
    void onPlayButtonClick(ActionEvent event) {
-
       PlayButton.setDisable(true);
       PauseButton.setDisable(false);
       enPausa=false;
-      nacerHumanos();
-      //Creamos el zombie
 
+      nacerHumanos();
+
+      //Creamos el zombie
       Zombie zombie= new Zombie("Z0000", this);
       zombie.start();
 
    }
+
+   @FXML
+   void onStopButtonClick(ActionEvent event) throws InterruptedException {
+      pausar();
+      PauseButton.setDisable(true);
+      ReanudarButton.setDisable(false);
+
+
+   }
+
+   @FXML
+   void onReanudarButtonClick(ActionEvent event){
+      reanudar();
+      PauseButton.setDisable(false);
+      ReanudarButton.setDisable(true);
+   }
+
    public synchronized void pausar(){
       enPausa=true;
-
    }
 
    public synchronized void comprobarPausa() throws InterruptedException{
@@ -292,7 +306,6 @@ public class Entorno {
    public synchronized void reanudar(){
       enPausa = false; // Cambia el estado a reanudado
       notifyAll();
-
    }
 
    public void nacerHumanos(){
@@ -319,21 +332,36 @@ public class Entorno {
 
 
    }
-   @FXML
-   void onStopButtonClick(ActionEvent event) throws InterruptedException {
-      pausar();
-      PauseButton.setDisable(true);
-      ReanudarButton.setDisable(false);
 
 
-   }
 
    @FXML
-   void onReanudarButtonClick(ActionEvent event){
-      reanudar();
-      PauseButton.setDisable(false);
-      ReanudarButton.setDisable(true);
+   void onInformacionButtonClick(){
+      try {
+         Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+         infoAlert.setTitle("Información del Juego");
+         infoAlert.setHeaderText("Estás jugando a: Apocalipsis Zombie");
+         TextArea textArea = new TextArea(
+                 "Es el año 2025 y se ha desencadenado un apocalipsis zombie.\n\n" +
+                         "Sólo se tiene un refugio seguro para los humanos, pero deben cruzar a la zona de riesgo por los túneles para recoger comida.\n\n" +
+                         "¡Cuidado con los zombies, podrán atacar e incliso convertir a los humanos!"
+         );
+         textArea.setWrapText(true); // Para que el texto se ajuste
+         textArea.setEditable(false); // Para que no se pueda editar
+         textArea.setStyle("-fx-font-family: 'Bookman Old Style'");
+
+         // Ajustar el tamaño del área
+         textArea.setMaxWidth(Double.MAX_VALUE);
+         textArea.setMaxHeight(Double.MAX_VALUE);
+
+         infoAlert.getDialogPane().setContent(textArea);infoAlert.showAndWait();
+
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
    }
+
+
 
    @FXML
    public  void  initialize() {
