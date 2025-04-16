@@ -1,17 +1,10 @@
 package com.example.pecl_pcd_final;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class LoggerConFichero {
 

@@ -6,15 +6,15 @@ import java.util.logging.Logger;
 
 public class Humano extends Ser {
 
-    Logger logger = LoggerConFichero.getLogger();
-    int numComida;
-    boolean marcado;
+    private Logger logger = LoggerConFichero.getLogger();
+    private int numComida;
+    private boolean marcado;
 
 
 
     public Humano(String id, Entorno entorno) {
-        this.identificador = id;
-        this.entorno = entorno;
+        this.setIdentificador(id);
+        this.setEntorno(entorno);
         numComida = 0;
         marcado = false;
     }
@@ -24,77 +24,77 @@ public class Humano extends Ser {
         try {
 
             while(true) {
-                entorno.comprobarPausa();
-                logger.info("Empezando " + identificador);
+                getEntorno().comprobarPausa();
+                logger.info("Empezando " + getIdentificador());
                 // Zona común tiempo entre 1 y 2
-                logger.info("En la zona común " + identificador);
-                entorno.meter(this, entorno.ListaZonaComun, entorno.zona_comun);
-                entorno.comprobarPausa();
+                logger.info("En la zona común " + getIdentificador());
+                getEntorno().meter(this, getEntorno().ListaZonaComun, getEntorno().getZona_comun());
+                getEntorno().comprobarPausa();
                 sleep(1000 + (int) (Math.random() * 1000));
-                entorno.comprobarPausa();
-                logger.info("Saliendo de la zona común " + identificador);
+                getEntorno().comprobarPausa();
+                logger.info("Saliendo de la zona común " + getIdentificador());
 
                 // Seleccionar túnel
                 Random r = new Random();
                 int tunelSalir = r.nextInt(0, 4);
 
-                entorno.sacar(this, entorno.ListaZonaComun, entorno.zona_comun);
+                getEntorno().sacar(this, getEntorno().ListaZonaComun, getEntorno().getZona_comun());
 
-                entorno.meter(this, entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
-                entorno.comprobarPausa();
+                getEntorno().meter(this, getEntorno().TunelesSalida.get(tunelSalir), getEntorno().getListaTunelesSalir().get(tunelSalir));
+                getEntorno().comprobarPausa();
                 sleep(1000);
-                entorno.comprobarPausa();
-                logger.info(identificador + " Esperando en la barrera para salir");
-                entorno.tunelesSalirBarreras.get(tunelSalir).await();
+                getEntorno().comprobarPausa();
+                logger.info(getIdentificador() + " Esperando en la barrera para salir");
+                getEntorno().getTunelesSalirBarreras().get(tunelSalir).await();
 
-                entorno.sacar(this, entorno.TunelesSalida.get(tunelSalir), entorno.listaTunelesSalir.get(tunelSalir));
+                getEntorno().sacar(this, getEntorno().TunelesSalida.get(tunelSalir), getEntorno().getListaTunelesSalir().get(tunelSalir));
 
-                Lock tunelInterior = entorno.tunelesInteriorLock.get(tunelSalir);
+                Lock tunelInterior = getEntorno().getTunelesInteriorLock().get(tunelSalir);
 
                 //Salimos del tunel
                 salir(this, tunelInterior, tunelSalir);
 
                 this.numComida += 2;
-                entorno.meter(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                getEntorno().meter(this, getEntorno().ZonaRiesgoHumanos.get(tunelSalir), getEntorno().getZona_riesgoHumanos().get(tunelSalir));
 
-                logger.info(identificador + " En la zona exterior");
-                entorno.comprobarPausa();
+                logger.info(getIdentificador() + " En la zona exterior");
+                getEntorno().comprobarPausa();
                 sleep(3000 + (int) Math.random() * 2000);
-                entorno.comprobarPausa();
+                getEntorno().comprobarPausa();
 
 
-                entorno.sacar(this, entorno.ZonaRiesgoHumanos.get(tunelSalir), entorno.zona_riesgoHumanos.get(tunelSalir));
+                getEntorno().sacar(this, getEntorno().ZonaRiesgoHumanos.get(tunelSalir), getEntorno().getZona_riesgoHumanos().get(tunelSalir));
 
                 //Volvemos al refugio
                 volver(tunelSalir, tunelInterior);
 
                 //Sumamos la comida recolectada y actualizamos el label
                 for (int i = 0; i < this.numComida; i++) {
-                    entorno.comidaTotal.offer(1);
+                    getEntorno().getComidaTotal().offer(1);
                 }
 
-                synchronized (entorno.lockComida) {
-                    entorno.lockComida.notify(); // Solo notificamos a un hilo
+                synchronized (getEntorno().getLockComida()) {
+                    getEntorno().getLockComida().notify(); // Solo notificamos a un hilo
                 }
-                entorno.actualizarLabelComida();
+                getEntorno().actualizarLabelComida();
 
                 ///En la zona de descanso
-                entorno.meter(this, entorno.ListaDescanso, entorno.descanso);
-                entorno.comprobarPausa();
+                getEntorno().meter(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
+                getEntorno().comprobarPausa();
                 sleep(2000 + (int) Math.random() * 2000);
-                entorno.comprobarPausa();
-                entorno.sacar(this, entorno.ListaDescanso, entorno.descanso);
+                getEntorno().comprobarPausa();
+                getEntorno().sacar(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
 
                 //Zona de espera en el comedor
                 comer();
 
                 //Zona de descanso si ha sido marcado
                 if (this.marcado) {
-                    entorno.meter(this, entorno.ListaDescanso, entorno.descanso);
-                    entorno.comprobarPausa();
+                    getEntorno().meter(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
+                    getEntorno().comprobarPausa();
                     sleep(3000 + (int) Math.random() * 2000);
-                    entorno.comprobarPausa();
-                    entorno.sacar(this, entorno.ListaDescanso, entorno.descanso);
+                    getEntorno().comprobarPausa();
+                    getEntorno().sacar(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
                 }
 
                 //Todos vuelven a la zona común
@@ -110,17 +110,17 @@ public class Humano extends Ser {
     public void salir(Humano humano, Lock tunel, int numTunel) {
         tunel.lock();
         try {
-            while (entorno.hayPrioridad.get(numTunel)) {
-                entorno.tunelesInteriorCondition.get(numTunel).await();
+            while (getEntorno().getHayPrioridad().get(numTunel)) {
+                getEntorno().getTunelesInteriorCondition().get(numTunel).await();
             }
 
-            logger.info("Pasando el túnel: " + this.identificador);
-            entorno.meter(humano, entorno.TunelesIntermedio.get(numTunel), entorno.listaTunelesIntermedio.get(numTunel));
-            entorno.comprobarPausa();
+            logger.info("Pasando el túnel: " + this.getIdentificador());
+            getEntorno().meter(humano, getEntorno().TunelesIntermedio.get(numTunel), getEntorno().getListaTunelesIntermedio().get(numTunel));
+            getEntorno().comprobarPausa();
             sleep(1000);
-            entorno.comprobarPausa();
-            logger.info("Saliendo del túnel: " + this.identificador);
-            entorno.sacar(humano, entorno.TunelesIntermedio.get(numTunel), entorno.listaTunelesIntermedio.get(numTunel));
+            getEntorno().comprobarPausa();
+            logger.info("Saliendo del túnel: " + this.getIdentificador());
+            getEntorno().sacar(humano, getEntorno().TunelesIntermedio.get(numTunel), getEntorno().getListaTunelesIntermedio().get(numTunel));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -131,23 +131,23 @@ public class Humano extends Ser {
     public void volver(int tunelEntrar, Lock tunelInteriorLock) {
         tunelInteriorLock.lock();
         try {
-            entorno.hayPrioridad.set(tunelEntrar, true);
+            getEntorno().getHayPrioridad().set(tunelEntrar, true);
 
-            entorno.meter(this, entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
-            logger.info("Esperando para entrar a la zona segura " + identificador);
-            entorno.comprobarPausa();
+            getEntorno().meter(this, getEntorno().TunelesEntrada.get(tunelEntrar), getEntorno().getListaTunelesEntrar().get(tunelEntrar));
+            logger.info("Esperando para entrar a la zona segura " + getIdentificador());
+            getEntorno().comprobarPausa();
             sleep(1000);
-            entorno.comprobarPausa();
-            entorno.sacar(this, entorno.TunelesEntrada.get(tunelEntrar), entorno.listaTunelesEntrar.get(tunelEntrar));
+            getEntorno().comprobarPausa();
+            getEntorno().sacar(this, getEntorno().TunelesEntrada.get(tunelEntrar), getEntorno().getListaTunelesEntrar().get(tunelEntrar));
 
-            entorno.meter(this, entorno.TunelesIntermedio.get(tunelEntrar), entorno.listaTunelesIntermedio.get(tunelEntrar));
-            entorno.comprobarPausa();
+            getEntorno().meter(this, getEntorno().TunelesIntermedio.get(tunelEntrar), getEntorno().getListaTunelesIntermedio().get(tunelEntrar));
+            getEntorno().comprobarPausa();
             sleep(1000);
-            entorno.comprobarPausa();
-            entorno.sacar(this, entorno.TunelesIntermedio.get(tunelEntrar), entorno.listaTunelesIntermedio.get(tunelEntrar));
+            getEntorno().comprobarPausa();
+            getEntorno().sacar(this, getEntorno().TunelesIntermedio.get(tunelEntrar), getEntorno().getListaTunelesIntermedio().get(tunelEntrar));
 
-            logger.info("Saliendo " + identificador);
-            entorno.hayPrioridad.set(tunelEntrar, false);
+            logger.info("Saliendo " + getIdentificador());
+            getEntorno().getHayPrioridad().set(tunelEntrar, false);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -157,28 +157,37 @@ public class Humano extends Ser {
 
     public synchronized void comer(){
         try {
-            entorno.meter(this, entorno.ListaComedorEspera, entorno.comedor_espera);
-            synchronized (entorno.lockComida) {
+            getEntorno().meter(this, getEntorno().ListaComedorEspera, getEntorno().getComedor_espera());
+            synchronized (getEntorno().getLockComida()) {
                 // Mientras no haya comida, espera a que se notifique
-                while (entorno.sumaComidaLista()==0) {
-                    entorno.lockComida.wait(); // El hilo se suspende hasta que haya comida y se llame a notify()
+                while (getEntorno().sumaComidaLista()==0) {
+                    getEntorno().getLockComida().wait(); // El hilo se suspende hasta que haya comida y se llame a notify()
                 }
             }
-            entorno.sacar(this, entorno.ListaComedorEspera, entorno.comedor_espera);
+            getEntorno().sacar(this, getEntorno().ListaComedorEspera, getEntorno().getComedor_espera());
 
-            entorno.meter(this, entorno.ListaComedorComiendo, entorno.comedor_comiendo);
-            entorno.comidaTotal.poll();
-            entorno.comidaTotal.poll();
-            entorno.actualizarLabelComida();
-            entorno.comprobarPausa();
+            getEntorno().meter(this, getEntorno().ListaComedorComiendo, getEntorno().getComedor_comiendo());
+            getEntorno().getComidaTotal().poll();
+            getEntorno().actualizarLabelComida();
+            getEntorno().comprobarPausa();
             sleep(3000 + (int) Math.random() * 2000);
-            entorno.comprobarPausa();
-            entorno.sacar(this, entorno.ListaComedorComiendo, entorno.comedor_comiendo);
+            getEntorno().comprobarPausa();
+            getEntorno().sacar(this, getEntorno().ListaComedorComiendo, getEntorno().getComedor_comiendo());
 
 
         }catch (Exception e){}
     }
 
+
+    //Getter y setter
+
+    public void setNumComida(int numComida) {
+        this.numComida = numComida;
+    }
+
+    public void setMarcado(boolean marcado) {
+        this.marcado = marcado;
+    }
 }
 
 

@@ -21,66 +21,66 @@ public class Entorno {
 
    ///El logger///
 
-   Logger logger = LoggerConFichero.getLogger();
-   ArrayList<Ser> descanso= new ArrayList<>();
-   ArrayList<Ser> comedor_espera= new ArrayList<>();
-   ArrayList<Ser> comedor_comiendo= new ArrayList<>();
-   ArrayList<Ser> zona_comun= new ArrayList<>();
+   private Logger logger = LoggerConFichero.getLogger();
+   private ArrayList<Ser> descanso= new ArrayList<>();
+   private ArrayList<Ser> comedor_espera= new ArrayList<>();
+   private ArrayList<Ser> comedor_comiendo= new ArrayList<>();
+   private ArrayList<Ser> zona_comun= new ArrayList<>();
 
-   Lock lockComida= new ReentrantLock();
+   private Lock lockComida= new ReentrantLock();
 
-   ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
+   private ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
 
-   int numSeres;
+   private int numSeres;
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
    private boolean enPausa = false;
-   public ArrayList<Thread> humanos = new ArrayList<>();
+   private ArrayList<Thread> humanos = new ArrayList<>();
 
 
 
-   ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
-   ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
+   private ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
+   private ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
 
-   ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
-   ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
-   ArrayList<Boolean> hayPrioridad= new ArrayList<>();
-
-
+   private ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
+   private ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
+   private ArrayList<Boolean> hayPrioridad= new ArrayList<>();
 
 
 
-   ArrayList<ArrayList<Ser>> zona_riesgoHumanos= new ArrayList<>();
-   ArrayList<Ser> zona_riesgoHumano1=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
 
 
-   ArrayList<ArrayList<Ser>> listaTunelesSalir= new ArrayList<>();
-   ArrayList<Ser> tunelSalir1=new ArrayList<>();
-   ArrayList<Ser> tunelSalir2=new ArrayList<>();
-   ArrayList<Ser> tunelSalir3=new ArrayList<>();
-   ArrayList<Ser> tunelSalir4=new ArrayList<>();
-
-   ArrayList<ArrayList<Ser>> listaTunelesIntermedio = new ArrayList<>();
-   ArrayList<Ser> tunelIntermedio1 = new ArrayList<>();
-   ArrayList<Ser> tunelIntermedio2 = new ArrayList<>();
-   ArrayList<Ser> tunelIntermedio3 = new ArrayList<>();
-   ArrayList<Ser> tunelIntermedio4 = new ArrayList<>();
+   private ArrayList<ArrayList<Ser>> zona_riesgoHumanos= new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano1=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
 
 
-   ArrayList<ArrayList<Ser>> listaTunelesEntrar= new ArrayList<>();
-   ArrayList<Ser> tunelEntrar1=new ArrayList<>();
-   ArrayList<Ser> tunelEntrar2=new ArrayList<>();
-   ArrayList<Ser> tunelEntrar3=new ArrayList<>();
-   ArrayList<Ser> tunelEntrar4=new ArrayList<>();
+   private ArrayList<ArrayList<Ser>> listaTunelesSalir= new ArrayList<>();
+   private ArrayList<Ser> tunelSalir1=new ArrayList<>();
+   private ArrayList<Ser> tunelSalir2=new ArrayList<>();
+   private ArrayList<Ser> tunelSalir3=new ArrayList<>();
+   private ArrayList<Ser> tunelSalir4=new ArrayList<>();
+
+   private ArrayList<ArrayList<Ser>> listaTunelesIntermedio = new ArrayList<>();
+   private ArrayList<Ser> tunelIntermedio1 = new ArrayList<>();
+   private ArrayList<Ser> tunelIntermedio2 = new ArrayList<>();
+   private ArrayList<Ser> tunelIntermedio3 = new ArrayList<>();
+   private ArrayList<Ser> tunelIntermedio4 = new ArrayList<>();
 
 
-   ArrayList<ArrayList<Ser>> zona_riesgoZombie= new ArrayList<>();
-   ArrayList<Ser> zona_riesgoZombie1=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoZombie2=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoZombie3=new ArrayList<>();
-   ArrayList<Ser> zona_riesgoZombie4=new ArrayList<>();
+   private ArrayList<ArrayList<Ser>> listaTunelesEntrar= new ArrayList<>();
+   private ArrayList<Ser> tunelEntrar1=new ArrayList<>();
+   private ArrayList<Ser> tunelEntrar2=new ArrayList<>();
+   private ArrayList<Ser> tunelEntrar3=new ArrayList<>();
+   private ArrayList<Ser> tunelEntrar4=new ArrayList<>();
+
+
+   private ArrayList<ArrayList<Ser>> zona_riesgoZombie= new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoZombie1=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoZombie2=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoZombie3=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoZombie4=new ArrayList<>();
 
 
 
@@ -282,8 +282,6 @@ public class Entorno {
       pausar();
       PauseButton.setDisable(true);
       ReanudarButton.setDisable(false);
-
-
    }
 
    @FXML
@@ -338,6 +336,9 @@ public class Entorno {
    @FXML
    void onInformacionButtonClick(){
       try {
+         pausar();
+         PauseButton.setDisable(true);
+         ReanudarButton.setDisable(false);
          Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
          infoAlert.setTitle("Información del Juego");
          infoAlert.setHeaderText("Estás jugando a: Apocalipsis Zombie");
@@ -408,4 +409,69 @@ public class Entorno {
    }
 
 
+
+   //Getters y setters
+   public ArrayList<Ser> getDescanso() {
+      return descanso;
+   }
+
+   public ArrayList<Ser> getComedor_espera() {
+      return comedor_espera;
+   }
+
+   public ArrayList<Ser> getComedor_comiendo() {
+      return comedor_comiendo;
+   }
+
+   public ArrayList<Ser> getZona_comun() {
+      return zona_comun;
+   }
+
+   public Lock getLockComida() {
+      return lockComida;
+   }
+
+   public ConcurrentLinkedQueue<Integer> getComidaTotal() {
+      return comidaTotal;
+   }
+
+   public ArrayList<Thread> getHumanos() {
+      return humanos;
+   }
+
+   public ArrayList<CyclicBarrier> getTunelesSalirBarreras() {
+      return tunelesSalirBarreras;
+   }
+
+   public ArrayList<Lock> getTunelesInteriorLock() {
+      return tunelesInteriorLock;
+   }
+
+   public ArrayList<Condition> getTunelesInteriorCondition() {
+      return tunelesInteriorCondition;
+   }
+
+   public ArrayList<Boolean> getHayPrioridad() {
+      return hayPrioridad;
+   }
+
+   public ArrayList<ArrayList<Ser>> getZona_riesgoHumanos() {
+      return zona_riesgoHumanos;
+   }
+
+   public ArrayList<ArrayList<Ser>> getListaTunelesSalir() {
+      return listaTunelesSalir;
+   }
+
+   public ArrayList<ArrayList<Ser>> getListaTunelesIntermedio() {
+      return listaTunelesIntermedio;
+   }
+
+   public ArrayList<ArrayList<Ser>> getListaTunelesEntrar() {
+      return listaTunelesEntrar;
+   }
+
+   public ArrayList<ArrayList<Ser>> getZona_riesgoZombie() {
+      return zona_riesgoZombie;
+   }
 }

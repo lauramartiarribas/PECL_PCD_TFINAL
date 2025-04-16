@@ -47,9 +47,9 @@
                </items>
             </ListView>
             <ListView fx:id="ListaComedorComiendo" layoutX="231.0" layoutY="278.0" prefHeight="120.0" prefWidth="171.0" />
-            <Label fx:id="Comida" layoutX="339.0" layoutY="349.0" prefHeight="38.0" prefWidth="35.0" style="-fx-background-color: #ffffff;" text="Label">
+            <Label fx:id="Comida" layoutX="339.0" layoutY="349.0" prefHeight="38.0" prefWidth="35.0" style="-fx-background-color: #ffffff;" text="Label" textAlignment="CENTER">
                <font>
-                  <Font size="14.0" />
+                  <Font name="Bookman Old Style" size="14.0" />
                </font></Label>
             <Label alignment="CENTER" layoutX="31.0" layoutY="250.0" prefHeight="22.0" prefWidth="91.0" style="-fx-background-color: #F6F2E5;" text="ESPERANDO">
                <font>
