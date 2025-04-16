@@ -273,6 +273,7 @@ public class Entorno {
       enPausa=false;
       nacerHumanos();
       //Creamos el zombie
+
       Zombie zombie= new Zombie("Z0000", this);
       zombie.start();
 
