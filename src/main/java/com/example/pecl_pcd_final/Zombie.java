@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 public class Zombie extends Ser {
 
     private Logger logger= LoggerConFichero.getLogger();
+    private int numMuertes;
 
     public Zombie (String id, Entorno entorno){
         this.setIdentificador(id);
         this.setEntorno(entorno);
+        this.numMuertes=0;
     }
 
 
@@ -70,6 +72,8 @@ public class Zombie extends Ser {
             humano.volver(numZona, getEntorno().getTunelesInteriorLock().get(numZona));
         } else {
             logger.info("Convirtiendo humano " + humano.getIdentificador() + " a zombie");
+            this.numMuertes++;
+            logger.info("El zombie "+ this.getIdentificador()+" ha convertido a "+ this.numMuertes);
             Zombie zombie = new Zombie("Z" + humano.getIdentificador().substring(1), getEntorno());
             zombie.start();
 
