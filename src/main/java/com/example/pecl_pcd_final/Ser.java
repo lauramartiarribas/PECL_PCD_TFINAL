@@ -14,7 +14,6 @@ public class Ser extends Thread{
 
 
     //Getter y setter
-
     public String getIdentificador() {
         return identificador;
     }

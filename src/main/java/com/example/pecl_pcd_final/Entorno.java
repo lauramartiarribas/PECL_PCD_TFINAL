@@ -20,8 +20,16 @@ import java.util.logging.Logger;
 public class Entorno {
 
    ///El logger///
-
    private Logger logger = LoggerConFichero.getLogger();
+
+   ///Elementos del juego ///
+   //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que se tienen en ese momento
+   private boolean enPausa = false;
+
+   private int numHumanos;
+   private ArrayList<Thread> humanos = new ArrayList<>();
+
+   /// Refugio ///
    private ArrayList<Ser> descanso= new ArrayList<>();
    private ArrayList<Ser> comedor_espera= new ArrayList<>();
    private ArrayList<Ser> comedor_comiendo= new ArrayList<>();
@@ -31,29 +39,14 @@ public class Entorno {
 
    private ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
 
-   private int numSeres;
-   //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que están en ese momento
-   private boolean enPausa = false;
-   private ArrayList<Thread> humanos = new ArrayList<>();
 
 
-
+   /// Túneles ///
    private ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
-   private ArrayList<CyclicBarrier> tunelesEntrarBarreras= new ArrayList<>();
 
    private ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
    private ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
    private ArrayList<Boolean> hayPrioridad= new ArrayList<>();
-
-
-
-
-
-   private ArrayList<ArrayList<Ser>> zona_riesgoHumanos= new ArrayList<>();
-   private ArrayList<Ser> zona_riesgoHumano1=new ArrayList<>();
-   private ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
-   private ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
-   private ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
 
 
    private ArrayList<ArrayList<Ser>> listaTunelesSalir= new ArrayList<>();
@@ -68,13 +61,20 @@ public class Entorno {
    private ArrayList<Ser> tunelIntermedio3 = new ArrayList<>();
    private ArrayList<Ser> tunelIntermedio4 = new ArrayList<>();
 
-
    private ArrayList<ArrayList<Ser>> listaTunelesEntrar= new ArrayList<>();
    private ArrayList<Ser> tunelEntrar1=new ArrayList<>();
    private ArrayList<Ser> tunelEntrar2=new ArrayList<>();
    private ArrayList<Ser> tunelEntrar3=new ArrayList<>();
    private ArrayList<Ser> tunelEntrar4=new ArrayList<>();
 
+
+
+   /// Zona de riesgo ///
+   private ArrayList<ArrayList<Ser>> zona_riesgoHumanos= new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano1=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano2=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano3=new ArrayList<>();
+   private ArrayList<Ser> zona_riesgoHumano4=new ArrayList<>();
 
    private ArrayList<ArrayList<Ser>> zona_riesgoZombie= new ArrayList<>();
    private ArrayList<Ser> zona_riesgoZombie1=new ArrayList<>();
@@ -86,10 +86,9 @@ public class Entorno {
 
 
    public Entorno() throws IOException {
-      numSeres=1;
+      numHumanos =1;
       for(int i=0; i<4;i++){
          tunelesSalirBarreras.add(new CyclicBarrier(3));
-         tunelesEntrarBarreras.add(new CyclicBarrier(3));
          tunelesInteriorLock.add(new ReentrantLock());
          tunelesInteriorCondition.add(tunelesInteriorLock.get(i).newCondition());
          hayPrioridad.add(false);
@@ -134,6 +133,7 @@ public class Entorno {
    @FXML
    public Button BotonInformacion;
 
+   ///////////////// REFUGIO //////////////////////
    @FXML
    public ListView ListaDescanso;
 
@@ -310,8 +310,8 @@ public class Entorno {
       new Thread(() ->{
          while (true){
 
-            Humano humano= new Humano("H"+ String.format("%04d",numSeres),this);
-            numSeres++;
+            Humano humano= new Humano("H"+ String.format("%04d", numHumanos),this);
+            numHumanos++;
 
 
 
