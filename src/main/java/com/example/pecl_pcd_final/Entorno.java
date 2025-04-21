@@ -345,7 +345,7 @@ public class Entorno {
          TextArea textArea = new TextArea(
                  "Es el año 2025 y se ha desencadenado un apocalipsis zombie.\n\n" +
                          "Sólo se tiene un refugio seguro para los humanos, pero deben cruzar a la zona de riesgo por los túneles para recoger comida.\n\n" +
-                         "¡Cuidado con los zombies, podrán atacar e incliso convertir a los humanos!"
+                         "¡Cuidado con los zombies, podrán atacar e incluso convertir a los humanos!"
          );
          textArea.setWrapText(true); // Para que el texto se ajuste
          textArea.setEditable(false); // Para que no se pueda editar
