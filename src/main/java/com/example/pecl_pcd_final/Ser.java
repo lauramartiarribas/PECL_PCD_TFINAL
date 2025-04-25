@@ -2,6 +2,9 @@ package com.example.pecl_pcd_final;
 
 import com.example.pecl_pcd_final.Entorno;
 
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+
 public class Ser extends Thread{
 
     private String identificador;
@@ -29,4 +32,6 @@ public class Ser extends Thread{
     public void setEntorno(Entorno entorno) {
         this.entorno = entorno;
     }
+
+
 }

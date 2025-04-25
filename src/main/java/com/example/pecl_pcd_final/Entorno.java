@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,10 +45,11 @@ public class Entorno {
 
    /// Túneles ///
    private ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
+   private ArrayList<Semaphore> tunelesSalirSemaforo= new ArrayList<>();
 
    private ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
    private ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
-   private ArrayList<Boolean> hayPrioridad= new ArrayList<>();
+   private AtomicIntegerArray hayPrioridad= new AtomicIntegerArray(4);
 
 
    private ArrayList<ArrayList<Ser>> listaTunelesSalir= new ArrayList<>();
@@ -89,9 +92,10 @@ public class Entorno {
       numHumanos =1;
       for(int i=0; i<4;i++){
          tunelesSalirBarreras.add(new CyclicBarrier(3));
+         tunelesSalirSemaforo.add(new Semaphore(3));
          tunelesInteriorLock.add(new ReentrantLock());
          tunelesInteriorCondition.add(tunelesInteriorLock.get(i).newCondition());
-         hayPrioridad.add(false);
+
       }
 
       zona_riesgoHumanos.add(zona_riesgoHumano1);
@@ -221,12 +225,12 @@ public class Entorno {
 
 
    //Para sacar los hilos por pantalla
-   public synchronized void meter(Ser t,ListView vista, ArrayList<Ser> lista) {
+   public synchronized void meter(Ser t, ListView vista, ArrayList<Ser> lista) {
+      lista.remove(t); // evita duplicados
       lista.add(t);
-      Platform.runLater(() -> {
-         imprimir(vista, lista);
-      });
+      Platform.runLater(() -> imprimir(vista, lista));
    }
+
 
    public synchronized void sacar(Ser t,ListView vista,ArrayList<Ser> lista) {
       lista.remove(t);
@@ -308,7 +312,8 @@ public class Entorno {
 
    public void nacerHumanos(){
       new Thread(() ->{
-         while (true){
+         ///while (true)
+         for(int i=0;i<14;i++){
 
             Humano humano= new Humano("H"+ String.format("%04d", numHumanos),this);
             numHumanos++;
@@ -451,9 +456,10 @@ public class Entorno {
       return tunelesInteriorCondition;
    }
 
-   public ArrayList<Boolean> getHayPrioridad() {
+   public AtomicIntegerArray getHayPrioridad() {
       return hayPrioridad;
    }
+
 
    public ArrayList<ArrayList<Ser>> getZona_riesgoHumanos() {
       return zona_riesgoHumanos;
@@ -474,4 +480,5 @@ public class Entorno {
    public ArrayList<ArrayList<Ser>> getZona_riesgoZombie() {
       return zona_riesgoZombie;
    }
+   public ArrayList<Semaphore> getTunelesSalirSemaforo(){return tunelesSalirSemaforo; }
 }
