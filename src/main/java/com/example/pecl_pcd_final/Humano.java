@@ -9,9 +9,6 @@ public class Humano extends Ser {
     private Logger logger = LoggerConFichero.getLogger();
     private int numComida;
     private boolean marcado;
-    private boolean haDescansado = true;
-    private boolean haComido = true;
-    private boolean necesitaRecuperarse = false;
 
 
 
@@ -40,10 +37,6 @@ public class Humano extends Ser {
                 logger.info("Saliendo de la zona común " + getIdentificador());
 
 
-                if (!haDescansado || !haComido || necesitaRecuperarse) {
-                    // No puede salir todavía, vuelve al ciclo para descansar o comer
-                    continue;
-                }
                 // Seleccionar túnel
                 Random r = new Random();
                 int tunelSalir = r.nextInt(0, 4);
@@ -84,11 +77,6 @@ public class Humano extends Ser {
 
                 volver(tunelSalir, tunelInterior);
 
-                haDescansado = false;
-                haComido = false;
-                if (marcado) {
-                    necesitaRecuperarse = true;
-                }
 
 
                 //Sumamos la comida recolectada y actualizamos el label
@@ -107,7 +95,7 @@ public class Humano extends Ser {
                 sleep(2000 + (int) Math.random() * 2000);
                 getEntorno().comprobarPausa();
                 getEntorno().sacar(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
-                haDescansado = true;
+
 
                 //Zona de espera en el comedor
                 comer();
@@ -121,7 +109,7 @@ public class Humano extends Ser {
                     getEntorno().sacar(this, getEntorno().ListaDescanso, getEntorno().getDescanso());
 
                     marcado = false;
-                    necesitaRecuperarse = false;
+
                 }
 
 
@@ -210,7 +198,7 @@ public class Humano extends Ser {
             sleep(3000 + (int) Math.random() * 2000);
             getEntorno().comprobarPausa();
             getEntorno().sacar(this, getEntorno().ListaComedorComiendo, getEntorno().getComedor_comiendo());
-            haComido = true;
+
 
 
         }catch (Exception e){}
