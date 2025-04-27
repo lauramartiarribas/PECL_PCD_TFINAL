@@ -9,6 +9,7 @@ public class Ser extends Thread{
 
     private String identificador;
     private Entorno entorno;
+    private boolean estaMuerto=false;
 
 
     public String toString() {
@@ -33,5 +34,11 @@ public class Ser extends Thread{
         this.entorno = entorno;
     }
 
+    public boolean isEstaMuerto() {
+        return estaMuerto;
+    }
 
+    public void setEstaMuerto(boolean estaMuerto) {
+        this.estaMuerto = estaMuerto;
+    }
 }

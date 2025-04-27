@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class ListaHilos {
@@ -41,6 +42,18 @@ se imprime su nuevo contenido en el ListView que toma como parámetro el constru
             }
         });
     }
-
-
+    public synchronized void verificarMuertos() {
+        Iterator<Ser> iterator = lista.iterator();
+        while (iterator.hasNext()) {
+            Ser ser = iterator.next();
+            if (ser.isEstaMuerto()) { // Verificar si está muerto
+                iterator.remove();
+                System.out.println("Un humano ha muerto y ha sido eliminado.");
+            }
+        }
+        imprimir();
+    }
+    public ArrayList<Ser> getLista() {
+        return lista;
+    }
 }

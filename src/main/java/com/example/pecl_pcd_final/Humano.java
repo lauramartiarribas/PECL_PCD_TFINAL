@@ -47,30 +47,6 @@ public class Humano extends Ser {
 
 
 
-                ///BORRAR////
-
-//                getEntorno().getZona_comun().sacar(this);
-//                getEntorno().getListaTunelesSalir().get(tunelSalir).meter(this);
-
-//                getEntorno().comprobarPausa();
-//                sleep(1000);
-//                getEntorno().comprobarPausa();
-
-                //getEntorno().getTunelesSalirBarreras().get(tunelSalir).await();
-
-//                getEntorno().getListaTunelesSalir().get(tunelSalir).sacar(this);
-//
-//                Lock tunelInterior = getEntorno().getTunelesInteriorLock().get(tunelSalir);
-
-
-
-
-                //Salir del tunel
-//                salir(this, tunelInterior, tunelSalir);
-
-
-
-                //getEntorno().getZona_riesgoHumanos().get(tunelSalir).meter(this);
 
                 logger.info(getIdentificador() + " En la zona exterior");
                 getEntorno().comprobarPausa();
@@ -79,17 +55,12 @@ public class Humano extends Ser {
 
 
                 //Volver al refugio
+//                if(this.isEstaMuerto()==false){
+//                    getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
+//
+//
+//                }
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
-
-
-
-//                getEntorno().getZona_riesgoHumanos().get(tunelSalir).sacar(this);
-
-                //Volvemos al refugio
-
-//                volver(tunelSalir, tunelInterior);
-
-
 
 //                //Sumamos la comida recolectada y actualizamos el label
 //                for (int i = 0; i < this.numComida; i++) {

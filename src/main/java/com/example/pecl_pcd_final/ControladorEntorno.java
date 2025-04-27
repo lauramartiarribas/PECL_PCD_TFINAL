@@ -120,8 +120,8 @@ public class ControladorEntorno {
         entorno.nacerHumanos();
 
         //Creamos el zombie
-//        Zombie zombie= new Zombie("Z0000", entorno);
-//        zombie.start();
+        Zombie zombie= new Zombie("Z0000", entorno);
+        zombie.start();
 
     }
 
@@ -197,7 +197,6 @@ public class ControladorEntorno {
                 new ListaHilos(ZonaRiesgoZombie2),
                 new ListaHilos(ZonaRiesgoZombie3),
                 new ListaHilos(ZonaRiesgoZombie4)
-
                 );
 
         PauseButton.setDisable(true);

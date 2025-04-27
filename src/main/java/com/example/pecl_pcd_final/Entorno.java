@@ -23,7 +23,7 @@ public class Entorno {
    private boolean enPausa = false;
 
    private int numHumanos=1;
-   //private ArrayList<Thread> humanos = new ArrayList<>();
+   private ListaHilos listaHumanos;
 
    /// Refugio ///
    private ListaHilos descanso;
@@ -82,6 +82,7 @@ public class Entorno {
                   ListaHilos tunelEntrar1, ListaHilos tunelEntrar2, ListaHilos tunelEntrar3, ListaHilos tunelEntrar4,
                   ListaHilos zona_riesgoHumano1,ListaHilos zona_riesgoHumano2,ListaHilos zona_riesgoHumano3,ListaHilos zona_riesgoHumano4,
                   ListaHilos zona_riesgoZombie1, ListaHilos zona_riesgoZombie2, ListaHilos zona_riesgoZombie3, ListaHilos zona_riesgoZombie4) throws IOException {
+
       this.descanso=descanso;
       this.comedor_espera=comedor_espera;
       this.comedor_comiendo=comedor_comiendo;
@@ -253,9 +254,7 @@ public class Entorno {
       return comidaTotal;
    }
 
-//   public ArrayList<Thread> getHumanos() {
-//      return humanos;
-//   }
+
 
 //   public ArrayList<CyclicBarrier> getTunelesSalirBarreras() {
 //      return tunelesSalirBarreras;
