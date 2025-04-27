@@ -4,17 +4,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class HelloController {
+public class ControladorInicio {
 
     @FXML
     private Button startButton;
@@ -27,7 +23,7 @@ public class HelloController {
 
         // Cargar la nueva escena
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("ProgramaP.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(ApocalipsisZombie.class.getResource("Entorno.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
 
             Stage stage = new Stage();
