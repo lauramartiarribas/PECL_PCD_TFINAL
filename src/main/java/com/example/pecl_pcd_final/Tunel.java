@@ -72,7 +72,7 @@ public class Tunel {
                 cerrojoTunel.unlock();
             }
 
-            humano.setNumComida(humano.getNumComida() + 2);
+            humano.setNumComida(2);
 
         } catch (BrokenBarrierException e) {
             Thread.currentThread().interrupt();

@@ -1,6 +1,9 @@
 package com.example.pecl_pcd_final;
 
 
+import javafx.application.Platform;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
@@ -31,29 +34,17 @@ public class Entorno {
    private ListaHilos comedor_comiendo;
    private ListaHilos zona_comun;
 
-   private Lock lockComida= new ReentrantLock();
 
+
+
+   private Lock cerrojoComida;
+   private Condition hayComida;
    private ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
 
+   private javafx.scene.control.TextField labelComida;
 
 
    /// Túneles ///
-
-
-//   private ArrayList<CyclicBarrier> tunelesSalirBarreras= new ArrayList<>();
-//   private ArrayList<Semaphore> tunelesSalirSemaforo= new ArrayList<>();
-//
-//   private ArrayList<Lock> tunelesInteriorLock= new ArrayList<>();
-//   private ArrayList<Condition> tunelesInteriorCondition= new ArrayList<>(4);
-//   private AtomicIntegerArray hayPrioridad= new AtomicIntegerArray(4);
-//
-//   private int esperandoIda=0;
-//   private int esperandoVuelta=0;
-//   private ArrayList<Object> control ;
-
-
-
-
 
    private ArrayList<Tunel> listaTuneles= new ArrayList<>();
 
@@ -81,7 +72,9 @@ public class Entorno {
                   ListaHilos tunelIntermedio1, ListaHilos tunelIntermedio2, ListaHilos tunelIntermedio3, ListaHilos tunelIntermedio4 ,
                   ListaHilos tunelEntrar1, ListaHilos tunelEntrar2, ListaHilos tunelEntrar3, ListaHilos tunelEntrar4,
                   ListaHilos zona_riesgoHumano1,ListaHilos zona_riesgoHumano2,ListaHilos zona_riesgoHumano3,ListaHilos zona_riesgoHumano4,
-                  ListaHilos zona_riesgoZombie1, ListaHilos zona_riesgoZombie2, ListaHilos zona_riesgoZombie3, ListaHilos zona_riesgoZombie4) throws IOException {
+                  ListaHilos zona_riesgoZombie1, ListaHilos zona_riesgoZombie2, ListaHilos zona_riesgoZombie3, ListaHilos zona_riesgoZombie4,
+
+                  javafx.scene.control.TextField labelComida) throws IOException {
 
       this.descanso=descanso;
       this.comedor_espera=comedor_espera;
@@ -93,6 +86,10 @@ public class Entorno {
          this.listaTuneles.add(new Tunel());
       }
 
+
+      this.labelComida=labelComida;
+      this.cerrojoComida=new ReentrantLock();
+      this.hayComida= cerrojoComida.newCondition();
 
 
 //      for(int i=0; i<4;i++){
@@ -172,12 +169,11 @@ public class Entorno {
 //      }
 //      return suma;
 //   }
-//
-//   public void actualizarLabelComida(){
-//      Platform.runLater(() -> {
-//         Comida.setText(String.valueOf(sumaComidaLista()));
-//      });
-//   }
+
+
+
+
+
 
 
 
@@ -246,32 +242,18 @@ public class Entorno {
       return zona_comun;
    }
 
-   public Lock getLockComida() {
-      return lockComida;
-   }
 
    public ConcurrentLinkedQueue<Integer> getComidaTotal() {
       return comidaTotal;
    }
 
 
+   public void actualizarLabelComida(){
+      Platform.runLater(() -> {
+         labelComida.setText(String.valueOf(this.getComidaTotal().size()));
+      });
+   }
 
-//   public ArrayList<CyclicBarrier> getTunelesSalirBarreras() {
-//      return tunelesSalirBarreras;
-//   }
-//
-//   public ArrayList<Lock> getTunelesInteriorLock() {
-//      return tunelesInteriorLock;
-//   }
-//
-//   public ArrayList<Condition> getTunelesInteriorCondition() {
-//      return tunelesInteriorCondition;
-//   }
-//
-//   public AtomicIntegerArray getHayPrioridad() {
-//      return hayPrioridad;
-//   }
-//
 
    public ArrayList<ListaHilos> getZona_riesgoHumanos() {
       return zona_riesgoHumanos;
@@ -303,5 +285,17 @@ public class Entorno {
 
    public void setListaTuneles(ArrayList<Tunel> listaTuneles) {
       this.listaTuneles = listaTuneles;
+   }
+
+   public Condition getHayComida() {
+      return hayComida;
+   }
+
+   public void setHayComida(Condition hayComida) {
+      this.hayComida = hayComida;
+   }
+
+   public Lock getCerrojoComida() {
+      return cerrojoComida;
    }
 }

@@ -1,6 +1,7 @@
 package com.example.pecl_pcd_final;
 
 import java.util.ArrayList;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.logging.Logger;
 
 public class Zombie extends Ser {
@@ -91,8 +92,8 @@ public class Zombie extends Ser {
             getEntorno().comprobarPausa();
             Thread.sleep(500 + (int)(Math.random() * 1000));
             getEntorno().comprobarPausa();
-        } catch (InterruptedException e) {
-
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
         }
     }
 

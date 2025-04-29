@@ -1,5 +1,6 @@
 package com.example.pecl_pcd_final;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -104,7 +105,7 @@ public class ControladorEntorno {
     public ListView<Ser> ZonaRiesgoZombie4;
 
     @FXML
-    public Label Comida;
+    public TextField Comida;
 
 
 
@@ -171,6 +172,8 @@ public class ControladorEntorno {
 
 
 
+
+
     @FXML
     public  void  initialize() throws IOException {
         this.entorno= new Entorno( new ListaHilos(ListaDescanso),
@@ -196,12 +199,14 @@ public class ControladorEntorno {
                 new ListaHilos(ZonaRiesgoZombie1),
                 new ListaHilos(ZonaRiesgoZombie2),
                 new ListaHilos(ZonaRiesgoZombie3),
-                new ListaHilos(ZonaRiesgoZombie4)
+                new ListaHilos(ZonaRiesgoZombie4),
+                Comida
                 );
 
         PauseButton.setDisable(true);
         ReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
+
 //        ZonaRiesgoHumanos = FXCollections.observableArrayList(
 //                ZonaRiesgoHumano1,
 //                ZonaRiesgoHumano2,

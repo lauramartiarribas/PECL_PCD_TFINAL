@@ -1,5 +1,7 @@
 package com.example.pecl_pcd_final;
 
+import javafx.application.Platform;
+
 import java.util.logging.Logger;
 
 public class Humano extends Ser {
@@ -21,12 +23,10 @@ public class Humano extends Ser {
     @Override
     public void run() {
         try {
-
+            logger.info("Empezando " + getIdentificador());
             while(true) {
 
                 getEntorno().comprobarPausa();
-                logger.info("Empezando " + getIdentificador());
-
 
                 // Zona común tiempo entre 1 y 2
                 logger.info("En la zona común " + getIdentificador());
@@ -61,48 +61,54 @@ public class Humano extends Ser {
 //
 //                }
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
+                getEntorno().comprobarPausa();
+                sleep(3000 + (int) Math.random() * 2000);
+                getEntorno().comprobarPausa();
+                getEntorno().getDescanso().sacar(this);
 
-//                //Sumamos la comida recolectada y actualizamos el label
-//                for (int i = 0; i < this.numComida; i++) {
-//                    getEntorno().getComidaTotal().offer(1);
-//                }
 
-//                synchronized (getEntorno().getLockComida()) {
-//                    getEntorno().getLockComida().notify(); // Solo notificamos a un hilo
-//                }
-//                getEntorno().actualizarLabelComida();
-//
-//                ///En la zona de descanso
-//                getEntorno().getDescanso().meter(this);
-//                getEntorno().comprobarPausa();
-//                sleep(2000 + (int) Math.random() * 2000);
-//                getEntorno().comprobarPausa();
-//                getEntorno().getDescanso().sacar(this);
-//
-//
-//                //Zona de espera en el comedor
-//                comer();
-//
-//                //Zona de descanso si ha sido marcado
-//                if (this.marcado) {
-//                    getEntorno().getDescanso().meter(this);
-//                    getEntorno().comprobarPausa();
-//                    sleep(3000 + (int) Math.random() * 2000);
-//                    getEntorno().comprobarPausa();
-//                    getEntorno().getDescanso().sacar(this);
-//
-//                    marcado = false;
-//
-//                }
-//
-//
-//                //Todos vuelven a la zona común
-//
+                //Sumamos la comida recolectada y actualizamos el label
+                for (int i = 0; i < this.numComida; i++) {
+                    getEntorno().getComidaTotal().offer(1);
+                    getEntorno().actualizarLabelComida();
+                }
+
+
+
+
+
+                ///En la zona de descanso
+                getEntorno().getDescanso().meter(this);
+                getEntorno().comprobarPausa();
+                sleep(2000 + (int) Math.random() * 2000);
+                getEntorno().comprobarPausa();
+                getEntorno().getDescanso().sacar(this);
+
+
+                //Zona de comedor
+                comer();
+
+                //Zona de descanso si ha sido marcado
+                if (this.marcado) {
+                    getEntorno().getDescanso().meter(this);
+                    getEntorno().comprobarPausa();
+                    sleep(3000 + (int) Math.random() * 2000);
+                    getEntorno().comprobarPausa();
+                    getEntorno().getDescanso().sacar(this);
+
+                    marcado = false;
+
+                }
+
+
+               //Todos vuelven a la zona común
+
 
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.out.println("Humano muerto ");
+            Thread.currentThread().interrupt(); // reestablecer estado de interrupción
         }
     }
 
@@ -116,89 +122,53 @@ public class Humano extends Ser {
         logger.info(getIdentificador() + " terminó de cruzar el túnel.");
     }
 
-//    public void salir(Humano humano, Lock tunel, int numTunel) {
-//        tunel.lock();
-//        try {
-//            while (getEntorno().getHayPrioridad().get(numTunel)>0) {
-//                getEntorno().getTunelesInteriorCondition().get(numTunel).await();
-//            }
-//            getEntorno().getListaTunelesEntrar().get(numTunel).sacar(this);
-//
-//            logger.info("Pasando el túnel: " + this.getIdentificador());
-//            getEntorno().getListaTunelesIntermedio().get(numTunel).meter(this);
-//            getEntorno().comprobarPausa();
-//            sleep(1000);
-//            getEntorno().comprobarPausa();
-//            logger.info("Saliendo del túnel: " + this.getIdentificador());
-//            getEntorno().getListaTunelesIntermedio().get(numTunel).sacar(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if(getEntorno().getHayPrioridad().get(numTunel)==0){
-//                getEntorno().getTunelesInteriorCondition().get(numTunel).signalAll();
-//
-//            }
-//            tunel.unlock();
-//        }
-//    }
-//
-//    public void volver(int tunelEntrar, Lock tunelInteriorLock) {
-//        getEntorno().getHayPrioridad().incrementAndGet(tunelEntrar);
-//        tunelInteriorLock.lock();
-//        try {
-//            getEntorno().meter(this, getEntorno().TunelesEntrada.get(tunelEntrar), getEntorno().getListaTunelesEntrar().get(tunelEntrar));
-//            logger.info("Esperando para entrar a la zona segura " + getIdentificador());
-//            getEntorno().comprobarPausa();
-//            sleep(1000);
-//            getEntorno().comprobarPausa();
-//            getEntorno().sacar(this, getEntorno().TunelesEntrada.get(tunelEntrar), getEntorno().getListaTunelesEntrar().get(tunelEntrar));
-//
-//            getEntorno().meter(this, getEntorno().TunelesIntermedio.get(tunelEntrar), getEntorno().getListaTunelesIntermedio().get(tunelEntrar));
-//            getEntorno().comprobarPausa();
-//            sleep(1000);
-//            getEntorno().comprobarPausa();
-//            getEntorno().sacar(this, getEntorno().TunelesIntermedio.get(tunelEntrar), getEntorno().getListaTunelesIntermedio().get(tunelEntrar));
-//
-//            logger.info("Saliendo " + getIdentificador());
-//            getEntorno().getHayPrioridad().decrementAndGet(tunelEntrar);
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//
-//
-//            tunelInteriorLock.unlock();
-//
-//        }
-//    }
-//
-//    public void comer(){
-//        try {
-//            getEntorno().meter(this, getEntorno().ListaComedorEspera, getEntorno().getComedor_espera());
-//            synchronized (getEntorno().getLockComida()) {
-//                // Mientras no haya comida, espera a que se notifique
-//                while (getEntorno().sumaComidaLista()==0) {
-//                    getEntorno().getLockComida().wait(); // El hilo se suspende hasta que haya comida y se llame a notify()
-//                }
-//            }
-//            getEntorno().sacar(this, getEntorno().ListaComedorEspera, getEntorno().getComedor_espera());
-//
-//            getEntorno().meter(this, getEntorno().ListaComedorComiendo, getEntorno().getComedor_comiendo());
-//            getEntorno().getComidaTotal().poll();
-//            getEntorno().actualizarLabelComida();
-//            getEntorno().comprobarPausa();
-//            sleep(3000 + (int) Math.random() * 2000);
-//            getEntorno().comprobarPausa();
-//            getEntorno().sacar(this, getEntorno().ListaComedorComiendo, getEntorno().getComedor_comiendo());
-//
-//
-//
-//        }catch (Exception e){}
-//    }
+
+
+    public void comer(){
+
+        try {
+            getEntorno().getComedor_espera().meter(this);
+            // Mientras no haya comida, espera a que se notifique
+            getEntorno().getCerrojoComida().lock();
+            try {
+                while (getEntorno().getComidaTotal().size()== 0) {
+                    getEntorno().getHayComida().await(); // El hilo se suspende hasta que haya comida y se llame a notify()
+
+                }
+            }finally {
+                getEntorno().getCerrojoComida().unlock();
+            }
+
+            getEntorno().getComedor_espera().sacar(this);
+
+            getEntorno().getComedor_comiendo().meter(this);
+            getEntorno().getComidaTotal().poll();
+            getEntorno().actualizarLabelComida();
+            getEntorno().comprobarPausa();
+            sleep(3000 + (int) Math.random() * 2000);
+            getEntorno().comprobarPausa();
+
+            getEntorno().getComedor_comiendo().sacar(this);
+            getEntorno().getCerrojoComida().lock();
+
+            try{
+                if(getEntorno().getComidaTotal().size()>0){
+                    getEntorno().getHayComida().signal();
+                }
+            }finally {
+                getEntorno().getCerrojoComida().unlock();
+            }
+
+
+
+
+        }catch (Exception e){}
+
+    }
 
 
     //Getter y setter
+
 
     public int getNumComida() {
         return numComida;
