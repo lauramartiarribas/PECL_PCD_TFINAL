@@ -1,7 +1,9 @@
 package com.example.pecl_pcd_final;
 
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -11,18 +13,22 @@ public class Tunel {
     private CyclicBarrier barreraTunel;
     private Lock cerrojoTunel;
     private Condition puedeAtravesar;
+    private Entorno entorno;
+
+
 
 
     private boolean tunelOcupado= false;
 
 
-    private final ArrayList<Humano> colaParaVolver = new ArrayList<>();
-    private final ArrayList<Humano> colaParaSalir = new ArrayList<>();
+    private final ConcurrentLinkedQueue<Humano> colaParaVolver = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Humano> colaParaSalir = new ConcurrentLinkedQueue<>();
 
-    public Tunel(){
+    public Tunel(Entorno entorno){
         this.barreraTunel= new CyclicBarrier(3);
         this.cerrojoTunel= new ReentrantLock();
         this.puedeAtravesar= cerrojoTunel.newCondition();
+        this.entorno=entorno;
 
     }
 
@@ -30,42 +36,49 @@ public class Tunel {
 
     public void salirDesdeRefugio(Humano humano, int tunelSalir) throws InterruptedException {
         try {
-            // Se agrega a la cola de salida
-            cerrojoTunel.lock();
-            colaParaSalir.add(humano);
-            cerrojoTunel.unlock();
+
 
             // Esperar a formar grupo de 3
             barreraTunel.await();
 
             // Ya hay tres que van a cruzar
-            humano.getEntorno().getZona_comun().sacar(humano);
-            humano.getEntorno().getListaTunelesSalir().get(tunelSalir).meter(humano);
+            entorno.getZona_comun().sacar(humano);
+            entorno.getTunelSalir(tunelSalir).meter(humano);
 
             // Ahora esperar su turno para cruzar de uno en uno
             cerrojoTunel.lock();
             try {
-                while (tunelOcupado || !colaParaVolver.isEmpty() || colaParaSalir.get(0) != humano) {
+                // Se agrega a la cola de salida
+                colaParaSalir.offer(humano);
+
+                //Mientras haya alguien cruzando, o alguien queriendo volver de la ZR o haya alguien cruzando antes
+                //
+                while (tunelOcupado || !colaParaVolver.isEmpty() ) {
                     puedeAtravesar.await();
                 }
                 tunelOcupado = true;
-                colaParaSalir.remove(0);
+                colaParaSalir.poll();
+
+                // Cruza el túnel
+                entorno.getTunelSalir(tunelSalir).sacar(humano);
+                entorno.getTunelIntermedio(tunelSalir).meter(humano);
+
+
 
             } finally {
                 cerrojoTunel.unlock();
             }
 
-            // Cruza el túnel
-            humano.getEntorno().getListaTunelesSalir().get(tunelSalir).sacar(humano);
-            humano.getEntorno().getListaTunelesIntermedio().get(tunelSalir).meter(humano);
-
             humano.cruzarTunel();
 
-            humano.getEntorno().getListaTunelesIntermedio().get(tunelSalir).sacar(humano);
-            humano.getEntorno().getZona_riesgoHumanos().get(tunelSalir).meter(humano);
+
 
             cerrojoTunel.lock();
             try {
+
+                entorno.getTunelIntermedio(tunelSalir).sacar(humano);
+                entorno.getZonaRiesgoH(tunelSalir).meter(humano);
+
                 tunelOcupado = false;
                 puedeAtravesar.signalAll();
             } finally {
@@ -81,40 +94,49 @@ public class Tunel {
 
     public void volverAlRefugio(Humano humano, int tunelEntrar) throws InterruptedException {
 
-        humano.getEntorno().getZona_riesgoHumanos().get(tunelEntrar).sacar(humano);
-        humano.getEntorno().getListaTunelesEntrar().get(tunelEntrar).meter(humano);
+        entorno.getZonaRiesgoH(tunelEntrar).sacar(humano);
+        entorno.getTunelEntrar(tunelEntrar).meter(humano);
+
 
         cerrojoTunel.lock();
         try {
-            colaParaVolver.add(humano);
+            colaParaVolver.offer(humano);
 
             // Prioridad para volver: si hay alguien en cola para volver, pasa primero
-            while (tunelOcupado || colaParaVolver.get(0) != humano) {
+            //|| colaParaVolver.peek() != humano
+            while (tunelOcupado ) {
                 puedeAtravesar.await();
             }
 
             tunelOcupado = true;
-            colaParaVolver.remove(0);
+            colaParaVolver.poll();
+
+            // Cruza el túnel
+            entorno.getTunelEntrar(tunelEntrar).sacar(humano);
+            entorno.getTunelIntermedio(tunelEntrar).meter(humano);
+
 
         } finally {
             cerrojoTunel.unlock();
         }
 
-        // Cruza el túnel
-        humano.getEntorno().getListaTunelesEntrar().get(tunelEntrar).sacar(humano);
-        humano.getEntorno().getListaTunelesIntermedio().get(tunelEntrar).meter(humano);
-
         humano.cruzarTunel();
 
-        humano.getEntorno().getListaTunelesIntermedio().get(tunelEntrar).sacar(humano);
-        humano.getEntorno().getDescanso().meter(humano);
+
+
+
 
         cerrojoTunel.lock();
         try {
+            entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
+            entorno.getDescanso().meter(humano);
+
             tunelOcupado = false;
             puedeAtravesar.signalAll();
         } finally {
             cerrojoTunel.unlock();
         }
     }
+
+
 }

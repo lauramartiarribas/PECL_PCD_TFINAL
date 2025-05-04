@@ -37,13 +37,14 @@ se imprime su nuevo contenido en el ListView que toma como parámetro el constru
     private void imprimir() {
         Platform.runLater(() -> {
             observableList.clear();
-            synchronized (lista) {
+            synchronized (this) {
                 for (Ser ser : lista) {
                     observableList.add(ser.toString());
                 }
             }
         });
     }
+
 
     public ArrayList<Ser> getLista() {
         return lista;

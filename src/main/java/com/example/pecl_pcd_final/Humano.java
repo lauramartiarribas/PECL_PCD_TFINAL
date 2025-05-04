@@ -1,6 +1,5 @@
 package com.example.pecl_pcd_final;
 
-import javafx.application.Platform;
 
 import java.util.logging.Logger;
 
@@ -9,7 +8,7 @@ public class Humano extends Ser {
     private Logger logger = LoggerConFichero.getLogger();
     private int numComida;
     private boolean marcado;
-//    private Entorno entorno;  CAMBIAR???????
+    private volatile boolean enTunel = false;
 
 
 
@@ -24,7 +23,7 @@ public class Humano extends Ser {
     public void run() {
         try {
             logger.info("Empezando " + getIdentificador());
-            while(true) {
+            while(!isEstaMuerto()) {
 
                 getEntorno().comprobarPausa();
 
@@ -46,32 +45,28 @@ public class Humano extends Ser {
                 getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
 
 
-
-
                 logger.info(getIdentificador() + " En la zona exterior");
                 getEntorno().comprobarPausa();
                 sleep(3000 + (int) Math.random() * 2000);
                 getEntorno().comprobarPausa();
 
 
-                //Volver al refugio
-//                if(this.isEstaMuerto()==false){
-//                    getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
-//
-//
-//                }
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
-                getEntorno().comprobarPausa();
-                sleep(3000 + (int) Math.random() * 2000);
-                getEntorno().comprobarPausa();
-                getEntorno().getDescanso().sacar(this);
 
 
                 //Sumamos la comida recolectada y actualizamos el label
                 for (int i = 0; i < this.numComida; i++) {
                     getEntorno().getComidaTotal().offer(1);
                     getEntorno().actualizarLabelComida();
+                    getEntorno().comprobarPausa();
                 }
+
+                getEntorno().comprobarPausa();
+                sleep(3000 + (int) Math.random() * 2000);
+                getEntorno().comprobarPausa();
+                getEntorno().getDescanso().sacar(this);
+
+
 
 
 
@@ -86,7 +81,7 @@ public class Humano extends Ser {
 
 
                 //Zona de comedor
-                comer();
+                getEntorno().comer(this);
 
                 //Zona de descanso si ha sido marcado
                 if (this.marcado) {
@@ -107,8 +102,22 @@ public class Humano extends Ser {
 
             }
         } catch (InterruptedException e) {
-            System.out.println("Humano muerto ");
-            Thread.currentThread().interrupt(); // reestablecer estado de interrupción
+            if (this.isEstaMuerto()){
+                System.out.println("Humano muerto");
+                Thread.currentThread().interrupt(); // reestablecer estado de interrupción
+
+            }else{
+                try {
+
+                    System.out.println("ataque");
+                    Thread.sleep(500);
+                    Thread.interrupted();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+
         }
     }
 
@@ -124,55 +133,10 @@ public class Humano extends Ser {
 
 
 
-    public void comer(){
 
-        try {
-            getEntorno().getComedor_espera().meter(this);
-            // Mientras no haya comida, espera a que se notifique
-            getEntorno().getCerrojoComida().lock();
-            try {
-                while (getEntorno().getComidaTotal().size()== 0) {
-                    getEntorno().getHayComida().await(); // El hilo se suspende hasta que haya comida y se llame a notify()
-
-                }
-            }finally {
-                getEntorno().getCerrojoComida().unlock();
-            }
-
-            getEntorno().getComedor_espera().sacar(this);
-
-            getEntorno().getComedor_comiendo().meter(this);
-            getEntorno().getComidaTotal().poll();
-            getEntorno().actualizarLabelComida();
-            getEntorno().comprobarPausa();
-            sleep(3000 + (int) Math.random() * 2000);
-            getEntorno().comprobarPausa();
-
-            getEntorno().getComedor_comiendo().sacar(this);
-            getEntorno().getCerrojoComida().lock();
-
-            try{
-                if(getEntorno().getComidaTotal().size()>0){
-                    getEntorno().getHayComida().signal();
-                }
-            }finally {
-                getEntorno().getCerrojoComida().unlock();
-            }
-
-
-
-
-        }catch (Exception e){}
-
-    }
 
 
     //Getter y setter
-
-
-    public int getNumComida() {
-        return numComida;
-    }
 
     public void setNumComida(int numComida) {
         this.numComida = numComida;
@@ -181,7 +145,12 @@ public class Humano extends Ser {
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
     }
-
+    public boolean estaEnTunel() {
+        return enTunel;
+    }
+    public void setEnTunel(boolean enTunel) {
+        this.enTunel = enTunel;
+    }
 
 }
 

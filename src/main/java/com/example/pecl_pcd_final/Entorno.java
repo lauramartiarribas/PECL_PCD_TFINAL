@@ -15,6 +15,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import static java.lang.Thread.sleep;
+
 
 public class Entorno {
 
@@ -83,7 +85,7 @@ public class Entorno {
 
 
       for(int i=0; i<4; i++){
-         this.listaTuneles.add(new Tunel());
+         this.listaTuneles.add(new Tunel(this));
       }
 
 
@@ -132,53 +134,6 @@ public class Entorno {
 
 
 
-
-//   //Para sacar los hilos por pantalla
-//   public synchronized void meter(Ser t, ListView vista, ArrayList<Ser> lista) {
-//      lista.remove(t); // evita duplicados
-//      lista.add(t);
-//      Platform.runLater(() -> imprimir(vista, lista));
-//   }
-//
-//
-//   public synchronized void sacar(Ser t,ListView vista,ArrayList<Ser> lista) {
-//      lista.remove(t);
-//      Platform.runLater(() -> {
-//         imprimir(vista, lista);
-//      });
-//
-//   }
-//
-//   public synchronized void imprimir(ListView<Ser> vista, ArrayList<Ser> lista) {
-//      Platform.runLater(() -> {
-//         ObservableList<Ser> observableList = FXCollections.observableArrayList(new ArrayList<>(lista));
-//
-//         vista.setItems(observableList);
-//      });
-//   }
-
-
-
-
-
-
-//   public int sumaComidaLista(){
-//      int suma = 0;
-//      for (Integer j : comidaTotal) {
-//         suma += j;
-//      }
-//      return suma;
-//   }
-
-
-
-
-
-
-
-
-
-
    public synchronized void pausar(){
       enPausa=true;
    }
@@ -208,7 +163,7 @@ public class Entorno {
             humano.start();
             try {
                this.comprobarPausa();
-               humano.sleep(500+(int)Math.random()*1500);
+               sleep(500+(int)Math.random()*1500);
                this.comprobarPausa();
             } catch (InterruptedException e) {
                throw new RuntimeException(e);
@@ -221,6 +176,120 @@ public class Entorno {
    }
 
 
+   public void comer(Humano humano){
+
+      try {
+         comedor_espera.meter(humano);
+         // Mientras no haya comida, espera a que se notifique
+         cerrojoComida.lock();
+         try {
+            while (getComidaTotal().size()== 0) {
+               hayComida.await(); // El hilo se suspende hasta que haya comida y se llame a notify()
+
+            }
+         }finally {
+            cerrojoComida.unlock();
+         }
+
+         comedor_espera.sacar(humano);
+
+         comedor_comiendo.meter(humano);
+         comidaTotal.poll();
+         actualizarLabelComida();
+         comprobarPausa();
+         sleep(3000 + (int) Math.random() * 2000);
+         comprobarPausa();
+
+         comedor_comiendo.sacar(humano);
+         cerrojoComida.lock();
+
+         try{
+            if(comidaTotal.size()>0){
+               hayComida.signal();
+            }
+         }finally {
+            cerrojoComida.unlock();
+         }
+
+
+
+
+      }catch (Exception e){}
+
+   }
+
+
+
+   public synchronized void atacar(Humano humano, int numZona, Zombie zombie) throws InterruptedException {
+
+      try {
+         int tiempoAtaque=500+ (int) Math.random()*1000;
+
+//         comprobarPausa();
+//         humano.interrupt();
+//         humano.interrupted();
+//         humano.sleep(tiempoAtaque);
+//         comprobarPausa();
+//
+//         comprobarPausa();
+//         zombie.sleep(tiempoAtaque);
+//         comprobarPausa();
+
+         int probGanaHumano = (int)(Math.random() * 3); // 0,1,2
+
+         if (probGanaHumano <= 1) {
+            logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso y queda marcado");
+            humano.setMarcado(true);
+            humano.setNumComida(0);
+            //humano.getEntorno().getListaTuneles().get(numZona).volverAlRefugio(humano,numZona);
+         } else {
+            logger.info("Convirtiendo humano " + humano.getIdentificador() + " a zombie");
+
+            zombie.setNumMuertes(zombie.getNumMuertes()+1);
+            logger.info("El zombie "+ zombie.getIdentificador()+" ha convertido a "+ zombie.getNumMuertes());
+
+            getZonaRiesgoH(numZona).sacar(humano);
+            comprobarPausa();
+            Zombie zombieNuevo = new Zombie("Z" + humano.getIdentificador().substring(1), this);
+
+            humano.setEstaMuerto(true);
+            humano.interrupt();
+            comprobarPausa();
+            zombieNuevo.start();
+
+
+
+
+         }
+
+
+//            getEntorno().comprobarPausa();
+//            this.sleep(500 + (int)(Math.random() * 1000));
+//            getEntorno().comprobarPausa();
+      } catch (Exception e) {
+         logger.warning("Error en ataque: " + e.getMessage());
+         Thread.currentThread().interrupt();
+      }
+
+   }
+
+
+   public synchronized Humano elegirHumano(int numZona){
+      int numHumanos = zona_riesgoHumanos.get(numZona).getLista().size();
+      Humano objetivo=null;
+      if (numHumanos > 0) {
+
+         if (numHumanos == 1) {
+
+            objetivo = (Humano) zona_riesgoHumanos.get(numZona).getLista().get(0);
+         } else {
+            int humanoAtacar = (int)(Math.random() * numHumanos);
+            objetivo = (Humano) zona_riesgoHumanos.get(numZona).getLista().get(humanoAtacar);
+         }
+
+      }
+      return objetivo;
+   }
 
 
 
@@ -283,19 +352,21 @@ public class Entorno {
       return listaTuneles;
    }
 
-   public void setListaTuneles(ArrayList<Tunel> listaTuneles) {
-      this.listaTuneles = listaTuneles;
+
+   public ListaHilos getTunelSalir(int numTunel){
+      return listaTunelesSalir.get(numTunel);
+   }
+   public ListaHilos getTunelIntermedio(int numTunel){
+      return listaTunelesIntermedio.get(numTunel);
+   }
+   public ListaHilos getTunelEntrar(int numTunel){
+      return listaTunelesEntrar.get(numTunel);
    }
 
-   public Condition getHayComida() {
-      return hayComida;
+
+   public ListaHilos getZonaRiesgoH(int num){
+      return zona_riesgoHumanos.get(num);
    }
 
-   public void setHayComida(Condition hayComida) {
-      this.hayComida = hayComida;
-   }
 
-   public Lock getCerrojoComida() {
-      return cerrojoComida;
-   }
 }
