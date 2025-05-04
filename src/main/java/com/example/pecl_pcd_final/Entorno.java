@@ -5,6 +5,7 @@ import javafx.application.Platform;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
@@ -27,8 +28,8 @@ public class Entorno {
    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que se tienen en ese momento
    private boolean enPausa = false;
 
-   private int numHumanos=1;
-   private ListaHilos listaHumanos;
+   private int numHumanos;
+
 
    /// Refugio ///
    private ListaHilos descanso;
@@ -41,7 +42,8 @@ public class Entorno {
 
    private Lock cerrojoComida;
    private Condition hayComida;
-   private ConcurrentLinkedQueue<Integer> comidaTotal= new ConcurrentLinkedQueue<>();
+   private ConcurrentLinkedQueue<Integer> comidaTotal;
+   private ConcurrentLinkedQueue<Humano> colaComedor;
 
    private javafx.scene.control.TextField labelComida;
 
@@ -78,6 +80,7 @@ public class Entorno {
 
                   javafx.scene.control.TextField labelComida) throws IOException {
 
+      this.numHumanos=1;
       this.descanso=descanso;
       this.comedor_espera=comedor_espera;
       this.comedor_comiendo=comedor_comiendo;
@@ -92,15 +95,9 @@ public class Entorno {
       this.labelComida=labelComida;
       this.cerrojoComida=new ReentrantLock();
       this.hayComida= cerrojoComida.newCondition();
+      this.comidaTotal = new ConcurrentLinkedQueue<>();
+      this.colaComedor = new ConcurrentLinkedQueue<>();
 
-
-//      for(int i=0; i<4;i++){
-//         tunelesSalirBarreras.add(new CyclicBarrier(3));
-//         tunelesSalirSemaforo.add(new Semaphore(1));
-//         tunelesInteriorLock.add(new ReentrantLock());
-//         //tunelesInteriorCondition.add(tunelesInteriorLock.get(i).newCondition());
-//
-//      }
 
       listaTunelesSalir.add(tunelSalir1);
       listaTunelesSalir.add(tunelSalir2);
@@ -152,14 +149,12 @@ public class Entorno {
 
    public void nacerHumanos(){
       new Thread(() ->{
-         ///while (true)
-         for(int i=0;i<14;i++){
+
+         for(int i=0;i<14;i++){ //9999
 
             Humano humano= new Humano("H"+ String.format("%04d", numHumanos),this);
             numHumanos++;
 
-
-            //humanos.add(humano);
             humano.start();
             try {
                this.comprobarPausa();
@@ -180,20 +175,21 @@ public class Entorno {
 
       try {
          comedor_espera.meter(humano);
+         colaComedor.offer(humano);
          // Mientras no haya comida, espera a que se notifique
          cerrojoComida.lock();
          try {
             while (getComidaTotal().size()== 0) {
                hayComida.await(); // El hilo se suspende hasta que haya comida y se llame a notify()
-
             }
          }finally {
             cerrojoComida.unlock();
          }
-
          comedor_espera.sacar(humano);
 
          comedor_comiendo.meter(humano);
+         colaComedor.poll();
+
          comidaTotal.poll();
          actualizarLabelComida();
          comprobarPausa();
@@ -201,11 +197,12 @@ public class Entorno {
          comprobarPausa();
 
          comedor_comiendo.sacar(humano);
-         cerrojoComida.lock();
 
+
+         cerrojoComida.lock();
          try{
-            if(comidaTotal.size()>0){
-               hayComida.signal();
+            if(!comidaTotal.isEmpty()){
+               hayComida.signal(); // signalAll?????
             }
          }finally {
             cerrojoComida.unlock();
@@ -214,7 +211,9 @@ public class Entorno {
 
 
 
-      }catch (Exception e){}
+      }catch (Exception e){
+         Thread.currentThread().interrupt();
+      }
 
    }
 
