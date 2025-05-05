@@ -52,57 +52,57 @@ public class Zombie extends Ser {
 
     }
 
-    public void atacar2(Humano humano, int numZona) throws InterruptedException {
-        cerrojoAtaque.lock();
-        try {
-            // Verificar si el humano está en una zona no atacable
-            if (humano.estaEnTunel() || humano.isEstaMuerto()) {
-                logger.info("El zombie " + this.getIdentificador() + " no puede atacar al humano " + humano.getIdentificador() + " porque está en un túnel o ya está muerto.");
-                return;
-            }
-
-            int tiempoAtaque = 500 + (int)(Math.random() * 1000);
-            logger.info("Zombie " + this.getIdentificador() + " atacando al humano " + humano.getIdentificador());
-
-            getEntorno().comprobarPausa();
-            humano.sleep(tiempoAtaque);
-            getEntorno().comprobarPausa();
-
-            this.sleep(tiempoAtaque);
-            getEntorno().comprobarPausa();
-
-            int probGanaHumano = (int)(Math.random() * 3); // 0,1,2
-
-            if (probGanaHumano <= 1) {
-                logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso y queda marcado");
-                humano.setMarcado(true);
-                humano.setNumComida(0);
-            } else {
-                logger.info("Convirtiendo humano " + humano.getIdentificador() + " a zombie");
-                humano.setEstaMuerto(true); // marcarlo como muerto
-                this.numMuertes++;
-                logger.info("El zombie "+ this.getIdentificador() + " ha convertido a " + humano.getIdentificador());
-
-                synchronized (getEntorno().getZonaRiesgoH(numZona)) {
-                    getEntorno().getZonaRiesgoH(numZona).sacar(humano);
-                }
-
-                getEntorno().comprobarPausa();
-                humano.interrupt(); // esto debería detener el hilo humano
-                getEntorno().comprobarPausa();
-
-                // Crear el nuevo zombie solo si el humano fue correctamente marcado como muerto
-                Zombie zombie = new Zombie("Z" + humano.getIdentificador().substring(1), getEntorno());
-                zombie.start();
-            }
-
-        } catch (Exception e) {
-            logger.warning("Error en ataque: " + e.getMessage());
-            Thread.currentThread().interrupt();
-        } finally {
-            cerrojoAtaque.unlock();
-        }
-    }
+//    public void atacar2(Humano humano, int numZona) throws InterruptedException {
+//        cerrojoAtaque.lock();
+//        try {
+//            // Verificar si el humano está en una zona no atacable
+//            if (humano.estaEnTunel() || humano.isEstaMuerto()) {
+//                logger.info("El zombie " + this.getIdentificador() + " no puede atacar al humano " + humano.getIdentificador() + " porque está en un túnel o ya está muerto.");
+//                return;
+//            }
+//
+//            int tiempoAtaque = 500 + (int)(Math.random() * 1000);
+//            logger.info("Zombie " + this.getIdentificador() + " atacando al humano " + humano.getIdentificador());
+//
+//            getEntorno().comprobarPausa();
+//            humano.sleep(tiempoAtaque);
+//            getEntorno().comprobarPausa();
+//
+//            this.sleep(tiempoAtaque);
+//            getEntorno().comprobarPausa();
+//
+//            int probGanaHumano = (int)(Math.random() * 3); // 0,1,2
+//
+//            if (probGanaHumano <= 1) {
+//                logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso y queda marcado");
+//                humano.setMarcado(true);
+//                humano.setNumComida(0);
+//            } else {
+//                logger.info("Convirtiendo humano " + humano.getIdentificador() + " a zombie");
+//                humano.setEstaMuerto(true); // marcarlo como muerto
+//                this.numMuertes++;
+//                logger.info("El zombie "+ this.getIdentificador() + " ha convertido a " + humano.getIdentificador());
+//
+//                synchronized (getEntorno().getZonaRiesgoH(numZona)) {
+//                    getEntorno().getZonaRiesgoH(numZona).sacar(humano);
+//                }
+//
+//                getEntorno().comprobarPausa();
+//                humano.interrupt(); // esto debería detener el hilo humano
+//                getEntorno().comprobarPausa();
+//
+//                // Crear el nuevo zombie solo si el humano fue correctamente marcado como muerto
+//                Zombie zombie = new Zombie("Z" + humano.getIdentificador().substring(1), getEntorno());
+//                zombie.start();
+//            }
+//
+//        } catch (Exception e) {
+//            logger.warning("Error en ataque: " + e.getMessage());
+//            Thread.currentThread().interrupt();
+//        } finally {
+//            cerrojoAtaque.unlock();
+//        }
+//    }
 
 //    public synchronized Humano elegirHumano(ListaHilos humanosZona, int numZonaRiesgoZombie ){
 //        synchronized (humanosZona) {

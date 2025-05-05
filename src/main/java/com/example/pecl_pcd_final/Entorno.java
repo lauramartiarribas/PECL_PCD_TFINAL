@@ -16,6 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 
@@ -219,57 +220,47 @@ public class Entorno {
 
 
 
-   public synchronized void atacar(Humano humano, int numZona, Zombie zombie) throws InterruptedException {
-
+   public synchronized void atacar(Humano humano, int numZona, Zombie zombie) {
       try {
-         int tiempoAtaque=500+ (int) Math.random()*1000;
+         int tiempoAtaque = 500 + (int) (Math.random() * 1000);
 
-//         comprobarPausa();
-//         humano.interrupt();
-//         humano.interrupted();
-//         humano.sleep(tiempoAtaque);
-//         comprobarPausa();
-//
-//         comprobarPausa();
-//         zombie.sleep(tiempoAtaque);
-//         comprobarPausa();
+         humano.getCerrojoDefendiendose().lock();
+         try {
 
-         int probGanaHumano = (int)(Math.random() * 3); // 0,1,2
+            humano.setDefendiendose(true);
+            humano.sleep(tiempoAtaque);
+            zombie.sleep(tiempoAtaque);
 
-         if (probGanaHumano <= 1) {
-            logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso y queda marcado");
-            humano.setMarcado(true);
-            humano.setNumComida(0);
-            //humano.getEntorno().getListaTuneles().get(numZona).volverAlRefugio(humano,numZona);
-         } else {
-            logger.info("Convirtiendo humano " + humano.getIdentificador() + " a zombie");
+            int probGanaHumano = (int) (Math.random() * 3);
+            if (probGanaHumano <= 1) {
+               logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso.");
+               humano.setMarcado(true);
+               humano.setNumComida(0);
+            } else {
+               logger.info("El zombie " + zombie.getIdentificador() + " ha convertido al humano " + humano.getIdentificador());
 
-            zombie.setNumMuertes(zombie.getNumMuertes()+1);
-            logger.info("El zombie "+ zombie.getIdentificador()+" ha convertido a "+ zombie.getNumMuertes());
+               humano.setEstaMuerto(true);
+               humano.interrupt();
+               getZonaRiesgoH(numZona).sacar(humano);
+               comprobarPausa();
 
-            getZonaRiesgoH(numZona).sacar(humano);
-            comprobarPausa();
-            Zombie zombieNuevo = new Zombie("Z" + humano.getIdentificador().substring(1), this);
+               Zombie nuevo = new Zombie("Z" + humano.getIdentificador().substring(1), this);
+               nuevo.start();
 
-            humano.setEstaMuerto(true);
-            humano.interrupt();
-            comprobarPausa();
-            zombieNuevo.start();
+               zombie.setNumMuertes(zombie.getNumMuertes() + 1);
+            }
 
-
-
-
+         } catch (InterruptedException e) {
+            logger.warning("Ataque interrumpido");
+            Thread.currentThread().interrupt();
+         } finally {
+            humano.setDefendiendose(false);
+            humano.getDefendiendoseCondicion().signalAll();
+            humano.getCerrojoDefendiendose().unlock();
          }
-
-
-//            getEntorno().comprobarPausa();
-//            this.sleep(500 + (int)(Math.random() * 1000));
-//            getEntorno().comprobarPausa();
-      } catch (Exception e) {
-         logger.warning("Error en ataque: " + e.getMessage());
-         Thread.currentThread().interrupt();
+      }  catch (Exception e) {
+         logger.warning("Excepción durante ataque: " + e.getMessage());
       }
-
    }
 
 

@@ -1,6 +1,9 @@
 package com.example.pecl_pcd_final;
 
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 public class Humano extends Ser {
@@ -8,7 +11,13 @@ public class Humano extends Ser {
     private Logger logger = LoggerConFichero.getLogger();
     private int numComida;
     private boolean marcado;
-    private volatile boolean enTunel = false;
+
+    private Lock cerrojoDefendiendose;
+
+    private Condition defendiendoseCondicion;
+
+    private Boolean defendiendose;
+
 
 
 
@@ -17,6 +26,9 @@ public class Humano extends Ser {
         this.setEntorno(entorno);
         numComida = 0;
         marcado = false;
+        cerrojoDefendiendose= new ReentrantLock();
+        defendiendoseCondicion= cerrojoDefendiendose.newCondition();
+        defendiendose=false;
     }
 
     @Override
@@ -24,6 +36,15 @@ public class Humano extends Ser {
         try {
             logger.info("Empezando " + getIdentificador());
             while(!isEstaMuerto()) {
+                cerrojoDefendiendose.lock();
+                try{
+                    while (defendiendose) {
+                        defendiendoseCondicion.await(); // El humano espera hasta que termine el ataque
+                    }
+                }finally {
+                    cerrojoDefendiendose.unlock();
+                }
+
 
                 getEntorno().comprobarPausa();
 
@@ -102,19 +123,12 @@ public class Humano extends Ser {
 
             }
         } catch (InterruptedException e) {
-            if (this.isEstaMuerto()){
-                System.out.println("Humano muerto");
-                Thread.currentThread().interrupt(); // reestablecer estado de interrupción
+            if (this.isEstaMuerto()) {
+                logger.info("El humano " + getIdentificador() + " ha muerto y su hilo se detiene.");
 
-            }else{
-                try {
-
-                    System.out.println("ataque");
-                    Thread.sleep(500);
-                    Thread.interrupted();
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
+            } else {
+                logger.warning("Humano " + getIdentificador() + " interrumpido por otra causa.");
+                Thread.currentThread().interrupt(); // Mantiene interrupción
             }
 
 
@@ -145,13 +159,18 @@ public class Humano extends Ser {
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
     }
-    public boolean estaEnTunel() {
-        return enTunel;
-    }
-    public void setEnTunel(boolean enTunel) {
-        this.enTunel = enTunel;
+
+    public Lock getCerrojoDefendiendose() {
+        return cerrojoDefendiendose;
     }
 
+    public Condition getDefendiendoseCondicion() {
+        return defendiendoseCondicion;
+    }
+
+    public void setDefendiendose(Boolean defendiendose) {
+        this.defendiendose = defendiendose;
+    }
 }
 
 

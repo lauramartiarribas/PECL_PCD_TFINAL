@@ -93,7 +93,9 @@ public class Tunel {
     }
 
     public void volverAlRefugio(Humano humano, int tunelEntrar) throws InterruptedException {
-
+        if(humano.isEstaMuerto()){
+            return;
+        }
         entorno.getZonaRiesgoH(tunelEntrar).sacar(humano);
         entorno.getTunelEntrar(tunelEntrar).meter(humano);
 
