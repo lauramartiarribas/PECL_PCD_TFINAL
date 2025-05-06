@@ -140,7 +140,7 @@ public class Entorno {
     public void nacerHumanos() {
         new Thread(() -> {
 
-            while(true) {
+            for (int i = 0; i < 9998; i++) { //9999
 
                 Humano humano = new Humano("H" + String.format("%04d", numHumanos), this);
                 numHumanos++;
