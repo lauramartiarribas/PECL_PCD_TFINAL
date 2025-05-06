@@ -52,7 +52,6 @@ public class Tunel {
                 colaParaSalir.offer(humano);
 
                 //Mientras haya alguien cruzando, o alguien queriendo volver de la ZR o haya alguien cruzando antes
-                //
                 while (tunelOcupado || !colaParaVolver.isEmpty() ) {
                     puedeAtravesar.await();
                 }
@@ -105,7 +104,6 @@ public class Tunel {
             colaParaVolver.offer(humano);
 
             // Prioridad para volver: si hay alguien en cola para volver, pasa primero
-            //|| colaParaVolver.peek() != humano
             while (tunelOcupado ) {
                 puedeAtravesar.await();
             }
