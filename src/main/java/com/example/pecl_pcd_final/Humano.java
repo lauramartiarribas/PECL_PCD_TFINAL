@@ -56,7 +56,7 @@ public class Humano extends Ser {
                 sleep(1000 + (int) (Math.random() * 1000));
                 getEntorno().comprobarPausa();
 
-                logger.info("Saliendo de la zona común " + getIdentificador());
+
 
 
                 // Seleccionar túnel
@@ -75,12 +75,12 @@ public class Humano extends Ser {
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
 
 
-                //Sumamos la comida recolectada y actualizamos el label
-                for (int i = 0; i < this.numComida; i++) {
-                    getEntorno().getComidaTotal().offer(1);
-                    getEntorno().actualizarLabelComida();
-                    getEntorno().comprobarPausa();
-                }
+
+
+
+
+                getEntorno().actualizarComida(numComida);
+                getEntorno().actualizarLabelComida();
 
                 getEntorno().comprobarPausa();
                 sleep(3000 + (int) Math.random() * 2000);
@@ -123,15 +123,8 @@ public class Humano extends Ser {
 
             }
         } catch (InterruptedException e) {
-            if (this.isEstaMuerto()) {
-                logger.info("El humano " + getIdentificador() + " ha muerto y su hilo se detiene.");
-
-            } else {
                 logger.warning("Humano " + getIdentificador() + " interrumpido por otra causa.");
                 Thread.currentThread().interrupt(); // Mantiene interrupción
-            }
-
-
         }
     }
 
@@ -142,7 +135,7 @@ public class Humano extends Ser {
         getEntorno().comprobarPausa();
         sleep(1000);
         getEntorno().comprobarPausa();
-        logger.info(getIdentificador() + " terminó de cruzar el túnel.");
+
     }
 
 
@@ -170,6 +163,10 @@ public class Humano extends Ser {
 
     public void setDefendiendose(Boolean defendiendose) {
         this.defendiendose = defendiendose;
+    }
+
+    public Boolean getDefendiendose() {
+        return defendiendose;
     }
 }
 

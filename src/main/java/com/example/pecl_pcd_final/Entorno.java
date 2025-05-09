@@ -6,9 +6,7 @@ import javafx.application.Platform;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -59,7 +57,7 @@ public class Entorno {
 
 
     /// Zona de riesgo ///
-    private ArrayList<ListaHilos> zona_riesgoHumanos = new ArrayList<>();
+    private ArrayList<ZonaRiesgoHumano> zona_riesgoHumanos = new ArrayList<>();
 
     private ArrayList<ListaHilos> zona_riesgoZombie = new ArrayList<>();
 
@@ -107,10 +105,11 @@ public class Entorno {
         listaTunelesEntrar.add(tunelEntrar3);
         listaTunelesEntrar.add(tunelEntrar4);
 
-        zona_riesgoHumanos.add(zona_riesgoHumano1);
-        zona_riesgoHumanos.add(zona_riesgoHumano2);
-        zona_riesgoHumanos.add(zona_riesgoHumano3);
-        zona_riesgoHumanos.add(zona_riesgoHumano4);
+        zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano1,this));
+        zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano2,this));
+        zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano3,this));
+        zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano4,this));
+
 
         zona_riesgoZombie.add(zona_riesgoZombie1);
         zona_riesgoZombie.add(zona_riesgoZombie2);
@@ -137,28 +136,7 @@ public class Entorno {
     }
 
 
-    public void nacerHumanos() {
-        new Thread(() -> {
 
-            for (int i = 0; i < 9998; i++) { //9999
-
-                Humano humano = new Humano("H" + String.format("%04d", numHumanos), this);
-                numHumanos++;
-
-                humano.start();
-                try {
-                    this.comprobarPausa();
-                    sleep(500 + (int) Math.random() * 1500);
-                    this.comprobarPausa();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-            }
-        }).start();
-
-
-    }
 
 
     public void comer(Humano humano) {
@@ -169,12 +147,18 @@ public class Entorno {
             // Mientras no haya comida, espera a que se notifique
             cerrojoComida.lock();
             try {
-                while (getComidaTotal().size() == 0) {
-                    hayComida.await(); // El hilo se suspende hasta que haya comida y se llame a notify()
+                while (comidaTotal.isEmpty()) {
+                    try {
+                        hayComida.await();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
                 }
             } finally {
                 cerrojoComida.unlock();
             }
+
             comedor_espera.sacar(humano);
 
             comedor_comiendo.meter(humano);
@@ -182,6 +166,7 @@ public class Entorno {
 
             comidaTotal.poll();
             actualizarLabelComida();
+
             comprobarPausa();
             sleep(3000 + (int) Math.random() * 2000);
             comprobarPausa();
@@ -189,82 +174,20 @@ public class Entorno {
             comedor_comiendo.sacar(humano);
 
 
-            cerrojoComida.lock();
-            try {
-                if (!comidaTotal.isEmpty()) {
-                    hayComida.signal(); // signalAll?????
-                }
-            } finally {
-                cerrojoComida.unlock();
-            }
+
 
 
         } catch (Exception e) {
-            Thread.currentThread().interrupt();
+            currentThread().interrupt();
         }
 
     }
 
 
-    public synchronized void atacar(Humano humano, int numZona, Zombie zombie) {
-        try {
-            int tiempoAtaque = 500 + (int) (Math.random() * 1000);
-
-            humano.getCerrojoDefendiendose().lock();
-            try {
-
-                humano.setDefendiendose(true);
-                humano.sleep(tiempoAtaque);
-                zombie.sleep(tiempoAtaque);
-
-                int probGanaHumano = (int) (Math.random() * 3);
-                if (probGanaHumano <= 1) {
-                    logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso.");
-                    humano.setMarcado(true);
-                    humano.setNumComida(0);
-                } else {
-                    logger.info("El zombie " + zombie.getIdentificador() + " ha convertido al humano " + humano.getIdentificador());
-
-                    humano.setEstaMuerto(true);
-                    humano.interrupt();
-                    getZonaRiesgoH(numZona).sacar(humano);
-                    comprobarPausa();
-
-                    Zombie nuevo = new Zombie("Z" + humano.getIdentificador().substring(1), this);
-                    nuevo.start();
-
-                    zombie.setNumMuertes(zombie.getNumMuertes() + 1);
-                }
-
-            } catch (InterruptedException e) {
-                logger.warning("Ataque interrumpido");
-                Thread.currentThread().interrupt();
-            } finally {
-                humano.setDefendiendose(false);
-                humano.getDefendiendoseCondicion().signalAll();
-                humano.getCerrojoDefendiendose().unlock();
-            }
-        } catch (Exception e) {
-            logger.warning("Excepción durante ataque: " + e.getMessage());
-        }
-    }
 
 
     public synchronized Humano elegirHumano(int numZona) {
-        int numHumanos = zona_riesgoHumanos.get(numZona).getLista().size();
-        Humano objetivo = null;
-        if (numHumanos > 0) {
-
-            if (numHumanos == 1) {
-
-                objetivo = (Humano) zona_riesgoHumanos.get(numZona).getLista().get(0);
-            } else {
-                int humanoAtacar = (int) (Math.random() * numHumanos);
-                objetivo = (Humano) zona_riesgoHumanos.get(numZona).getLista().get(humanoAtacar);
-            }
-
-        }
-        return objetivo;
+        return zona_riesgoHumanos.get(numZona).elegirObjetivoAleatorio();
     }
 
 
@@ -292,13 +215,26 @@ public class Entorno {
 
 
     public void actualizarLabelComida() {
-        Platform.runLater(() -> {
-            labelComida.setText(String.valueOf(this.getComidaTotal().size()));
-        });
+        Platform.runLater(() -> labelComida.setText(String.valueOf(comidaTotal.size())));
+    }
+    public void actualizarComida(int numComida){
+        for (int i = 0; i < numComida; i++) {
+            comidaTotal.offer(1);
+        }
+        cerrojoComida.lock();
+        try {
+            hayComida.signalAll(); // Notifica a todos los que esperan por comida
+        } finally {
+            cerrojoComida.unlock();
+        }
+        actualizarLabelComida();
+
+
     }
 
 
-    public ArrayList<ListaHilos> getZona_riesgoHumanos() {
+
+    public ArrayList<ZonaRiesgoHumano> getZona_riesgoHumanos() {
         return zona_riesgoHumanos;
     }
 
@@ -337,9 +273,15 @@ public class Entorno {
     }
 
 
-    public ListaHilos getZonaRiesgoH(int num) {
+    public ZonaRiesgoHumano getZonaRiesgoH(int num) {
         return zona_riesgoHumanos.get(num);
     }
 
+    public int getNumHumanos() {
+        return numHumanos;
+    }
 
+    public void setNumHumanos(int numHumanos) {
+        this.numHumanos = numHumanos;
+    }
 }

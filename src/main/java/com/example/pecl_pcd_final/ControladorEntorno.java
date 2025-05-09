@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 public class ControladorEntorno {
 
     private Entorno entorno;
@@ -117,8 +119,8 @@ public class ControladorEntorno {
         PlayButton.setDisable(true);
         PauseButton.setDisable(false);
         //entorno.enPausa=false;
-
-        entorno.nacerHumanos();
+        HiloGenerador hilo= new HiloGenerador(entorno,500);
+        hilo.start();
 
         //Creamos el zombie
         Zombie zombie= new Zombie("Z0000", entorno);
@@ -152,7 +154,7 @@ public class ControladorEntorno {
             infoAlert.setHeaderText("Estás jugando a: Apocalipsis Zombie");
             TextArea textArea = new TextArea(
                     "Es el año 2025 y se ha desencadenado un apocalipsis zombie.\n\n" +
-                            "Sólo se tiene un refugio seguro para los humanos, pero deben cruzar a la zona de riesgo por los túneles para recoger comida.\n\n" +
+                            "Sólo se tiene un refugio seguro para los humanos, pero deben cruzar a la zona de riesgo por los túneles para recoger Pla.\n\n" +
                             "¡Cuidado con los zombies, podrán atacar e incluso convertir a los humanos!"
             );
             textArea.setWrapText(true); // Para que el texto se ajuste
@@ -207,40 +209,8 @@ public class ControladorEntorno {
         ReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
 
-//        ZonaRiesgoHumanos = FXCollections.observableArrayList(
-//                ZonaRiesgoHumano1,
-//                ZonaRiesgoHumano2,
-//                ZonaRiesgoHumano3,
-//                ZonaRiesgoHumano4
-//        );
-//        TunelesSalida = FXCollections.observableArrayList(
-//                TunelSalir1,
-//                TunelSalir2,
-//                TunelSalir3,
-//                TunelSalir4
-//        );
-//
-//        TunelesEntrada = FXCollections.observableArrayList(
-//                TunelEntrar1,
-//                TunelEntrar2,
-//                TunelEntrar3,
-//                TunelEntrar4
-//        );
-//
-//
-//        TunelesIntermedio = FXCollections.observableArrayList(
-//                TunelIntermedio1,
-//                TunelIntermedio2,
-//                TunelIntermedio3,
-//                TunelIntermedio4
-//        );
-//
-//        ZonaRiesgoZombies = FXCollections.observableArrayList(
-//                ZonaRiesgoZombie1,
-//                ZonaRiesgoZombie2,
-//                ZonaRiesgoZombie3,
-//                ZonaRiesgoZombie4
-//        );
+
+
 
 
     }

@@ -20,7 +20,6 @@ public class Zombie extends Ser {
     @Override
     public void run(){
         try {
-            logger.info("Empezando zombie" + getIdentificador());
 
             while (true){
                 //Elige zona
@@ -32,8 +31,8 @@ public class Zombie extends Ser {
 
                 //Busca humano para atacar
                 Humano objetivo= getEntorno().elegirHumano(numZonaRiesgoZombie);
-                if(objetivo!=null){
-                    getEntorno().atacar(objetivo,numZonaRiesgoZombie,this);
+                if(objetivo!=null && !objetivo.getDefendiendose()){
+                    getEntorno().getZonaRiesgoH(numZonaRiesgoZombie).atacar(objetivo,numZonaRiesgoZombie,this);
                 }
 
 
@@ -42,7 +41,6 @@ public class Zombie extends Ser {
                 sleep(2000+ (int) Math.random()*1000);
                 getEntorno().comprobarPausa();
 
-                logger.info("Zombie "+this.getIdentificador()+ " saliendo de la zona de riesgo "+numZonaRiesgoZombie );
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).sacar(this);
 
             }

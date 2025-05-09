@@ -1,0 +1,36 @@
+package com.example.pecl_pcd_final;
+
+public class HiloGenerador extends Thread {
+
+    private Entorno entorno;
+    private int numHumanosAGenerar;
+
+
+    public HiloGenerador(Entorno entorno, int numHumanosAGenerar) {
+        this.entorno = entorno;
+        this.numHumanosAGenerar = numHumanosAGenerar;
+
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < numHumanosAGenerar; i++) {
+            Humano humano = new Humano("H" + String.format("%04d", entorno.getNumHumanos()), entorno);
+            entorno.setNumHumanos(entorno.getNumHumanos()+1);
+            humano.start();
+            int n=500+(int)Math.random()*1500;
+
+
+
+            try {
+                Thread.sleep(n); // Esperar antes de lanzar el siguiente
+            } catch (InterruptedException e) {
+                System.out.println("Generador interrumpido");
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+}
+
+

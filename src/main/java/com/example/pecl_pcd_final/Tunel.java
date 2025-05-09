@@ -21,8 +21,8 @@ public class Tunel {
     private boolean tunelOcupado= false;
 
 
-    private final ConcurrentLinkedQueue<Humano> colaParaVolver = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Humano> colaParaSalir = new ConcurrentLinkedQueue<>();
+    private  ConcurrentLinkedQueue<Humano> colaParaVolver = new ConcurrentLinkedQueue<>();
+    private  ConcurrentLinkedQueue<Humano> colaParaSalir = new ConcurrentLinkedQueue<>();
 
     public Tunel(Entorno entorno){
         this.barreraTunel= new CyclicBarrier(3);
@@ -76,7 +76,7 @@ public class Tunel {
             try {
 
                 entorno.getTunelIntermedio(tunelSalir).sacar(humano);
-                entorno.getZonaRiesgoH(tunelSalir).meter(humano);
+                entorno.getZonaRiesgoH(tunelSalir).meterHumano(humano);
 
                 tunelOcupado = false;
                 puedeAtravesar.signalAll();
@@ -95,7 +95,7 @@ public class Tunel {
         if(humano.isEstaMuerto()){
             return;
         }
-        entorno.getZonaRiesgoH(tunelEntrar).sacar(humano);
+        entorno.getZonaRiesgoH(tunelEntrar).sacarHumano(humano);
         entorno.getTunelEntrar(tunelEntrar).meter(humano);
 
 
