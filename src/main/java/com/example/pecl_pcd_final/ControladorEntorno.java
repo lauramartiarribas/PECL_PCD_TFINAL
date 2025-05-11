@@ -178,7 +178,8 @@ public class ControladorEntorno {
 
     @FXML
     public  void  initialize() throws IOException {
-        this.entorno= new Entorno( new ListaHilos(ListaDescanso),
+        this.entorno= new Entorno(
+                new ListaHilos(ListaDescanso),
                 new ListaHilos(ListaComedorEspera),
                 new ListaHilos(ListaComedorComiendo),
                 new ListaHilos(ListaZonaComun),
@@ -203,17 +204,10 @@ public class ControladorEntorno {
                 new ListaHilos(ZonaRiesgoZombie3),
                 new ListaHilos(ZonaRiesgoZombie4),
                 Comida
-                );
-
+        );
         PauseButton.setDisable(true);
         ReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
 
-
-
-
-
     }
-
-
 }

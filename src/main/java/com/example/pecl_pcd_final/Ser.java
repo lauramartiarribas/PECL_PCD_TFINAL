@@ -1,10 +1,5 @@
 package com.example.pecl_pcd_final;
 
-import com.example.pecl_pcd_final.Entorno;
-
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Ser extends Thread{
 

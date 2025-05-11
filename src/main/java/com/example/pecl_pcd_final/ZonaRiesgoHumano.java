@@ -21,14 +21,12 @@ public class ZonaRiesgoHumano {
         this.entorno = entorno;
         cerrojoAtaque = new ReentrantLock();
         humanosDisponibles= new ArrayList<>();
-
     }
 
-    public void meterHumano(Humano h) {
-        humanosDisponibles.add(h);
-
-        humanos.meter(h);
-    }
+//    public void meterHumano(Humano h) {
+//        humanosDisponibles.add(h);
+//        humanos.meter(h);
+//    }
 //
 //    public void sacarHumano(Humano h) {
 //        humanosDisponibles.remove(h);
@@ -54,8 +52,8 @@ public class ZonaRiesgoHumano {
             cerrojoAtaque.unlock();
             return h;
         }
-
     }
+
 
     public void atacar(int numZona, Zombie zombie) {
         try {
@@ -64,7 +62,6 @@ public class ZonaRiesgoHumano {
             if(humano!=null) {
 
                 humano.interrupt();
-
                 zombie.sleep(tiempoAtaque);
 
                 int probGanaHumano = (int) (Math.random() * 3);
@@ -93,12 +90,7 @@ public class ZonaRiesgoHumano {
                     humano.notify();
                 }
             }
-
-
-        } catch (Exception e) {
-        }
-
-
+        } catch (Exception e) {}
     }
 
     public ListaHilos getHumanos() {

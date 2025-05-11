@@ -1,9 +1,6 @@
 package com.example.pecl_pcd_final;
 
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 public class Humano extends Ser {
@@ -11,11 +8,7 @@ public class Humano extends Ser {
     private Logger logger = LoggerConFichero.getLogger();
     private int numComida;
     private boolean marcado;
-
-
-
     private boolean defendiendose;
-
 
 
 
@@ -24,7 +17,6 @@ public class Humano extends Ser {
         this.setEntorno(entorno);
         numComida = 0;
         marcado = false;
-
         defendiendose=false;
     }
 
@@ -32,13 +24,13 @@ public class Humano extends Ser {
     public void run() {
         logger.info("Empezando " + getIdentificador());
         while(!isEstaMuerto()) {
-            int tunelSalir = (int) (Math.random() * 4);
-            try {
-                // Seleccionar túnel
 
+            // Seleccionar túnel
+            int tunelSalir = (int) (Math.random() * 4);
+
+            try {
                 if(!marcado) {
                     getEntorno().comprobarPausa();
-
                     // Zona común tiempo entre 1 y 2
                     logger.info("En la zona común " + getIdentificador());
                     getEntorno().getZona_comun().meter(this);
@@ -47,14 +39,8 @@ public class Humano extends Ser {
                     sleep(1000 + (int) (Math.random() * 1000));
                     getEntorno().comprobarPausa();
 
-
-
-
-                    logger.info(getIdentificador() + " Esperando en la barrera para salir");
-
-
+                    // Salir por el túnel elegido
                     getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
-
 
                     logger.info(getIdentificador() + " En la zona exterior");
                     getEntorno().comprobarPausa();
@@ -80,7 +66,7 @@ public class Humano extends Ser {
                 getEntorno().getDescanso().sacar(this);
 
 
-                ///En la zona de descanso
+                //En la zona de descanso
                 getEntorno().getDescanso().meter(this);
                 getEntorno().comprobarPausa();
                 sleep(2000 + (int) Math.random() * 2000);
@@ -101,12 +87,8 @@ public class Humano extends Ser {
 
                     marcado = false;
                 }
-
-
             }
             catch (InterruptedException e) {
-
-
             }
         }
 
@@ -119,8 +101,8 @@ public class Humano extends Ser {
         getEntorno().comprobarPausa();
         sleep(1000);
         getEntorno().comprobarPausa();
-
     }
+
 
     public void matar(int numZona){
 

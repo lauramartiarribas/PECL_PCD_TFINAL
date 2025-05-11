@@ -20,10 +20,10 @@ import static java.lang.Thread.sleep;
 
 public class Entorno {
 
-    ///El logger///
+    //El logger
     private Logger logger = LoggerConFichero.getLogger();
 
-    ///Elementos del juego ///
+    //Elementos del juego
     //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que se tienen en ese momento
     private boolean enPausa = false;
 
@@ -45,20 +45,16 @@ public class Entorno {
     private javafx.scene.control.TextField labelComida;
 
 
-    /// Túneles ///
+    // Túneles
     private ArrayList<Tunel> listaTuneles = new ArrayList<>();
 
-
     private ArrayList<ListaHilos> listaTunelesSalir = new ArrayList<>();
-
     private ArrayList<ListaHilos> listaTunelesIntermedio = new ArrayList<>();
-
     private ArrayList<ListaHilos> listaTunelesEntrar = new ArrayList<>();
 
 
-    /// Zona de riesgo ///
+    // Zona de riesgo
     private ArrayList<ZonaRiesgoHumano> zona_riesgoHumanos = new ArrayList<>();
-
     private ArrayList<ListaHilos> zona_riesgoZombie = new ArrayList<>();
 
 
@@ -136,9 +132,6 @@ public class Entorno {
     }
 
 
-
-
-
     public void comer(Humano humano) {
 
         try {
@@ -173,10 +166,6 @@ public class Entorno {
 
             comedor_comiendo.sacar(humano);
 
-
-
-
-
         } catch (Exception e) {
             currentThread().interrupt();
         }
@@ -186,29 +175,18 @@ public class Entorno {
 
 
 
-
-
-
     //Getters y setters
     public ListaHilos getDescanso() {
         return descanso;
     }
-
     public ListaHilos getComedor_espera() {
         return comedor_espera;
     }
-
     public ListaHilos getComedor_comiendo() {
         return comedor_comiendo;
     }
-
     public ListaHilos getZona_comun() {
         return zona_comun;
-    }
-
-
-    public ConcurrentLinkedQueue<Integer> getComidaTotal() {
-        return comidaTotal;
     }
 
 
@@ -226,8 +204,6 @@ public class Entorno {
             cerrojoComida.unlock();
         }
         actualizarLabelComida();
-
-
     }
 
 
@@ -239,15 +215,12 @@ public class Entorno {
     public ArrayList<ListaHilos> getListaTunelesSalir() {
         return listaTunelesSalir;
     }
-
     public ArrayList<ListaHilos> getListaTunelesIntermedio() {
         return listaTunelesIntermedio;
     }
-
     public ArrayList<ListaHilos> getListaTunelesEntrar() {
         return listaTunelesEntrar;
     }
-
     public ArrayList<ListaHilos> getZona_riesgoZombie() {
         return zona_riesgoZombie;
     }

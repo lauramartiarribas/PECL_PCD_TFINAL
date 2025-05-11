@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 
 
 public class ListaHilos {
@@ -39,15 +39,10 @@ se imprime su nuevo contenido en el ListView que toma como parámetro el constru
             observableList.clear();
             synchronized (this) {
                 for (Ser ser : lista) {
-                    //if(ser.isEstaMuerto()){return;}
                     observableList.add(ser.toString());
                 }
             }
         });
     }
 
-
-    public ArrayList<Ser> getLista() {
-        return lista;
-    }
 }
