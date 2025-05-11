@@ -15,6 +15,11 @@ public class HiloGenerador extends Thread {
     @Override
     public void run() {
         for (int i = 0; i < numHumanosAGenerar; i++) {
+            try {
+                entorno.comprobarPausa();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             Humano humano = new Humano("H" + String.format("%04d", entorno.getNumHumanos()), entorno);
             entorno.setNumHumanos(entorno.getNumHumanos()+1);
             humano.start();
