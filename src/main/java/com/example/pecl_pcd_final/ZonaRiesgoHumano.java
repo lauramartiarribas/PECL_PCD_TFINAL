@@ -62,12 +62,11 @@ public class ZonaRiesgoHumano {
             if(humano!=null) {
 
                 humano.interrupt();
-                zombie.sleep(tiempoAtaque);
+                zombie.dormir(tiempoAtaque);
 
                 int probGanaHumano = (int) (Math.random() * 3);
                 if (probGanaHumano <= 1) {
                     logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso.");
-
                     humano.setNumComida(0);
 
 
@@ -75,7 +74,7 @@ public class ZonaRiesgoHumano {
                     logger.info("El zombie " + zombie.getIdentificador() + " ha convertido al humano " + humano.getIdentificador());
                     humano.matar(numZona);
                     humano.setEstaMuerto(true);
-                    entorno.getZonaRiesgoH(numZona).getHumanos().sacar(humano);
+
 
 
                     entorno.comprobarPausa();
@@ -85,6 +84,7 @@ public class ZonaRiesgoHumano {
 
                     zombie.setNumMuertes(zombie.getNumMuertes() + 1);
                 }
+                entorno.getZonaRiesgoH(numZona).getHumanos().sacar(humano);
                 humano.setDefendiendose(false);
                 synchronized ((humano)) {
                     humano.notify();

@@ -35,21 +35,19 @@ public class Humano extends Ser {
                     logger.info("En la zona común " + getIdentificador());
                     getEntorno().getZona_comun().meter(this);
 
-                    getEntorno().comprobarPausa();
-                    sleep(1000 + (int) (Math.random() * 1000));
-                    getEntorno().comprobarPausa();
+                    dormir(1000 + (int) (Math.random() * 1000));
+
 
                     // Salir por el túnel elegido
                     getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
 
                     logger.info(getIdentificador() + " En la zona exterior");
-                    getEntorno().comprobarPausa();
-                    sleep(3000 + (int) Math.random() * 2000);
-                    getEntorno().comprobarPausa();
+                    dormir(3000 + (int) Math.random() * 2000);
                 }
                 esperarAtaque();
                 if(isEstaMuerto()){
-                    getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
+                    matar(tunelSalir);
+                    //getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
                     return;
                 }
 
@@ -60,17 +58,11 @@ public class Humano extends Ser {
                 getEntorno().actualizarComida(numComida);
                 getEntorno().actualizarLabelComida();
 
-                getEntorno().comprobarPausa();
-                sleep(3000 + (int) Math.random() * 2000);
-                getEntorno().comprobarPausa();
-                getEntorno().getDescanso().sacar(this);
 
 
                 //En la zona de descanso
-                getEntorno().getDescanso().meter(this);
-                getEntorno().comprobarPausa();
-                sleep(2000 + (int) Math.random() * 2000);
-                getEntorno().comprobarPausa();
+                //getEntorno().getDescanso().meter(this);
+                dormir(2000 + (int) Math.random() * 2000);
                 getEntorno().getDescanso().sacar(this);
 
 
@@ -80,9 +72,7 @@ public class Humano extends Ser {
                 //Zona de descanso si ha sido marcado
                 if (this.marcado) {
                     getEntorno().getDescanso().meter(this);
-                    getEntorno().comprobarPausa();
-                    sleep(3000 + (int) Math.random() * 2000);
-                    getEntorno().comprobarPausa();
+                    dormir(3000 + (int) Math.random() * 2000);
                     getEntorno().getDescanso().sacar(this);
 
                     marcado = false;
@@ -94,14 +84,6 @@ public class Humano extends Ser {
 
     }
 
-
-
-    public void cruzarTunel() throws InterruptedException {
-        logger.info(getIdentificador() + " está cruzando el túnel.");
-        getEntorno().comprobarPausa();
-        sleep(1000);
-        getEntorno().comprobarPausa();
-    }
 
 
     public void matar(int numZona){
@@ -144,7 +126,6 @@ public class Humano extends Ser {
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
     }
-
 
 
     public void setDefendiendose(boolean defendiendose) {

@@ -29,9 +29,7 @@ public class Zombie extends Ser {
 
 
                 getEntorno().getZonaRiesgoH(numZonaRiesgoZombie).atacar(numZonaRiesgoZombie, this);
-                getEntorno().comprobarPausa();
-                sleep(2000 + (int) Math.random() * 1000);
-                getEntorno().comprobarPausa();
+                dormir(2000 + (int) Math.random() * 1000);
 
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).sacar(this);
 

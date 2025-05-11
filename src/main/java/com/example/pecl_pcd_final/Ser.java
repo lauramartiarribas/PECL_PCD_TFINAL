@@ -12,6 +12,11 @@ public class Ser extends Thread{
         return identificador;
     }
 
+    public void dormir(int milisegDormir) throws InterruptedException {
+        entorno.comprobarPausa();
+        sleep(milisegDormir);
+        entorno.comprobarPausa();
+    }
 
     //Getter y setter
     public String getIdentificador() {

@@ -62,21 +62,15 @@ public class Tunel {
                 entorno.getTunelSalir(tunelSalir).sacar(humano);
                 entorno.getTunelIntermedio(tunelSalir).meter(humano);
 
-            } finally {
-                cerrojoTunel.unlock();
-            }
+                logger.info(humano.getIdentificador() + " está cruzando el túnel.");
+                humano.dormir(1000);
 
 
-            humano.cruzarTunel();
-
-
-
-            cerrojoTunel.lock();
-            try {
                 //Sale del tunel y va a la ZR
                 entorno.getTunelIntermedio(tunelSalir).sacar(humano);
                 entorno.getZonaRiesgoH(tunelSalir).getHumanos().meter(humano);
                 entorno.getZonaRiesgoH(tunelSalir).getHumanosDisponibles().add(humano);
+                humano.setNumComida(2);
 
                 tunelOcupado = false;
                 puedeAtravesar.signalAll();
@@ -84,7 +78,7 @@ public class Tunel {
                 cerrojoTunel.unlock();
             }
 
-            humano.setNumComida(2);
+
 
         } catch (BrokenBarrierException e) {
 
@@ -92,46 +86,43 @@ public class Tunel {
     }
 
     public void volverAlRefugio(Humano humano, int tunelEntrar) throws InterruptedException {
-            entorno.getZonaRiesgoH(tunelEntrar).getHumanos().sacar(humano);
-            cerrojoTunel.lock();
-            try {
-                entorno.getTunelEntrar(tunelEntrar).meter(humano);
-                colaParaVolver.offer(humano);
+        entorno.getZonaRiesgoH(tunelEntrar).getHumanos().sacar(humano);
+        entorno.getZonaRiesgoH(tunelEntrar).getHumanosDisponibles().remove(humano);
+        entorno.getTunelEntrar(tunelEntrar).meter(humano);
+        colaParaVolver.offer(humano);
+        cerrojoTunel.lock();
+        try {
 
-                //Prioridad para volver: si hay alguien en cola para volver, pasa primero
-                while (tunelOcupado) {
-                    puedeAtravesar.await();
-                }
 
-                //Cuando ya puede volver
-                tunelOcupado = true;
-                colaParaVolver.poll();
 
-                //Cruza el túnel
-                entorno.getTunelEntrar(tunelEntrar).sacar(humano);
-                entorno.getTunelIntermedio(tunelEntrar).meter(humano);
-
-            } finally {
-                cerrojoTunel.unlock();
+            //Prioridad para volver: si hay alguien en cola para volver, pasa primero
+            while (tunelOcupado) {
+                puedeAtravesar.await();
             }
 
-            humano.cruzarTunel();
+            //Cuando ya puede volver
+            tunelOcupado = true;
+            colaParaVolver.poll();
+
+            //Cruza el túnel
+            entorno.getTunelEntrar(tunelEntrar).sacar(humano);
+            entorno.getTunelIntermedio(tunelEntrar).meter(humano);
+            logger.info(humano.getIdentificador() + " está cruzando el túnel.");
+            humano.dormir(1000);
 
 
-            cerrojoTunel.lock();
-            try {
-                entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
-                entorno.getDescanso().meter(humano);
+            entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
+            entorno.getDescanso().meter(humano);
 
-                //tunelOcupado = false;
-                puedeAtravesar.signalAll();
-            } finally {
-                tunelOcupado = false;
+            //tunelOcupado = false;
+            tunelOcupado = false;
+            puedeAtravesar.signalAll();
+        } finally {
+
+
 //                entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
-                cerrojoTunel.unlock();
-            }
+            cerrojoTunel.unlock();
+        }
 
     }
-
-
 }

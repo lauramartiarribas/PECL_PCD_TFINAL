@@ -2,12 +2,8 @@ package com.example.pecl_pcd_final;
 
 
 import javafx.application.Platform;
-
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,7 +11,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
+
 
 
 public class Entorno {
@@ -144,8 +140,7 @@ public class Entorno {
                     try {
                         hayComida.await();
                     } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        return;
+
                     }
                 }
             } finally {
@@ -160,9 +155,7 @@ public class Entorno {
             comidaTotal.poll();
             actualizarLabelComida();
 
-            comprobarPausa();
-            sleep(3000 + (int) Math.random() * 2000);
-            comprobarPausa();
+            humano.dormir(3000 + (int) Math.random() * 2000);
 
             comedor_comiendo.sacar(humano);
 
