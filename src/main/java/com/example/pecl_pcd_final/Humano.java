@@ -40,8 +40,7 @@ public class Humano extends Ser {
                 }
                 esperarAtaque();
                 if(isEstaMuerto()){
-                    matar(tunelSalir);
-                    //getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
+                    getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
                     return;
                 }
 
@@ -71,27 +70,6 @@ public class Humano extends Ser {
                 logger.warning("Se ha producido un error en el humano "+getIdentificador());
             }
         }
-
-    }
-
-
-
-    public void matar(int numZona){
-
-        logger.info(getIdentificador() + " se muere");
-        getEntorno().getDescanso().sacar(this);
-        getEntorno().getZona_comun().sacar(this);
-        getEntorno().getComedor_comiendo().sacar(this);
-        getEntorno().getComedor_espera().sacar(this);
-
-        getEntorno().getZonaRiesgoH(numZona).getHumanos().sacar(this);
-        getEntorno().getListaTunelesIntermedio().get(numZona).sacar(this);
-        getEntorno().getListaTunelesSalir().get(numZona).sacar(this);
-        getEntorno().getListaTunelesEntrar().get(numZona).sacar(this);
-        getEntorno().getTunelIntermedio(numZona).sacar(this);
-        getEntorno().getTunelSalir(numZona).sacar(this);
-        getEntorno().getTunelEntrar(numZona).sacar(this);
-
 
     }
 

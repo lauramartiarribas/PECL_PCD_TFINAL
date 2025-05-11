@@ -59,7 +59,6 @@ public class ZonaRiesgoHumano {
                     humano.setNumComida(0);
                 } else {
                     logger.info("El zombie " + zombie.getIdentificador() + " ha convertido al humano " + humano.getIdentificador());
-                    humano.matar(numZona);
                     humano.setEstaMuerto(true);
 
                     entorno.comprobarPausa();
