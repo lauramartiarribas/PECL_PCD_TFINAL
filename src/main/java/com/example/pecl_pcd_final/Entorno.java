@@ -1,15 +1,12 @@
 package com.example.pecl_pcd_final;
 
 import javafx.application.Platform;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
-
-import static java.lang.Thread.currentThread;
 
 
 
@@ -18,7 +15,7 @@ public class Entorno {
     private Logger logger = LoggerConFichero.getLogger();
     private boolean enPausa = false;
     private int numHumanos;
-
+    private ArrayList<Zombie> zombiesTotales;
 
     ///////////////// REFUGIO //////////////////////
     private ListaHilos descanso;
@@ -62,6 +59,7 @@ public class Entorno {
         this.comedor_espera = comedor_espera;
         this.comedor_comiendo = comedor_comiendo;
         this.zona_comun = zona_comun;
+        this.zombiesTotales=new ArrayList<>();
 
 
         for (int i = 0; i < 4; i++) {
@@ -209,5 +207,101 @@ public class Entorno {
     }
     public void setNumHumanos(int numHumanos) {
         this.numHumanos = numHumanos;
+    }
+
+    public ArrayList<Zombie> getZombiesTotales() {
+        return zombiesTotales;
+    }
+
+    public boolean isEnPausa() {
+        return enPausa;
+    }
+
+    ///////Para la parte distribuida
+    public int getNumRefugio(){
+        return descanso.getLista().size() + comedor_comiendo.getLista().size() +comedor_espera.getLista().size()+zona_comun.getLista().size();
+
+
+//        synchronized (descanso){
+//            for (int i = 0; i < descanso.getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        synchronized (comedor_comiendo) {
+//            for (int i = 0; i < comedor_comiendo.getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        synchronized (comedor_espera) {
+//            for (int i = 0; i < comedor_espera.getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        synchronized (zona_comun) {
+//            for (int i = 0; i < zona_comun.getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        return devolverNum;
+    }
+
+
+    public int getNumTunel(int numTunel){
+        return getTunelEntrar(numTunel).getLista().size()+getTunelIntermedio(numTunel).getLista().size()+getTunelSalir(numTunel).getLista().size();
+//        int devolverNum=0;
+//        synchronized (listaTunelesSalir.get(numTunel).getLista()) {
+//            for (int i = 0; i < listaTunelesSalir.get(numTunel).getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        synchronized (listaTunelesIntermedio.get(numTunel).getLista()) {
+//            for (int i = 0; i < listaTunelesIntermedio.get(numTunel).getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        synchronized (listaTunelesEntrar.get(numTunel).getLista()) {
+//            for (int i = 0; i < listaTunelesEntrar.get(numTunel).getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        return devolverNum;
+
+    }
+    public int getNumZonaInseguraHumanos(int numTunel){
+        return zona_riesgoHumanos.get(numTunel).getHumanos().getLista().size();
+//        int devolverNum=0;
+//        synchronized (zona_riesgoHumanos.get(numTunel).getHumanos()) {
+//            for (int i = 0; i < zona_riesgoHumanos.get(numTunel).getHumanos().getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//            return devolverNum;
+//        }
+
+    }
+    public int getNumZonaInseguraZombie(int numTunel){
+        return zona_riesgoZombie.get(numTunel).getLista().size();
+//        int devolverNum=0;
+//        synchronized (zona_riesgoZombie.get(numTunel)) {
+//            for (int i = 0; i < zona_riesgoZombie.get(numTunel).getLista().size(); i++) {
+//                devolverNum++;
+//            }
+//        }
+//        return devolverNum;
+
+    }
+
+    public ArrayList<String>  getZombiesLetales() {
+        ArrayList<String> ranking =new ArrayList<>();
+        synchronized (zombiesTotales) {
+            zombiesTotales.sort((z1,z2) -> Integer.compare(z2.getNumMuertes(),z1.getNumMuertes()));
+
+            for(int i=0; i<Math.min(3,zombiesTotales.size());i++){
+                Zombie z=zombiesTotales.get(i);
+                ranking.add("Zombie "+z.getIdentificador()+ ": "+z.getNumMuertes()+ " muertes");
+            }
+
+        }
+        return ranking;
+
     }
 }

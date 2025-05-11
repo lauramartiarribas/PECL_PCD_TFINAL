@@ -9,9 +9,16 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Optional;
 
-public class ApocalipsisZombie extends Application {
+public class MainServidor extends Application {
+    ControladorInicio controlador = new ControladorInicio();
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ApocalipsisZombie.fxml"));
@@ -34,6 +41,25 @@ public class ApocalipsisZombie extends Application {
                 System.exit(0);
             }
         });
+
+        controlador = fxmlLoader.getController();
+
+        iniciarServidor();
+    }
+
+
+    public void iniciarServidor(){
+        try{
+
+            ImplementacionInterfaz implementacionInterfaz= new ImplementacionInterfaz(controlador.getEntorno());
+            Registry registry =LocateRegistry.createRegistry(1099);
+            Naming.rebind("//172.22.74.172/ImplementacionInterfaz", implementacionInterfaz);
+            System.out.println("Servidor RMI iniciado correctamente.");
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {

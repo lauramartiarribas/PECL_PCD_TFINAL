@@ -45,4 +45,8 @@ se imprime su nuevo contenido en el ListView que toma como parámetro el constru
         });
     }
 
+    public ArrayList<Ser> getLista(){
+        return lista;
+    }
+
 }

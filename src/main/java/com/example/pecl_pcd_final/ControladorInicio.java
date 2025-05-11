@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public class ControladorInicio {
 
+    private Entorno entorno;
+
     @FXML
     private Button startButton;
 
@@ -23,7 +25,7 @@ public class ControladorInicio {
 
         // Cargar la nueva escena
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(ApocalipsisZombie.class.getResource("Entorno.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(MainServidor.class.getResource("Entorno.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
 
             Stage stage = new Stage();
@@ -83,5 +85,9 @@ public class ControladorInicio {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Entorno getEntorno() {
+        return entorno;
     }
 }

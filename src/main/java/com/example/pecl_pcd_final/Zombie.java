@@ -11,6 +11,7 @@ public class Zombie extends Ser {
         this.setIdentificador(id);
         this.setEntorno(entorno);
         this.numMuertes=0;
+        this.getEntorno().getZombiesTotales().add(this);
     }
 
     @Override

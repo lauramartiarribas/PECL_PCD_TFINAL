@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="419.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.ControladorDatosDistribuidos">
+   <children>
+      <Text layoutX="67.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de humanos en el refugio" wrappingWidth="264.53662109375">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="67.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de humanos en los túneles" wrappingWidth="298.1365966796875">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="67.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de humanos en las zonas de riesgo" wrappingWidth="298.1365966796875">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="67.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de zombis en las zonas de riesgo" wrappingWidth="298.1365966796875">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="67.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zombis más letales" wrappingWidth="196.53662109375">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Text>
+      <TextField fx:id="textoHumanosRefugio" layoutX="418.0" layoutY="34.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanostuneles1" layoutX="484.0" layoutY="84.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanostuneles0" layoutX="417.0" layoutY="84.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanostuneles2" layoutX="549.0" layoutY="84.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanostuneles3" layoutX="610.0" layoutY="84.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanosRiesgo1" layoutX="484.0" layoutY="139.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanosRiesgo0" layoutX="417.0" layoutY="139.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanosRiesgo2" layoutX="549.0" layoutY="139.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoHumanosRiesgo3" layoutX="610.0" layoutY="139.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoZombiesRiesgo1" layoutX="484.0" layoutY="192.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoZombiesRiesgo0" layoutX="417.0" layoutY="192.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoZombiesRiesgo2" layoutX="549.0" layoutY="192.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="textoZombiesRiesgo3" layoutX="610.0" layoutY="192.0" prefHeight="26.0" prefWidth="38.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </TextField>
+      <TextArea fx:id="textoZombiesLetales" layoutX="69.0" layoutY="288.0" prefHeight="100.0" prefWidth="239.0" />
+   </children>
+</AnchorPane>
