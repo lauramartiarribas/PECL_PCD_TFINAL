@@ -17,11 +17,9 @@ public class Tunel {
     private Condition puedeAtravesar;
     private Entorno entorno;
     private boolean tunelOcupado;
-
-
-
     private  ConcurrentLinkedQueue<Humano> colaParaVolver = new ConcurrentLinkedQueue<>();
     private  ConcurrentLinkedQueue<Humano> colaParaSalir = new ConcurrentLinkedQueue<>();
+
 
     public Tunel(Entorno entorno){
         this.barreraTunel= new CyclicBarrier(3);
@@ -29,9 +27,7 @@ public class Tunel {
         this.puedeAtravesar= cerrojoTunel.newCondition();
         this.entorno=entorno;
         this.tunelOcupado= false;
-
     }
-
 
 
     public void salirDesdeRefugio(Humano humano, int tunelSalir) throws InterruptedException {
@@ -65,7 +61,6 @@ public class Tunel {
                 logger.info(humano.getIdentificador() + " está cruzando el túnel.");
                 humano.dormir(1000);
 
-
                 //Sale del tunel y va a la ZR
                 entorno.getTunelIntermedio(tunelSalir).sacar(humano);
                 entorno.getZonaRiesgoH(tunelSalir).getHumanos().meter(humano);
@@ -77,11 +72,8 @@ public class Tunel {
             } finally {
                 cerrojoTunel.unlock();
             }
-
-
-
         } catch (BrokenBarrierException e) {
-
+            logger.warning("Algo ha ido mal al salir desde el refugio: "+humano.getIdentificador());
         }
     }
 
@@ -92,10 +84,7 @@ public class Tunel {
         colaParaVolver.offer(humano);
         cerrojoTunel.lock();
         try {
-
-
-
-            //Prioridad para volver: si hay alguien en cola para volver, pasa primero
+            //Prioridad para volver: si hay alguien en cola para volver, pasa primero pero espera a que termine de cruzar quien esté
             while (tunelOcupado) {
                 puedeAtravesar.await();
             }
@@ -110,19 +99,14 @@ public class Tunel {
             logger.info(humano.getIdentificador() + " está cruzando el túnel.");
             humano.dormir(1000);
 
-
+            //Vuelve a la zona de descanso
             entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
             entorno.getDescanso().meter(humano);
 
-            //tunelOcupado = false;
             tunelOcupado = false;
             puedeAtravesar.signalAll();
         } finally {
-
-
-//                entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
             cerrojoTunel.unlock();
         }
-
     }
 }

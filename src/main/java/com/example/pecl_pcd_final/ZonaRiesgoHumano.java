@@ -5,11 +5,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
-import static java.lang.Thread.currentThread;
-
 public class ZonaRiesgoHumano {
 
     private Logger logger = LoggerConFichero.getLogger();
+
     private ListaHilos humanos;
     private ArrayList<Humano> humanosDisponibles;
     private Entorno entorno;
@@ -22,16 +21,6 @@ public class ZonaRiesgoHumano {
         cerrojoAtaque = new ReentrantLock();
         humanosDisponibles= new ArrayList<>();
     }
-
-//    public void meterHumano(Humano h) {
-//        humanosDisponibles.add(h);
-//        humanos.meter(h);
-//    }
-//
-//    public void sacarHumano(Humano h) {
-//        humanosDisponibles.remove(h);
-//        humanos.sacar(h);
-//    }
 
 
     public Humano elegirObjetivoAleatorio() {
@@ -68,17 +57,12 @@ public class ZonaRiesgoHumano {
                 if (probGanaHumano <= 1) {
                     logger.info("El humano " + humano.getIdentificador() + " ha salido victorioso.");
                     humano.setNumComida(0);
-
-
                 } else {
                     logger.info("El zombie " + zombie.getIdentificador() + " ha convertido al humano " + humano.getIdentificador());
                     humano.matar(numZona);
                     humano.setEstaMuerto(true);
 
-
-
                     entorno.comprobarPausa();
-
                     Zombie nuevo = new Zombie("Z" + humano.getIdentificador().substring(1), entorno);
                     nuevo.start();
 
@@ -90,13 +74,14 @@ public class ZonaRiesgoHumano {
                     humano.notify();
                 }
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            logger.warning("Se ha producido un error en un ataque en la zona: "+ numZona);
+        }
     }
 
     public ListaHilos getHumanos() {
         return humanos;
     }
-
     public ArrayList<Humano> getHumanosDisponibles() {
         return humanosDisponibles;
     }

@@ -1,6 +1,5 @@
 package com.example.pecl_pcd_final;
 
-
 import java.util.logging.Logger;
 
 public class Humano extends Ser {
@@ -9,7 +8,6 @@ public class Humano extends Ser {
     private int numComida;
     private boolean marcado;
     private boolean defendiendose;
-
 
 
     public Humano(String id, Entorno entorno) {
@@ -24,19 +22,15 @@ public class Humano extends Ser {
     public void run() {
         logger.info("Empezando " + getIdentificador());
         while(!isEstaMuerto()) {
-
             // Seleccionar túnel
             int tunelSalir = (int) (Math.random() * 4);
-
             try {
                 if(!marcado) {
                     getEntorno().comprobarPausa();
                     // Zona común tiempo entre 1 y 2
                     logger.info("En la zona común " + getIdentificador());
                     getEntorno().getZona_comun().meter(this);
-
                     dormir(1000 + (int) (Math.random() * 1000));
-
 
                     // Salir por el túnel elegido
                     getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
@@ -51,17 +45,13 @@ public class Humano extends Ser {
                     return;
                 }
 
-
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
-
 
                 getEntorno().actualizarComida(numComida);
                 getEntorno().actualizarLabelComida();
 
 
-
                 //En la zona de descanso
-                //getEntorno().getDescanso().meter(this);
                 dormir(2000 + (int) Math.random() * 2000);
                 getEntorno().getDescanso().sacar(this);
 
@@ -74,11 +64,11 @@ public class Humano extends Ser {
                     getEntorno().getDescanso().meter(this);
                     dormir(3000 + (int) Math.random() * 2000);
                     getEntorno().getDescanso().sacar(this);
-
                     marcado = false;
                 }
             }
             catch (InterruptedException e) {
+                logger.warning("Se ha producido un error en el humano "+getIdentificador());
             }
         }
 
@@ -116,24 +106,15 @@ public class Humano extends Ser {
 
 
 
-
     //Getter y setter
-
     public void setNumComida(int numComida) {
         this.numComida = numComida;
     }
-
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
     }
-
-
     public void setDefendiendose(boolean defendiendose) {
         this.defendiendose = defendiendose;
-    }
-
-    public boolean getDefendiendose() {
-        return defendiendose;
     }
 }
 

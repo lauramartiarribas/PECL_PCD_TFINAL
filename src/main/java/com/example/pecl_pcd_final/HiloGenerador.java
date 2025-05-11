@@ -5,15 +5,18 @@ public class HiloGenerador extends Thread {
     private Entorno entorno;
     private int numHumanosAGenerar;
 
-
     public HiloGenerador(Entorno entorno, int numHumanosAGenerar) {
         this.entorno = entorno;
         this.numHumanosAGenerar = numHumanosAGenerar;
-
     }
 
     @Override
     public void run() {
+        //Creamos el zombie
+        Zombie zombie = new Zombie("Z0000", entorno);
+        zombie.start();
+
+        //Creamos los humanos
         for (int i = 0; i < numHumanosAGenerar; i++) {
             try {
                 entorno.comprobarPausa();
@@ -25,10 +28,8 @@ public class HiloGenerador extends Thread {
             humano.start();
             int n=500+(int)Math.random()*1500;
 
-
-
             try {
-                Thread.sleep(n); // Esperar antes de lanzar el siguiente
+                Thread.sleep(n); //Esperar antes del siguiente humano
             } catch (InterruptedException e) {
                 System.out.println("Generador interrumpido");
                 Thread.currentThread().interrupt();

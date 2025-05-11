@@ -1,9 +1,5 @@
 package com.example.pecl_pcd_final;
 
-import java.util.ArrayList;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 public class Zombie extends Ser {
@@ -27,15 +23,14 @@ public class Zombie extends Ser {
 
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).meter(this);
 
-
                 getEntorno().getZonaRiesgoH(numZonaRiesgoZombie).atacar(numZonaRiesgoZombie, this);
                 dormir(2000 + (int) Math.random() * 1000);
 
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).sacar(this);
-
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                logger.warning("Se ha producido un error en el zombie: "+getIdentificador());
+            }
         }
-
     }
 
     public int getNumMuertes() {

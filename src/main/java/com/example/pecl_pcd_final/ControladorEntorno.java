@@ -1,15 +1,11 @@
 package com.example.pecl_pcd_final;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.IOException;
 
-import static java.lang.Thread.sleep;
 
 public class ControladorEntorno {
 
@@ -21,30 +17,22 @@ public class ControladorEntorno {
     public Button PauseButton;
     @FXML
     public Button ReanudarButton;
-
     @FXML
     public Button BotonInformacion;
-
 
 
     ///////////////// REFUGIO //////////////////////
     @FXML
     public ListView ListaDescanso;
-
     @FXML
     public ListView ListaComedorEspera;
-
     @FXML
     public ListView ListaComedorComiendo;
-
     @FXML
     public ListView<Ser> ListaZonaComun;
 
+
     ///////////////// TUNELES //////////////////////
-
-
-    //public ObservableList<ListView<Ser>> TunelesSalida;
-
     @FXML
     public ListView<Ser> TunelSalir1;
     @FXML
@@ -54,8 +42,6 @@ public class ControladorEntorno {
     @FXML
     public ListView<Ser> TunelSalir4;
 
-
-    //public ObservableList<ListView<Ser>> TunelesIntermedio;
 
     @FXML
     public ListView<Ser> TunelIntermedio1;
@@ -67,8 +53,6 @@ public class ControladorEntorno {
     public ListView<Ser> TunelIntermedio4;
 
 
-    //public ObservableList<ListView<Ser>> TunelesEntrada;
-
     @FXML
     public ListView<Ser> TunelEntrar1;
     @FXML
@@ -79,12 +63,7 @@ public class ControladorEntorno {
     public ListView<Ser> TunelEntrar4;
 
 
-
-
-
     ///////////////// ZONA DE RIESGO ///////////////////////////
-    //public ObservableList<ListView<Ser>> ZonaRiesgoHumanos;
-
     @FXML
     public ListView<Ser> ZonaRiesgoHumano1;
     @FXML
@@ -94,8 +73,6 @@ public class ControladorEntorno {
     @FXML
     public ListView<Ser> ZonaRiesgoHumano4;
 
-
-    //public ObservableList<ListView<Ser>> ZonaRiesgoZombies;
 
     @FXML
     public ListView<Ser> ZonaRiesgoZombie1;
@@ -110,22 +87,13 @@ public class ControladorEntorno {
     public TextField Comida;
 
 
-
-
-    //Botones
-
+    ///////////////// FUNCIONES DE LOS BOTONES ///////////////////////////
     @FXML
     void onPlayButtonClick(ActionEvent event) {
         PlayButton.setDisable(true);
         PauseButton.setDisable(false);
-        //entorno.enPausa=false;
-        HiloGenerador hilo= new HiloGenerador(entorno,500);
+        HiloGenerador hilo = new HiloGenerador(entorno, 9999);
         hilo.start();
-
-        //Creamos el zombie
-        Zombie zombie= new Zombie("Z0000", entorno);
-        zombie.start();
-
     }
 
     @FXML
@@ -136,7 +104,7 @@ public class ControladorEntorno {
     }
 
     @FXML
-    void onReanudarButtonClick(ActionEvent event){
+    void onReanudarButtonClick(ActionEvent event) {
         entorno.reanudar();
         PauseButton.setDisable(false);
         ReanudarButton.setDisable(true);
@@ -144,7 +112,7 @@ public class ControladorEntorno {
 
 
     @FXML
-    void onInformacionButtonClick(){
+    void onInformacionButtonClick() {
         try {
             entorno.pausar();
             PauseButton.setDisable(true);
@@ -165,7 +133,8 @@ public class ControladorEntorno {
             textArea.setMaxWidth(Double.MAX_VALUE);
             textArea.setMaxHeight(Double.MAX_VALUE);
 
-            infoAlert.getDialogPane().setContent(textArea);infoAlert.showAndWait();
+            infoAlert.getDialogPane().setContent(textArea);
+            infoAlert.showAndWait();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,12 +142,9 @@ public class ControladorEntorno {
     }
 
 
-
-
-
     @FXML
-    public  void  initialize() throws IOException {
-        this.entorno= new Entorno(
+    public void initialize() throws IOException {
+        this.entorno = new Entorno(
                 new ListaHilos(ListaDescanso),
                 new ListaHilos(ListaComedorEspera),
                 new ListaHilos(ListaComedorComiendo),
@@ -208,6 +174,5 @@ public class ControladorEntorno {
         PauseButton.setDisable(true);
         ReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
-
     }
 }

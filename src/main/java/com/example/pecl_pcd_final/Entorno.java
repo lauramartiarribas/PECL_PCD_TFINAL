@@ -1,13 +1,12 @@
 package com.example.pecl_pcd_final;
 
-
 import javafx.application.Platform;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import static java.lang.Thread.currentThread;
@@ -16,17 +15,12 @@ import static java.lang.Thread.currentThread;
 
 public class Entorno {
 
-    //El logger
     private Logger logger = LoggerConFichero.getLogger();
-
-    //Elementos del juego
-    //Para cuando queramos pausar el juego y así poder también almacenar todos los hilos que se tienen en ese momento
     private boolean enPausa = false;
-
     private int numHumanos;
 
 
-    /// Refugio ///
+    ///////////////// REFUGIO //////////////////////
     private ListaHilos descanso;
     private ListaHilos comedor_espera;
     private ListaHilos comedor_comiendo;
@@ -41,19 +35,19 @@ public class Entorno {
     private javafx.scene.control.TextField labelComida;
 
 
-    // Túneles
+    ///////////////// TUNELES //////////////////////
     private ArrayList<Tunel> listaTuneles = new ArrayList<>();
-
     private ArrayList<ListaHilos> listaTunelesSalir = new ArrayList<>();
     private ArrayList<ListaHilos> listaTunelesIntermedio = new ArrayList<>();
     private ArrayList<ListaHilos> listaTunelesEntrar = new ArrayList<>();
 
 
-    // Zona de riesgo
+    ///////////////// ZONA DE RIESGO ///////////////////////////
     private ArrayList<ZonaRiesgoHumano> zona_riesgoHumanos = new ArrayList<>();
     private ArrayList<ListaHilos> zona_riesgoZombie = new ArrayList<>();
 
 
+    //CONSTRUCTOR
     public Entorno(ListaHilos descanso, ListaHilos comedor_espera, ListaHilos comedor_comiendo, ListaHilos zona_comun,
                    ListaHilos tunelSalir1, ListaHilos tunelSalir2, ListaHilos tunelSalir3, ListaHilos tunelSalir4,
                    ListaHilos tunelIntermedio1, ListaHilos tunelIntermedio2, ListaHilos tunelIntermedio3, ListaHilos tunelIntermedio4,
@@ -61,7 +55,7 @@ public class Entorno {
                    ListaHilos zona_riesgoHumano1, ListaHilos zona_riesgoHumano2, ListaHilos zona_riesgoHumano3, ListaHilos zona_riesgoHumano4,
                    ListaHilos zona_riesgoZombie1, ListaHilos zona_riesgoZombie2, ListaHilos zona_riesgoZombie3, ListaHilos zona_riesgoZombie4,
 
-                   javafx.scene.control.TextField labelComida) throws IOException {
+                   javafx.scene.control.TextField labelComida) {
 
         this.numHumanos = 1;
         this.descanso = descanso;
@@ -74,13 +68,11 @@ public class Entorno {
             this.listaTuneles.add(new Tunel(this));
         }
 
-
         this.labelComida = labelComida;
         this.cerrojoComida = new ReentrantLock();
         this.hayComida = cerrojoComida.newCondition();
         this.comidaTotal = new ConcurrentLinkedQueue<>();
         this.colaComedor = new ConcurrentLinkedQueue<>();
-
 
         listaTunelesSalir.add(tunelSalir1);
         listaTunelesSalir.add(tunelSalir2);
@@ -102,13 +94,10 @@ public class Entorno {
         zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano3,this));
         zona_riesgoHumanos.add(new ZonaRiesgoHumano(zona_riesgoHumano4,this));
 
-
         zona_riesgoZombie.add(zona_riesgoZombie1);
         zona_riesgoZombie.add(zona_riesgoZombie2);
         zona_riesgoZombie.add(zona_riesgoZombie3);
         zona_riesgoZombie.add(zona_riesgoZombie4);
-
-
     }
 
 
@@ -129,60 +118,29 @@ public class Entorno {
 
 
     public void comer(Humano humano) {
-
         try {
             comedor_espera.meter(humano);
             colaComedor.offer(humano);
-            // Mientras no haya comida, espera a que se notifique
             cerrojoComida.lock();
             try {
                 while (comidaTotal.isEmpty()) {
-                    try {
-                        hayComida.await();
-                    } catch (InterruptedException e) {
-
-                    }
+                    hayComida.await(); // Mientras no haya comida, espera a que haya y se le notifique
                 }
             } finally {
                 cerrojoComida.unlock();
             }
-
             comedor_espera.sacar(humano);
-
             comedor_comiendo.meter(humano);
-            colaComedor.poll();
-
             comidaTotal.poll();
+            colaComedor.poll();
             actualizarLabelComida();
-
             humano.dormir(3000 + (int) Math.random() * 2000);
-
             comedor_comiendo.sacar(humano);
-
         } catch (Exception e) {
-            currentThread().interrupt();
+            logger.warning("Se ha producido un error en el comedor.");
         }
 
     }
-
-
-
-
-    //Getters y setters
-    public ListaHilos getDescanso() {
-        return descanso;
-    }
-    public ListaHilos getComedor_espera() {
-        return comedor_espera;
-    }
-    public ListaHilos getComedor_comiendo() {
-        return comedor_comiendo;
-    }
-    public ListaHilos getZona_comun() {
-        return zona_comun;
-    }
-
-
     public void actualizarLabelComida() {
         Platform.runLater(() -> labelComida.setText(String.valueOf(comidaTotal.size())));
     }
@@ -201,10 +159,23 @@ public class Entorno {
 
 
 
-    public ArrayList<ZonaRiesgoHumano> getZona_riesgoHumanos() {
-        return zona_riesgoHumanos;
+    //Getters y setters
+    public ListaHilos getDescanso() {
+        return descanso;
+    }
+    public ListaHilos getComedor_espera() {
+        return comedor_espera;
+    }
+    public ListaHilos getComedor_comiendo() {
+        return comedor_comiendo;
+    }
+    public ListaHilos getZona_comun() {
+        return zona_comun;
     }
 
+    public ArrayList<Tunel> getListaTuneles() {
+        return listaTuneles;
+    }
     public ArrayList<ListaHilos> getListaTunelesSalir() {
         return listaTunelesSalir;
     }
@@ -219,23 +190,15 @@ public class Entorno {
     }
 
 
-    public ArrayList<Tunel> getListaTuneles() {
-        return listaTuneles;
-    }
-
-
     public ListaHilos getTunelSalir(int numTunel) {
         return listaTunelesSalir.get(numTunel);
     }
-
     public ListaHilos getTunelIntermedio(int numTunel) {
         return listaTunelesIntermedio.get(numTunel);
     }
-
     public ListaHilos getTunelEntrar(int numTunel) {
         return listaTunelesEntrar.get(numTunel);
     }
-
 
     public ZonaRiesgoHumano getZonaRiesgoH(int num) {
         return zona_riesgoHumanos.get(num);
@@ -244,7 +207,6 @@ public class Entorno {
     public int getNumHumanos() {
         return numHumanos;
     }
-
     public void setNumHumanos(int numHumanos) {
         this.numHumanos = numHumanos;
     }
