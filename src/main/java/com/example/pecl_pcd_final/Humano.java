@@ -12,11 +12,9 @@ public class Humano extends Ser {
     private int numComida;
     private boolean marcado;
 
-    private Lock cerrojoDefendiendose;
 
-    private Condition defendiendoseCondicion;
 
-    private Boolean defendiendose;
+    private boolean defendiendose;
 
 
 
@@ -26,57 +24,51 @@ public class Humano extends Ser {
         this.setEntorno(entorno);
         numComida = 0;
         marcado = false;
-        cerrojoDefendiendose= new ReentrantLock();
-        defendiendoseCondicion= cerrojoDefendiendose.newCondition();
+
         defendiendose=false;
     }
 
     @Override
     public void run() {
-        try {
-            logger.info("Empezando " + getIdentificador());
-            while(!isEstaMuerto()) {
-                cerrojoDefendiendose.lock();
-                try{
-                    while (defendiendose) {
-                        defendiendoseCondicion.await(); // El humano espera hasta que termine el ataque
-                    }
-                }finally {
-                    cerrojoDefendiendose.unlock();
+        logger.info("Empezando " + getIdentificador());
+        while(!isEstaMuerto()) {
+            int tunelSalir = (int) (Math.random() * 4);
+            try {
+                // Seleccionar túnel
+
+                if(!marcado) {
+                    getEntorno().comprobarPausa();
+
+                    // Zona común tiempo entre 1 y 2
+                    logger.info("En la zona común " + getIdentificador());
+                    getEntorno().getZona_comun().meter(this);
+
+                    getEntorno().comprobarPausa();
+                    sleep(1000 + (int) (Math.random() * 1000));
+                    getEntorno().comprobarPausa();
+
+
+
+
+                    logger.info(getIdentificador() + " Esperando en la barrera para salir");
+
+
+                    getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
+
+
+                    logger.info(getIdentificador() + " En la zona exterior");
+                    getEntorno().comprobarPausa();
+                    sleep(3000 + (int) Math.random() * 2000);
+                    getEntorno().comprobarPausa();
+                }
+                esperarAtaque();
+                if(isEstaMuerto()){
+                    getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
+                    return;
                 }
 
 
-                getEntorno().comprobarPausa();
-
-                // Zona común tiempo entre 1 y 2
-                logger.info("En la zona común " + getIdentificador());
-                getEntorno().getZona_comun().meter(this);
-
-                getEntorno().comprobarPausa();
-                sleep(1000 + (int) (Math.random() * 1000));
-                getEntorno().comprobarPausa();
-
-
-
-
-                // Seleccionar túnel
-                int tunelSalir = (int)(Math.random()*4);
-                logger.info(getIdentificador() + " Esperando en la barrera para salir");
-
-                getEntorno().getListaTuneles().get(tunelSalir).salirDesdeRefugio(this, tunelSalir);
-
-
-                logger.info(getIdentificador() + " En la zona exterior");
-                getEntorno().comprobarPausa();
-                sleep(3000 + (int) Math.random() * 2000);
-                getEntorno().comprobarPausa();
-
-
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
-
-
-
-
 
 
                 getEntorno().actualizarComida(numComida);
@@ -86,11 +78,6 @@ public class Humano extends Ser {
                 sleep(3000 + (int) Math.random() * 2000);
                 getEntorno().comprobarPausa();
                 getEntorno().getDescanso().sacar(this);
-
-
-
-
-
 
 
                 ///En la zona de descanso
@@ -113,19 +100,16 @@ public class Humano extends Ser {
                     getEntorno().getDescanso().sacar(this);
 
                     marcado = false;
-
                 }
 
 
-               //Todos vuelven a la zona común
-
+            }
+            catch (InterruptedException e) {
 
 
             }
-        } catch (InterruptedException e) {
-                logger.warning("Humano " + getIdentificador() + " interrumpido por otra causa.");
-                Thread.currentThread().interrupt(); // Mantiene interrupción
         }
+
     }
 
 
@@ -136,6 +120,32 @@ public class Humano extends Ser {
         sleep(1000);
         getEntorno().comprobarPausa();
 
+    }
+
+    public void matar(int numZona){
+
+        logger.info(getIdentificador() + " se muere");
+        getEntorno().getDescanso().sacar(this);
+        getEntorno().getZona_comun().sacar(this);
+        getEntorno().getComedor_comiendo().sacar(this);
+        getEntorno().getComedor_espera().sacar(this);
+
+        getEntorno().getZonaRiesgoH(numZona).getHumanos().sacar(this);
+        getEntorno().getListaTunelesIntermedio().get(numZona).sacar(this);
+        getEntorno().getListaTunelesSalir().get(numZona).sacar(this);
+        getEntorno().getListaTunelesEntrar().get(numZona).sacar(this);
+        getEntorno().getTunelIntermedio(numZona).sacar(this);
+        getEntorno().getTunelSalir(numZona).sacar(this);
+        getEntorno().getTunelEntrar(numZona).sacar(this);
+
+
+    }
+
+    public synchronized void esperarAtaque() throws InterruptedException {
+        logger.info("Esperando ataque");
+        while (defendiendose) {
+            this.wait();
+        }
     }
 
 
@@ -153,19 +163,13 @@ public class Humano extends Ser {
         this.marcado = marcado;
     }
 
-    public Lock getCerrojoDefendiendose() {
-        return cerrojoDefendiendose;
-    }
 
-    public Condition getDefendiendoseCondicion() {
-        return defendiendoseCondicion;
-    }
 
-    public void setDefendiendose(Boolean defendiendose) {
+    public void setDefendiendose(boolean defendiendose) {
         this.defendiendose = defendiendose;
     }
 
-    public Boolean getDefendiendose() {
+    public boolean getDefendiendose() {
         return defendiendose;
     }
 }

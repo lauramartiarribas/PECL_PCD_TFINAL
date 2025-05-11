@@ -186,9 +186,7 @@ public class Entorno {
 
 
 
-    public synchronized Humano elegirHumano(int numZona) {
-        return zona_riesgoHumanos.get(numZona).elegirObjetivoAleatorio();
-    }
+
 
 
     //Getters y setters

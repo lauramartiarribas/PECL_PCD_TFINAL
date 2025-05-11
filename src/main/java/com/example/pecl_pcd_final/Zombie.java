@@ -10,7 +10,7 @@ public class Zombie extends Ser {
 
     private Logger logger= LoggerConFichero.getLogger();
     private int numMuertes;
-    private Lock cerrojoAtaque= new ReentrantLock();
+    //private Lock cerrojoAtaque= new ReentrantLock();
 
     public Zombie (String id, Entorno entorno){
         this.setIdentificador(id);
@@ -19,34 +19,27 @@ public class Zombie extends Ser {
     }
     @Override
     public void run(){
-        try {
+        while(true) {
 
-            while (true){
+            try {
                 //Elige zona
                 logger.info("En la zona de riesgo de zombie " + getIdentificador());
-                int numZonaRiesgoZombie= (int)(Math.random()*4);
-                ListaHilos zombiesZona = getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie);
+                int numZonaRiesgoZombie = (int) (Math.random() * 4);
 
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).meter(this);
 
-                //Busca humano para atacar
-                Humano objetivo= getEntorno().elegirHumano(numZonaRiesgoZombie);
-                if(objetivo!=null && !objetivo.getDefendiendose()){
-                    getEntorno().getZonaRiesgoH(numZonaRiesgoZombie).atacar(objetivo,numZonaRiesgoZombie,this);
-                }
 
-
-                //
+                getEntorno().getZonaRiesgoH(numZonaRiesgoZombie).atacar(numZonaRiesgoZombie, this);
                 getEntorno().comprobarPausa();
-                sleep(2000+ (int) Math.random()*1000);
+                sleep(2000 + (int) Math.random() * 1000);
                 getEntorno().comprobarPausa();
 
                 getEntorno().getZona_riesgoZombie().get(numZonaRiesgoZombie).sacar(this);
 
+
+            } catch (Exception e) {
             }
-
-
-        }catch (Exception e){}
+        }
 
     }
 

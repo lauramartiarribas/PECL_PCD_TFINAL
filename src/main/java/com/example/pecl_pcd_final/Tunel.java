@@ -76,7 +76,8 @@ public class Tunel {
             try {
 
                 entorno.getTunelIntermedio(tunelSalir).sacar(humano);
-                entorno.getZonaRiesgoH(tunelSalir).meterHumano(humano);
+                entorno.getZonaRiesgoH(tunelSalir).getHumanos().meter(humano);
+                entorno.getZonaRiesgoH(tunelSalir).getHumanosDisponibles().add(humano);
 
                 tunelOcupado = false;
                 puedeAtravesar.signalAll();
@@ -92,50 +93,46 @@ public class Tunel {
     }
 
     public void volverAlRefugio(Humano humano, int tunelEntrar) throws InterruptedException {
-        if(humano.isEstaMuerto()){
-            return;
-        }
-        entorno.getZonaRiesgoH(tunelEntrar).sacarHumano(humano);
-        entorno.getTunelEntrar(tunelEntrar).meter(humano);
+            entorno.getZonaRiesgoH(tunelEntrar).getHumanos().sacar(humano);
+            cerrojoTunel.lock();
+            try {
+                entorno.getTunelEntrar(tunelEntrar).meter(humano);
+                colaParaVolver.offer(humano);
+
+                // Prioridad para volver: si hay alguien en cola para volver, pasa primero
+                while (tunelOcupado) {
+                    puedeAtravesar.await();
+                }
+
+                tunelOcupado = true;
+                colaParaVolver.poll();
+
+                // Cruza el túnel
+                entorno.getTunelEntrar(tunelEntrar).sacar(humano);
+                entorno.getTunelIntermedio(tunelEntrar).meter(humano);
 
 
-        cerrojoTunel.lock();
-        try {
-            colaParaVolver.offer(humano);
 
-            // Prioridad para volver: si hay alguien en cola para volver, pasa primero
-            while (tunelOcupado ) {
-                puedeAtravesar.await();
+            } finally {
+                cerrojoTunel.unlock();
             }
 
-            tunelOcupado = true;
-            colaParaVolver.poll();
-
-            // Cruza el túnel
-            entorno.getTunelEntrar(tunelEntrar).sacar(humano);
-            entorno.getTunelIntermedio(tunelEntrar).meter(humano);
+            humano.cruzarTunel();
 
 
-        } finally {
-            cerrojoTunel.unlock();
-        }
+            cerrojoTunel.lock();
+            try {
+                entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
+                entorno.getDescanso().meter(humano);
 
-        humano.cruzarTunel();
+                //tunelOcupado = false;
+                puedeAtravesar.signalAll();
+            } finally {
+                tunelOcupado = false;
+//                entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
+                cerrojoTunel.unlock();
+            }
 
-
-
-
-
-        cerrojoTunel.lock();
-        try {
-            entorno.getTunelIntermedio(tunelEntrar).sacar(humano);
-            entorno.getDescanso().meter(humano);
-
-            tunelOcupado = false;
-            puedeAtravesar.signalAll();
-        } finally {
-            cerrojoTunel.unlock();
-        }
     }
 
 
