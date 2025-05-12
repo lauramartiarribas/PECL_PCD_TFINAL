@@ -53,7 +53,7 @@ public class MainServidor extends Application {
 
             ImplementacionInterfaz implementacionInterfaz= new ImplementacionInterfaz(controlador.getEntorno());
             Registry registry =LocateRegistry.createRegistry(1099);
-            Naming.rebind("//172.22.74.172/ImplementacionInterfaz", implementacionInterfaz);
+            Naming.rebind("//172.22.44.153/ImplementacionInterfaz", implementacionInterfaz);
             System.out.println("Servidor RMI iniciado correctamente.");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
