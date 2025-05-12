@@ -1,0 +1,13 @@
+@startuml
+class com.example.pecl_pcd_final.ListaHilos {
+- ArrayList<Ser> lista
+- ListView listView
+- ObservableList<String> observableList
++ void meter(Ser)
++ void sacar(Ser)
+- void imprimir()
++ ArrayList<Ser> getLista()
+}
+
+
+@enduml
