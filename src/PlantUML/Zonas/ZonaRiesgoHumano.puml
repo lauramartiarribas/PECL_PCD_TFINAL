@@ -1,0 +1,15 @@
+@startuml
+class com.example.pecl_pcd_final.ZonaRiesgoHumano {
+- Logger logger
+- ListaHilos humanos
+- ArrayList<Humano> humanosDisponibles
+- Entorno entorno
+- Lock cerrojoAtaque
++ Humano elegirObjetivoAleatorio()
++ void atacar(int,Zombie)
++ ListaHilos getHumanos()
++ ArrayList<Humano> getHumanosDisponibles()
+}
+
+
+@enduml
