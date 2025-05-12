@@ -8,8 +8,9 @@ public class ImplementacionInterfaz extends UnicastRemoteObject implements Inter
 
     private Entorno entorno;
 
-//    public ImplementacionInterfaz() throws RemoteException {
-//    }
+    public ImplementacionInterfaz() throws RemoteException {
+    }
+
 
     public ImplementacionInterfaz(Entorno entorno) throws RemoteException {
         this.entorno = entorno;

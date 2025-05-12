@@ -5,6 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 
 public class ControladorEntorno {
@@ -142,6 +149,7 @@ public class ControladorEntorno {
     }
 
 
+
     @FXML
     public void initialize() throws IOException {
         this.entorno = new Entorno(
@@ -174,5 +182,15 @@ public class ControladorEntorno {
         PauseButton.setDisable(true);
         ReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
+        try {
+            ImplementacionInterfaz implementacionInterfaz = new ImplementacionInterfaz(entorno);
+            Registry registry = LocateRegistry.createRegistry(1099);
+            InetAddress direccion = InetAddress.getLocalHost();
+            String ip = direccion.getHostAddress();
+            Naming.rebind("//" + ip + "/ImplementacionInterfaz", implementacionInterfaz);
+            System.out.println("Servidor RMI iniciado correctamente.");
+        } catch (RemoteException | MalformedURLException | UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 }

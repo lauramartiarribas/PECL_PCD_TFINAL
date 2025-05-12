@@ -9,7 +9,9 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -44,20 +46,26 @@ public class MainServidor extends Application {
 
         controlador = fxmlLoader.getController();
 
-        iniciarServidor();
+
     }
 
 
     public void iniciarServidor(){
         try{
 
-            ImplementacionInterfaz implementacionInterfaz= new ImplementacionInterfaz(controlador.getEntorno());
+            ImplementacionInterfaz implementacionInterfaz= new ImplementacionInterfaz();
             Registry registry =LocateRegistry.createRegistry(1099);
-            Naming.rebind("//172.22.44.153/ImplementacionInterfaz", implementacionInterfaz);
+            InetAddress direccion = InetAddress.getLocalHost();
+            String ip = direccion.getHostAddress();
+            Naming.rebind("//"+ip+"/ImplementacionInterfaz", implementacionInterfaz);
+
+
             System.out.println("Servidor RMI iniciado correctamente.");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
     }

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class ControladorInicio {
 
-    private Entorno entorno;
+
 
     @FXML
     private Button startButton;
@@ -51,6 +51,8 @@ public class ControladorInicio {
                 }
             });
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +89,5 @@ public class ControladorInicio {
         }
     }
 
-    public Entorno getEntorno() {
-        return entorno;
-    }
+
 }

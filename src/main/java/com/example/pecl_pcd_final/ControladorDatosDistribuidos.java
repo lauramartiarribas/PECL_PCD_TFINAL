@@ -46,15 +46,7 @@ public class ControladorDatosDistribuidos {
     public TextArea textoZombiesLetales;
 
 
-
-
-    @FXML
-    public void actualizarDatos(InterfazMonitor interfazMonitor){
-        try {
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    public ImplementacionInterfaz getImplementacionInterfaz() {
+        return implementacionInterfaz;
     }
 }
