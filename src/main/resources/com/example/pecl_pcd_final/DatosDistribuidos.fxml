@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="419.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.ControladorDatosDistribuidos">
+<AnchorPane prefHeight="419.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.ControladorDatosDistribuidos">
    <children>
       <Text layoutX="67.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de humanos en el refugio" wrappingWidth="264.53662109375">
          <font>
