@@ -45,4 +45,16 @@ public class ImplementacionInterfaz extends UnicastRemoteObject implements Inter
     public Entorno getEntorno() {
         return entorno;
     }
+
+    @Override
+    public void pausar() throws RemoteException {
+        entorno.pausar();
+    }
+
+    @Override
+    public void reanudar() throws RemoteException {
+        entorno.reanudar();
+    }
+
+
 }

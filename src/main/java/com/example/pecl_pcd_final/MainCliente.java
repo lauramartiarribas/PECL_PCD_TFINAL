@@ -49,44 +49,9 @@ public class MainCliente extends Application {
         InetAddress direccion = InetAddress.getLocalHost();
         String ip = direccion.getHostAddress();
         InterfazMonitor interfazMonitor = (InterfazMonitor) Naming.lookup("//"+ip+"/ImplementacionInterfaz");
-//        while (!controladorDatos.getImplementacionInterfaz().getEntorno().isEnPausa()){
-//            //controladorDatos.actualizarDatos(interfazMonitor);
-//
-//
-//            int humanosRefugioNum = interfazMonitor.getNumHumanosRefugio();
-//            controladorDatos.textoHumanosRefugio.setText(String.valueOf(humanosRefugioNum));
-//            int humanosTunel0= interfazMonitor.getNumHumanosTunel(0);
-//            controladorDatos.textoHumanostuneles0.setText(String.valueOf(humanosTunel0));
-//            int humanosTunel1 = interfazMonitor.getNumHumanosTunel(1);
-//            controladorDatos.textoHumanostuneles1.setText(String.valueOf(humanosTunel1));
-//            int humanosTunel2 = interfazMonitor.getNumHumanosTunel(2);
-//            controladorDatos.textoHumanostuneles2.setText(String.valueOf(humanosTunel2));
-//            int humanosTunel3 = interfazMonitor.getNumHumanosTunel(3);
-//            controladorDatos.textoHumanostuneles3.setText(String.valueOf(humanosTunel3));
-//
-//            int humanosRiesgo0 = interfazMonitor.getNumZonaInseguraHumanos(0);
-//            controladorDatos.textoHumanosRiesgo0.setText(String.valueOf(humanosRiesgo0));
-//            int humanosRiesgo1 = interfazMonitor.getNumZonaInseguraHumanos(1);
-//            controladorDatos.textoHumanosRiesgo1.setText(String.valueOf(humanosRiesgo1));
-//            int humanosRiesgo2 = interfazMonitor.getNumZonaInseguraHumanos(2);
-//            controladorDatos.textoHumanosRiesgo2.setText(String.valueOf(humanosRiesgo2));
-//            int humanosRiesgo3 = interfazMonitor.getNumZonaInseguraHumanos(3);
-//            controladorDatos.textoHumanosRiesgo3.setText(String.valueOf(humanosRiesgo3));
-//
-//            int zombiesRiesgo0 = interfazMonitor.getNumZonaInseguraZombies(0);
-//            controladorDatos.textoZombiesRiesgo0.setText(String.valueOf(zombiesRiesgo0));
-//            int zombiesRiesgo1 = interfazMonitor.getNumZonaInseguraZombies(1);
-//            controladorDatos.textoZombiesRiesgo1.setText(String.valueOf(zombiesRiesgo1));
-//            int zombiesRiesgo2 = interfazMonitor.getNumZonaInseguraZombies(2);
-//            controladorDatos.textoZombiesRiesgo2.setText(String.valueOf(zombiesRiesgo2));
-//            int zombiesRiesgo3 = interfazMonitor.getNumZonaInseguraZombies(3);
-//            controladorDatos.textoZombiesRiesgo3.setText(String.valueOf(zombiesRiesgo3));
-//
-//            ArrayList<String> zombisLetales= interfazMonitor.getLetales();
-//            String texto = String.join("\n", zombisLetales);
-//            controladorDatos.textoZombiesLetales.setText(texto);
-//
-//        }
+        controladorDatos.setInterfaz(interfazMonitor);
+        interfazMonitor.pausar(); // Llama al servidor
+        interfazMonitor.reanudar();
         Thread actualizador = new Thread(() -> {
             while (true) {
                 try {
