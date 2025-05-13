@@ -161,27 +161,12 @@ public class Entorno {
     public ListaHilos getDescanso() {
         return descanso;
     }
-    public ListaHilos getComedor_espera() {
-        return comedor_espera;
-    }
-    public ListaHilos getComedor_comiendo() {
-        return comedor_comiendo;
-    }
     public ListaHilos getZona_comun() {
         return zona_comun;
     }
 
     public ArrayList<Tunel> getListaTuneles() {
         return listaTuneles;
-    }
-    public ArrayList<ListaHilos> getListaTunelesSalir() {
-        return listaTunelesSalir;
-    }
-    public ArrayList<ListaHilos> getListaTunelesIntermedio() {
-        return listaTunelesIntermedio;
-    }
-    public ArrayList<ListaHilos> getListaTunelesEntrar() {
-        return listaTunelesEntrar;
     }
     public ArrayList<ListaHilos> getZona_riesgoZombie() {
         return zona_riesgoZombie;
@@ -217,76 +202,22 @@ public class Entorno {
         return enPausa;
     }
 
-    ///////Para la parte distribuida
+    ///////Para la parte distribuida//////
     public int getNumRefugio(){
         return descanso.getLista().size() + comedor_comiendo.getLista().size() +comedor_espera.getLista().size()+zona_comun.getLista().size();
-
-
-//        synchronized (descanso){
-//            for (int i = 0; i < descanso.getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        synchronized (comedor_comiendo) {
-//            for (int i = 0; i < comedor_comiendo.getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        synchronized (comedor_espera) {
-//            for (int i = 0; i < comedor_espera.getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        synchronized (zona_comun) {
-//            for (int i = 0; i < zona_comun.getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        return devolverNum;
     }
 
 
     public int getNumTunel(int numTunel){
         return getTunelEntrar(numTunel).getLista().size()+getTunelIntermedio(numTunel).getLista().size()+getTunelSalir(numTunel).getLista().size();
-//        int devolverNum=0;
-//        synchronized (listaTunelesSalir.get(numTunel).getLista()) {
-//            for (int i = 0; i < listaTunelesSalir.get(numTunel).getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        synchronized (listaTunelesIntermedio.get(numTunel).getLista()) {
-//            for (int i = 0; i < listaTunelesIntermedio.get(numTunel).getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        synchronized (listaTunelesEntrar.get(numTunel).getLista()) {
-//            for (int i = 0; i < listaTunelesEntrar.get(numTunel).getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        return devolverNum;
 
     }
     public int getNumZonaInseguraHumanos(int numTunel){
         return zona_riesgoHumanos.get(numTunel).getHumanos().getLista().size();
-//        int devolverNum=0;
-//        synchronized (zona_riesgoHumanos.get(numTunel).getHumanos()) {
-//            for (int i = 0; i < zona_riesgoHumanos.get(numTunel).getHumanos().getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//            return devolverNum;
-//        }
 
     }
     public int getNumZonaInseguraZombie(int numTunel){
         return zona_riesgoZombie.get(numTunel).getLista().size();
-//        int devolverNum=0;
-//        synchronized (zona_riesgoZombie.get(numTunel)) {
-//            for (int i = 0; i < zona_riesgoZombie.get(numTunel).getLista().size(); i++) {
-//                devolverNum++;
-//            }
-//        }
-//        return devolverNum;
 
     }
 

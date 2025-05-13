@@ -50,26 +50,6 @@ public class MainServidor extends Application {
     }
 
 
-    public void iniciarServidor(){
-        try{
-
-            ImplementacionInterfaz implementacionInterfaz= new ImplementacionInterfaz();
-            Registry registry =LocateRegistry.createRegistry(1099);
-            InetAddress direccion = InetAddress.getLocalHost();
-            String ip = direccion.getHostAddress();
-            Naming.rebind("//"+ip+"/ImplementacionInterfaz", implementacionInterfaz);
-
-
-            System.out.println("Servidor RMI iniciado correctamente.");
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void main(String[] args) {
         launch();
     }

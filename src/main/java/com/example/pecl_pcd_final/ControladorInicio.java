@@ -9,10 +9,11 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class ControladorInicio {
 
-
+    private Logger logger = LoggerConFichero.getLogger();
 
     @FXML
     private Button startButton;
@@ -36,6 +37,7 @@ public class ControladorInicio {
             stage.setHeight(750);
             stage.setWidth(1400);
             stage.show();
+            logger.info("Se ha inicializado correctamente la pantalla de inicio");
             stage.setOnCloseRequest(evento -> {
                 evento.consume(); // Detiene el cierre automático
 

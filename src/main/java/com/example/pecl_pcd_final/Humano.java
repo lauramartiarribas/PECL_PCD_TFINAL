@@ -41,6 +41,7 @@ public class Humano extends Ser {
                 esperarAtaque();
                 if(isEstaMuerto()){
                     getEntorno().getZonaRiesgoH(tunelSalir).getHumanos().sacar(this);
+                    logger.info("Ha muerto el humano "+getIdentificador());
                     return;
                 }
 
@@ -60,6 +61,7 @@ public class Humano extends Ser {
 
                 //Zona de descanso si ha sido marcado
                 if (this.marcado) {
+                    logger.info("El humano "+getIdentificador()+ " ha sido marcado y regresa a la zona de descanso");
                     getEntorno().getDescanso().meter(this);
                     dormir(3000 + (int) Math.random() * 2000);
                     getEntorno().getDescanso().sacar(this);

@@ -12,11 +12,13 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Logger;
 
 
 public class ControladorEntorno {
 
     private Entorno entorno;
+    private Logger logger = LoggerConFichero.getLogger();
 
     @FXML
     public Button PlayButton;
@@ -188,7 +190,7 @@ public class ControladorEntorno {
             InetAddress direccion = InetAddress.getLocalHost();
             String ip = direccion.getHostAddress();
             Naming.rebind("//" + ip + "/ImplementacionInterfaz", implementacionInterfaz);
-            System.out.println("Servidor RMI iniciado correctamente.");
+            logger.info("Servidor RMI iniciado correctamente.");
         } catch (RemoteException | MalformedURLException | UnknownHostException e) {
             e.printStackTrace();
         }
