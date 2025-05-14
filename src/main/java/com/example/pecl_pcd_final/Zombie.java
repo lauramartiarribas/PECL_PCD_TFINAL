@@ -42,12 +42,3 @@ public class Zombie extends Ser {
         this.numMuertes = numMuertes;
     }
 }
-
-
-
-
-
-
-
-
-

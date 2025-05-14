@@ -27,14 +27,13 @@ public class HiloGenerador extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            Humano humano = new Humano("H" + String.format("%04d", entorno.getNumHumanos()), entorno);
-            entorno.setNumHumanos(entorno.getNumHumanos()+1);
-            logger.info("Nace el humano H"+ String.format("%04d", entorno.getNumHumanos()));
+            Humano humano = new Humano("H" + String.format("%04d", i), entorno);
+            logger.info("Nace el humano H"+ String.format("%04d", i));
             humano.start();
             int n=500+(int)Math.random()*1500;
 
             try {
-                Thread.sleep(n); //Esperar antes del siguiente humano
+                humano.dormir(n); //Esperar antes del siguiente humano
             } catch (InterruptedException e) {
                 System.out.println("Generador interrumpido");
                 Thread.currentThread().interrupt();

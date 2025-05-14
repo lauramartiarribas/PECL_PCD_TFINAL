@@ -48,8 +48,6 @@ public class Humano extends Ser {
                 getEntorno().getListaTuneles().get(tunelSalir).volverAlRefugio(this, tunelSalir);
 
                 getEntorno().actualizarComida(numComida);
-                getEntorno().actualizarLabelComida();
-
 
                 //En la zona de descanso
                 dormir(2000 + (int) Math.random() * 2000);
@@ -81,8 +79,6 @@ public class Humano extends Ser {
             this.wait();
         }
     }
-
-
 
 
 

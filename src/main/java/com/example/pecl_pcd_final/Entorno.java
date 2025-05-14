@@ -14,7 +14,6 @@ public class Entorno {
 
     private Logger logger = LoggerConFichero.getLogger();
     private boolean enPausa = false;
-    private int numHumanos;
     private ArrayList<Zombie> zombiesTotales;
 
     ///////////////// REFUGIO //////////////////////
@@ -54,7 +53,6 @@ public class Entorno {
 
                    javafx.scene.control.TextField labelComida) {
 
-        this.numHumanos = 1;
         this.descanso = descanso;
         this.comedor_espera = comedor_espera;
         this.comedor_comiendo = comedor_comiendo;
@@ -99,7 +97,9 @@ public class Entorno {
     }
 
 
+    //////// GESTION DE PAUSA //////////
     public synchronized void pausar() {
+        logger.info("El juego ha sido pausado");
         enPausa = true;
     }
 
@@ -110,11 +110,13 @@ public class Entorno {
     }
 
     public synchronized void reanudar() {
-        enPausa = false; // Cambia el estado a reanudado
+        logger.info("El juego ha sido reanudado");
+        enPausa = false;
         notifyAll();
     }
 
 
+    //////// COMIDA ///////////
     public void comer(Humano humano) {
         try {
             comedor_espera.meter(humano);
@@ -131,33 +133,44 @@ public class Entorno {
             comedor_comiendo.meter(humano);
             comidaTotal.poll();
             colaComedor.poll();
-            actualizarLabelComida();
             humano.dormir(3000 + (int) Math.random() * 2000);
             comedor_comiendo.sacar(humano);
+            actualizarLabelComida();
         } catch (Exception e) {
             logger.warning("Se ha producido un error en el comedor.");
         }
 
     }
-    public void actualizarLabelComida() {
-        Platform.runLater(() -> labelComida.setText(String.valueOf(comidaTotal.size())));
-    }
+
     public void actualizarComida(int numComida){
         for (int i = 0; i < numComida; i++) {
             comidaTotal.offer(1);
         }
         cerrojoComida.lock();
         try {
-            hayComida.signalAll(); // Notifica a todos los que esperan por comida
+            if(!comidaTotal.isEmpty()) {
+                hayComida.signalAll(); // Notifica a todos los que esperan por comida
+            }
         } finally {
             cerrojoComida.unlock();
         }
         actualizarLabelComida();
     }
 
+    public void actualizarLabelComida() {
+        Platform.runLater(() -> labelComida.setText(String.valueOf(comidaTotal.size())));
+    }
 
 
     //Getters y setters
+    public ArrayList<Zombie> getZombiesTotales() {
+        return zombiesTotales;
+    }
+
+    public boolean isEnPausa() {
+        return enPausa;
+    }
+
     public ListaHilos getDescanso() {
         return descanso;
     }
@@ -168,11 +181,6 @@ public class Entorno {
     public ArrayList<Tunel> getListaTuneles() {
         return listaTuneles;
     }
-    public ArrayList<ListaHilos> getZona_riesgoZombie() {
-        return zona_riesgoZombie;
-    }
-
-
     public ListaHilos getTunelSalir(int numTunel) {
         return listaTunelesSalir.get(numTunel);
     }
@@ -186,42 +194,32 @@ public class Entorno {
     public ZonaRiesgoHumano getZonaRiesgoH(int num) {
         return zona_riesgoHumanos.get(num);
     }
-
-    public int getNumHumanos() {
-        return numHumanos;
-    }
-    public void setNumHumanos(int numHumanos) {
-        this.numHumanos = numHumanos;
+    public ArrayList<ListaHilos> getZona_riesgoZombie() {
+        return zona_riesgoZombie;
     }
 
-    public ArrayList<Zombie> getZombiesTotales() {
-        return zombiesTotales;
-    }
 
-    public boolean isEnPausa() {
-        return enPausa;
-    }
 
-    ///////Para la parte distribuida//////
+    ////// FUNCIONES DE LA PARTE DISTRIBUIDA /////////
     public int getNumRefugio(){
         return descanso.getLista().size() + comedor_comiendo.getLista().size() +comedor_espera.getLista().size()+zona_comun.getLista().size();
     }
-
 
     public int getNumTunel(int numTunel){
         return getTunelEntrar(numTunel).getLista().size()+getTunelIntermedio(numTunel).getLista().size()+getTunelSalir(numTunel).getLista().size();
 
     }
+
     public int getNumZonaInseguraHumanos(int numTunel){
         return zona_riesgoHumanos.get(numTunel).getHumanos().getLista().size();
-
     }
+
     public int getNumZonaInseguraZombie(int numTunel){
         return zona_riesgoZombie.get(numTunel).getLista().size();
 
     }
 
-    public ArrayList<String>  getZombiesLetales() {
+    public ArrayList<String> getZombiesLetales() {
         ArrayList<String> ranking =new ArrayList<>();
         synchronized (zombiesTotales) {
             zombiesTotales.sort((z1,z2) -> Integer.compare(z2.getNumMuertes(),z1.getNumMuertes()));
