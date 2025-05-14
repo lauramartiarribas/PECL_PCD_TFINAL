@@ -116,7 +116,7 @@ public class ControladorEntorno {
     void onInformacionButtonClick() {
         try {
             entorno.setEnPausa(true);
-            entorno.comprobarPausa();
+
 
             Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
             infoAlert.setTitle("Información del Juego");
