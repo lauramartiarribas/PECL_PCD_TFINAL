@@ -98,9 +98,16 @@ public class Entorno {
 
 
     //////// GESTION DE PAUSA //////////
-    public synchronized void pausar() {
-        logger.info("El juego ha sido pausado");
-        enPausa = true;
+    public synchronized void pausarYPlay() {
+        if(enPausa){
+            logger.info("El juego ha sido reanudado");
+            setEnPausa(false);
+            notifyAll();
+        }else{
+            logger.info("El juego ha sido pausado");
+            setEnPausa(true);
+        }
+
     }
 
     public synchronized void comprobarPausa() throws InterruptedException {
@@ -109,11 +116,7 @@ public class Entorno {
         }
     }
 
-    public synchronized void reanudar() {
-        logger.info("El juego ha sido reanudado");
-        enPausa = false;
-        notifyAll();
-    }
+
 
 
     //////// COMIDA ///////////
@@ -167,8 +170,8 @@ public class Entorno {
         return zombiesTotales;
     }
 
-    public boolean isEnPausa() {
-        return enPausa;
+    public void setEnPausa(boolean enPausa) {
+        this.enPausa = enPausa;
     }
 
     public ListaHilos getDescanso() {
@@ -197,6 +200,7 @@ public class Entorno {
     public ArrayList<ListaHilos> getZona_riesgoZombie() {
         return zona_riesgoZombie;
     }
+
 
 
 

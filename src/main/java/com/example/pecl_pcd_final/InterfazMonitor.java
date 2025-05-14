@@ -16,8 +16,8 @@ public interface InterfazMonitor extends Remote {
 
     ArrayList<String> getLetales() throws RemoteException;
 
-    void pausar() throws RemoteException;
+    void pausarReanudar() throws RemoteException;
 
-    void reanudar() throws RemoteException;
+
 
 }

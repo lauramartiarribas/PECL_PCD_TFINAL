@@ -51,36 +51,25 @@ public class ControladorDatosDistribuidos {
     public TextArea textoZombiesLetales;
 
     @FXML
-    public Button botonStop;
+    public Button botonStopReanudar;
 
-    @FXML
-    public Button botonReanudar;
+
 
     public void setInterfaz(InterfazMonitor interfazMonitor) {
         this.interfazRemota = interfazMonitor;
     }
 
     @FXML
-    void onStopButtonClick(ActionEvent event) {
+    void onStopReanudarButtonClick(ActionEvent event) {
         try {
-            interfazRemota.pausar();
-            botonStop.setDisable(true);
-            botonReanudar.setDisable(false);
+            interfazRemota.pausarReanudar();
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    void onReanudarButtonClick(ActionEvent event) {
-        try {
-            interfazRemota.reanudar();
-            botonStop.setDisable(false);
-            botonReanudar.setDisable(true);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
 

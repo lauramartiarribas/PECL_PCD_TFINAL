@@ -23,9 +23,8 @@ public class ControladorEntorno {
     @FXML
     public Button PlayButton;
     @FXML
-    public Button PauseButton;
-    @FXML
-    public Button ReanudarButton;
+    public Button PauseReanudarButton;
+
     @FXML
     public Button BotonInformacion;
 
@@ -100,32 +99,25 @@ public class ControladorEntorno {
     @FXML
     void onPlayButtonClick(ActionEvent event) {
         PlayButton.setDisable(true);
-        PauseButton.setDisable(false);
+        PauseReanudarButton.setDisable(false);
         HiloGenerador hilo = new HiloGenerador(entorno, 9999);
         hilo.start();
     }
 
     @FXML
-    void onStopButtonClick(ActionEvent event) throws InterruptedException {
-        entorno.pausar();
-        PauseButton.setDisable(true);
-        ReanudarButton.setDisable(false);
+    void onStopReanudarButtonClick(ActionEvent event) throws InterruptedException {
+        entorno.pausarYPlay();
     }
 
-    @FXML
-    void onReanudarButtonClick(ActionEvent event) {
-        entorno.reanudar();
-        PauseButton.setDisable(false);
-        ReanudarButton.setDisable(true);
-    }
+
 
 
     @FXML
     void onInformacionButtonClick() {
         try {
-            entorno.pausar();
-            PauseButton.setDisable(true);
-            ReanudarButton.setDisable(false);
+            entorno.setEnPausa(true);
+            entorno.comprobarPausa();
+
             Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
             infoAlert.setTitle("Información del Juego");
             infoAlert.setHeaderText("Estás jugando a: Apocalipsis Zombie");
@@ -181,8 +173,7 @@ public class ControladorEntorno {
                 new ListaHilos(ZonaRiesgoZombie4),
                 Comida
         );
-        PauseButton.setDisable(true);
-        ReanudarButton.setDisable(true);
+        PauseReanudarButton.setDisable(true);
         Comida.setText(String.valueOf(0));
         try {
             ImplementacionInterfaz implementacionInterfaz = new ImplementacionInterfaz(entorno);

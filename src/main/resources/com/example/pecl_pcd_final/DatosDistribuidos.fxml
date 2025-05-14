@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="419.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.ControladorDatosDistribuidos">
+<AnchorPane prefHeight="419.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pecl_pcd_final.ControladorDatosDistribuidos">
    <children>
       <Text layoutX="67.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número de humanos en el refugio" wrappingWidth="264.53662109375">
          <font>
@@ -100,12 +100,7 @@
          </font>
       </TextField>
       <TextArea fx:id="textoZombiesLetales" layoutX="69.0" layoutY="288.0" prefHeight="100.0" prefWidth="239.0" />
-      <Button fx:id="botonStop" layoutX="402.0" layoutY="298.0" mnemonicParsing="false" onAction="#onStopButtonClick" prefHeight="62.0" prefWidth="98.0" text="Stop">
-         <font>
-            <Font name="Bookman Old Style" size="14.0" />
-         </font>
-      </Button>
-      <Button fx:id="botonReanudar" layoutX="538.0" layoutY="299.0" mnemonicParsing="false" onAction="#onReanudarButtonClick" prefHeight="61.0" prefWidth="97.0" text="Reanudar">
+      <Button fx:id="botonStopReanudar" layoutX="454.0" layoutY="288.0" mnemonicParsing="false" onAction="#onStopReanudarButtonClick" prefHeight="87.0" prefWidth="136.0" text="Stop/Reanudar">
          <font>
             <Font name="Bookman Old Style" size="14.0" />
          </font>

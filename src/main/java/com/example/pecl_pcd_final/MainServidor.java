@@ -21,6 +21,7 @@ import java.util.Optional;
 public class MainServidor extends Application {
     ControladorInicio controlador = new ControladorInicio();
 
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ApocalipsisZombie.fxml"));

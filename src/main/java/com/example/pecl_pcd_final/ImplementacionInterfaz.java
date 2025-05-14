@@ -47,14 +47,10 @@ public class ImplementacionInterfaz extends UnicastRemoteObject implements Inter
     }
 
     @Override
-    public void pausar() throws RemoteException {
-        entorno.pausar();
+    public void pausarReanudar() throws RemoteException {
+        entorno.pausarYPlay();
     }
 
-    @Override
-    public void reanudar() throws RemoteException {
-        entorno.reanudar();
-    }
 
 
 }
