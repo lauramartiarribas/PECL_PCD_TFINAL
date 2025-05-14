@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class ControladorDatosDistribuidos {
 
 
-    private ImplementacionInterfaz implementacionInterfaz;
     private InterfazMonitor interfazRemota;
 
 
@@ -72,14 +71,4 @@ public class ControladorDatosDistribuidos {
 
 
 
-
-
-
-
-
-
-
-    public ImplementacionInterfaz getImplementacionInterfaz() {
-        return implementacionInterfaz;
-    }
 }

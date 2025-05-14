@@ -19,7 +19,7 @@ import java.rmi.registry.Registry;
 import java.util.Optional;
 
 public class MainServidor extends Application {
-    ControladorInicio controlador = new ControladorInicio();
+
 
 
     @Override
@@ -45,7 +45,7 @@ public class MainServidor extends Application {
             }
         });
 
-        controlador = fxmlLoader.getController();
+
 
 
     }

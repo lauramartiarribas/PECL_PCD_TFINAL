@@ -1,0 +1,25 @@
+@startuml
+
+class Ser
+class Humano
+class Zombie
+class Entorno
+class Tunel
+class ZonaComun
+class ZonaDescanso
+class ListaHilos
+
+Ser <|-- Humano
+Ser <|-- Zombie
+ListaHilos <|--Entorno
+
+Humano --> Entorno
+Zombie --> Entorno
+
+Humano --> Tunel
+Humano --> ZonaComun
+Humano --> ZonaDescanso
+
+Humano --> Zombie : morir()
+@enduml
+

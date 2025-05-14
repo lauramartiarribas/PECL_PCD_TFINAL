@@ -1,0 +1,20 @@
+@startuml
+class com.example.pecl_pcd_final.Ser {
+- String identificador
+- Entorno entorno
+- boolean estaMuerto
++ String toString()
++ void dormir(int)
++ String getIdentificador()
++ void setIdentificador(String)
++ Entorno getEntorno()
++ void setEntorno(Entorno)
++ boolean isEstaMuerto()
++ void setEstaMuerto(boolean)
+}
+
+
+
+
+com.example.pecl_pcd_final.Thread <|-- com.example.pecl_pcd_final.Ser
+@enduml
