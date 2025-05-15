@@ -11,7 +11,7 @@ class ListaHilos
 
 Ser <|-- Humano
 Ser <|-- Zombie
-ListaHilos <|--Entorno
+ListaHilos <--Entorno
 
 Humano --> Entorno
 Zombie --> Entorno

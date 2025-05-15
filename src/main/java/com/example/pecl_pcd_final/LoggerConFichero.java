@@ -15,7 +15,7 @@ public class LoggerConFichero {
             // Creamos el logger
             logger = Logger.getLogger("Logger");
 
-            FileHandler fileHandler = new FileHandler("fichero.txt", true);
+            FileHandler fileHandler = new FileHandler("apocalipsis.txt", true);
             fileHandler.setFormatter(new SimpleFormatter());
 
             logger.addHandler(fileHandler);

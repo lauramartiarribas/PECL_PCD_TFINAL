@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 import java.util.logging.Logger;
 
 
-public class ControladorEntorno {
+public class ControladorEntorno_Servidor {
 
     private Entorno entorno;
     private Logger logger = LoggerConFichero.getLogger();
